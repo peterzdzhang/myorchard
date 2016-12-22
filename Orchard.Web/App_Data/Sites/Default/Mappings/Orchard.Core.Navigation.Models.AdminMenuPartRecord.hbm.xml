@@ -1,0 +1,21 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Core.Navigation.Models.AdminMenuPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Navigation_AdminMenuPartRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="foreign">
+        <param name="property">ContentItemRecord</param>
+      </generator>
+    </id>
+    <property name="AdminMenuText" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="AdminMenuText" length="255" />
+    </property>
+    <property name="AdminMenuPosition" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="AdminMenuPosition" />
+    </property>
+    <property name="OnAdminMenu" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="OnAdminMenu" />
+    </property>
+    <one-to-one class="Orchard.ContentManagement.Records.ContentItemRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" constrained="true" name="ContentItemRecord" />
+  </class>
+</hibernate-mapping>

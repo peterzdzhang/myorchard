@@ -1,0 +1,18 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Core.Settings.Metadata.Records.ContentPartFieldDefinitionRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Settings_ContentPartFieldDefinitionRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <property name="Name" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Name" />
+    </property>
+    <property name="Settings" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Settings" length="10000" />
+    </property>
+    <many-to-one class="Orchard.Core.Settings.Metadata.Records.ContentFieldDefinitionRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ContentFieldDefinitionRecord">
+      <column name="ContentFieldDefinitionRecord_id" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Autoroute.Models.AutoroutePartRecord, Orchard.Autoroute, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Autoroute_AutoroutePartRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="foreign">
+        <param name="property">ContentItemVersionRecord</param>
+      </generator>
+    </id>
+    <property name="UseCustomPattern" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="UseCustomPattern" />
+    </property>
+    <property name="UseCulturePattern" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="UseCulturePattern" />
+    </property>
+    <property name="CustomPattern" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="CustomPattern" length="2048" />
+    </property>
+    <property name="DisplayAlias" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="DisplayAlias" length="2048" />
+    </property>
+    <many-to-one class="Orchard.ContentManagement.Records.ContentItemRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ContentItemRecord">
+      <column name="ContentItemRecord_id" />
+    </many-to-one>
+    <one-to-one class="Orchard.ContentManagement.Records.ContentItemVersionRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" constrained="true" name="ContentItemVersionRecord" />
+  </class>
+</hibernate-mapping>

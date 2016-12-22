@@ -1,0 +1,18 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Core.Settings.State.Records.ShellFeatureStateRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Settings_ShellFeatureStateRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <property name="Name" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Name" />
+    </property>
+    <property name="InstallState" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Orchard.Environment.State.Models.ShellFeatureState+State, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
+      <column name="InstallState" />
+    </property>
+    <property name="EnableState" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Orchard.Environment.State.Models.ShellFeatureState+State, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
+      <column name="EnableState" />
+    </property>
+  </class>
+</hibernate-mapping>

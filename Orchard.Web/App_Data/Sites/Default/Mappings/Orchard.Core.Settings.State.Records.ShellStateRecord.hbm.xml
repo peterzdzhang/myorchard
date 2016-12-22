@@ -1,0 +1,19 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Core.Settings.State.Records.ShellStateRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Settings_ShellStateRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <bag cascade="all-delete-orphan" name="Features">
+      <cache usage="read-write" />
+      <key>
+        <column name="ShellStateRecord_id" />
+      </key>
+      <one-to-many class="Orchard.Core.Settings.State.Records.ShellFeatureStateRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" />
+    </bag>
+    <property name="Unused" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Unused" />
+    </property>
+  </class>
+</hibernate-mapping>

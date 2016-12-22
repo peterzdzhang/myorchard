@@ -1,0 +1,8 @@
+﻿<a href="@Href("~/")" class="navbar-brand" style="padding:5px">
+    @{
+        var theme = WorkContext.CurrentTheme;
+    }
+    @Html.Image(Url.Content(theme.Location + "/" + theme.Path + "/Content/Images/logo.png")
+                    , WorkContext.CurrentSite.SiteName
+                    ,new { @style="height:40px" })
+</a>

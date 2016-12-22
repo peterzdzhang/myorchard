@@ -1,0 +1,19 @@
+﻿@model Maps.Models.MapPart
+
+<fieldset>
+    <legend>@T("Map Fields")</legend>
+    <div class="editor-label">
+        @Html.LabelFor(m=>m.Latitude)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m=>m.Latitude)
+        @Html.ValidationMessageFor(m => m.Latitude)
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(m => m.Longitude)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.Longitude)
+        @Html.ValidationMessageFor(m => m.Longitude)
+    </div>
+</fieldset>

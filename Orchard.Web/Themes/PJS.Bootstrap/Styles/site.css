@@ -1,0 +1,10 @@
+﻿
+div.ui-datepicker {
+    font-size: 100%;
+}
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year
+{
+    display:inline;
+    padding:0px;
+}

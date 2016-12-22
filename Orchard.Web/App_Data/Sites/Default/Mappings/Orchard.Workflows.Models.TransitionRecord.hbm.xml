@@ -1,0 +1,24 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Workflows.Models.TransitionRecord, Orchard.Workflows, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Workflows_TransitionRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <property name="SourceEndpoint" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="SourceEndpoint" />
+    </property>
+    <property name="DestinationEndpoint" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="DestinationEndpoint" />
+    </property>
+    <many-to-one class="Orchard.Workflows.Models.ActivityRecord, Orchard.Workflows, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="SourceActivityRecord">
+      <column name="SourceActivityRecord_id" />
+    </many-to-one>
+    <many-to-one class="Orchard.Workflows.Models.ActivityRecord, Orchard.Workflows, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="DestinationActivityRecord">
+      <column name="DestinationActivityRecord_id" />
+    </many-to-one>
+    <many-to-one class="Orchard.Workflows.Models.WorkflowDefinitionRecord, Orchard.Workflows, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="WorkflowDefinitionRecord">
+      <column name="WorkflowDefinitionRecord_id" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

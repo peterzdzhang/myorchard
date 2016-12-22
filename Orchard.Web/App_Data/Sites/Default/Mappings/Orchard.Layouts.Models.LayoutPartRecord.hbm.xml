@@ -1,0 +1,18 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Layouts.Models.LayoutPartRecord, Orchard.Layouts, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Layouts_LayoutPartRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="foreign">
+        <param name="property">ContentItemVersionRecord</param>
+      </generator>
+    </id>
+    <property name="TemplateId" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="TemplateId" />
+    </property>
+    <many-to-one class="Orchard.ContentManagement.Records.ContentItemRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ContentItemRecord">
+      <column name="ContentItemRecord_id" />
+    </many-to-one>
+    <one-to-one class="Orchard.ContentManagement.Records.ContentItemVersionRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" constrained="true" name="ContentItemVersionRecord" />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+﻿Name: Faurecia.ADL
+Path: ADL
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Description for the module
+Features:
+    Faurecia.ADL:
+        Description: Description for feature Faurecia.ADL.
+		Category: Faurecia

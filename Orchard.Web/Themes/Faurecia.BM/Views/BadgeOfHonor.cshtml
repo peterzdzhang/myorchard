@@ -1,0 +1,17 @@
+﻿@{ 
+    var theme = WorkContext.CurrentTheme;
+    var url = Url.Content(theme.Location + "/" + theme.Path + "/Content/Images/slogan.png");
+}
+<div class="table">
+    <div class="row">
+        <div class="span-7 cell">
+            @Html.Image(url, WorkContext.CurrentSite.SiteName, new { @style = "height:30px" })
+        </div>
+        <div class="span-5 cell">
+            <div class="credits text-right">
+                <span class="poweredby">@T("Powered by <a href=\"{0}\" target=\"_blank\">Sinno Tech</a>", "http://www.sinno-tech.com/")</span>
+                <span class="copyright">@T("&#169;Faurecia Budget Management") @DateTime.Now.Year</span>
+            </div>
+        </div>
+    </div>
+</div>

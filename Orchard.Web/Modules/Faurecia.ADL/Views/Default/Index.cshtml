@@ -1,0 +1,210 @@
+﻿@model ADLIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    var index = 0;
+    var pageSizes = new List<int?>() { 10, 20, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize))
+    {
+        pageSizes.Add(defaultPageSize);
+    }
+    
+    Script.Require("jQueryUI");
+    Style.Require("jQueryUI");
+}
+<h1 style="margin:5px 10px 10px 10px">
+    @Html.TitleForPage(T("ADL Home").ToString())
+</h1>
+@using (Html.BeginFormAntiForgeryPost()){
+    @Html.ValidationSummary()
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-lg-6 col-sm-8">
+                    <button class="btn btn-info" type="submit" name="submit.Query" value="@T("Query")">@T("Query")</button>
+                    <button class="btn btn-success" type="submit" name="submit.Diff" value="@T("Diff")">@T("Diff")</button>
+                </div>
+                <div class="col-lg-6 col-sm-4 text-right">
+                    @Html.ActionLink(T("Create New").Text, "Index","Create", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.ProjectNo, T("Project No").ToString(), new { @class = "col-sm-2 col-lg-2 control-label",@style="text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.Options.ProjectNo, new { autofocus = "autofocus", @class = "form-control", placeholder = "Project No" })
+                        @Html.ValidationMessageFor(m => m.Options.ProjectNo)
+                    </div>
+                    @Html.LabelFor(m => m.Options.Customer, T("Customer").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.Options.Customer, new { @class = "form-control", @maxlength = 3, placeholder = "Customer Name" })
+                        @Html.ValidationMessageFor(m => m.Options.Customer)
+                    </div>
+                    @Html.LabelFor(m => m.Options.ProgramManager, T("ADL/PDL").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.Options.ProgramManager, new { @class = "form-control", placeholder = "ADL/PDL" })
+                        @Html.ValidationMessageFor(m => m.Options.ProgramManager)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.StartDate1, T("Strat Date").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.Options.StartDate1, new { @class = "form-control datepicker", placeholder = "Start Date" })
+                        @Html.ValidationMessageFor(m => m.Options.StartDate1)
+                    </div>
+                     @Html.LabelFor(m => m.Options.StartDate2, T("-").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.Options.StartDate2, new { @class = "form-control datepicker", placeholder = "End Date" })
+                        @Html.ValidationMessageFor(m => m.Options.StartDate2)
+                    </div>
+                    @Html.LabelFor(m => m.Options.Order, T("Order By").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        <select id="@Html.IdFor(m=>m.Options.Order)" name="@Html.NameOf(m => m.Options.Order)">
+                            @Html.SelectOption(Model.Options.Order, ADLOrder.ProjectNo, T("Project No").ToString())
+                            @Html.SelectOption(Model.Options.Order, ADLOrder.Customer, T("Customer").ToString())
+                            @Html.SelectOption(Model.Options.Order, ADLOrder.ProgramManager, T("ADL/PDL").ToString())
+                            @Html.SelectOption(Model.Options.Order, ADLOrder.StartDate, T("Strat Date").ToString())
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Filter, T("Filter").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-lg-2">
+                        <select id="@Html.IdFor(m=>m.Options.Filter)" name="@Html.NameOf(m => m.Options.Filter)">
+                            @Html.SelectOption(Model.Options.Filter, ADLFilter.LastestVersion, T("Lastest Version").ToString())
+                            @Html.SelectOption(Model.Options.Filter, ADLFilter.AllVersion, T("All Version").ToString())
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered table-condensed table-hover">
+            <thead>
+                <tr class="active">
+                    <th>@T("Item No")</th>
+                    <th>@T("Project No")</th>
+                    <th>@T("Version No")</th>
+                    <th>@T("Status")</th>
+                    <th>@T("ADL/PDL")</th>
+                    <th>@T("Customer")</th>
+                    <th>@T("Type")</th>
+                    <th>@T("Start Date")</th>
+                    <th>@T("Offer Date")</th>
+                    <th>@T("SOP Date")</th>
+                    <th>@T("Comments")</th>
+                </tr>
+            </thead>
+            @if (Model.ADLs.Count == 0)
+            {
+                <tr>
+                    <td colspan="11" class="warning text-center">
+                        @T("No Data Found.")
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var entry in Model.ADLs)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" value="@Model.ADLs[index].Id" name="@Html.NameOf(m => m.ADLs[index].Id)" />
+                            <input type="checkbox" value="true" name="@Html.NameOf(m => m.ADLs[index].IsChecked)" />
+                            @(index + 1)
+                        </td>
+                        <td>
+                            @if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
+                            {
+                                string url = Url.Action("Index", "Create", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id });
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Index", "Create"
+                                                    , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl , Id = entry.Id }
+                                                    , new { })
+                            }
+                            else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.Quotation)
+                            {
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Index", "Quotation"
+                               , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
+                               , new { })
+                            }
+                            else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+                            {
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Index", "IBP"
+                               , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
+                               , new { })
+                            }
+                        </td>
+                        <td>
+                            @entry.ADLRecord.VersionNo
+                        </td>
+                        <td>
+                            @(entry.ADLRecord.Phase + "-" + entry.ADLRecord.Status)
+                        </td>
+                        <td>
+                            @entry.ADLRecord.ProgramManager
+                        </td>
+                        <td>
+                            @entry.ADLRecord.Customer
+                        </td>
+                        <td>
+                            @entry.ADLRecord.Type
+                        </td>
+                        <td>
+                            @(entry.ADLRecord.StartDate == null ? "" : string.Format("yyyy-MM-dd", entry.ADLRecord.StartDate))
+                        </td>
+                        <td>
+                            @(entry.ADLRecord.OfferDate == null ? "" : string.Format("yyyy-MM-dd", entry.ADLRecord.OfferDate))
+                        </td>
+                        <td>
+                            @(entry.ADLRecord.SOPDate == null ? "" : string.Format("yyyy-MM-dd", entry.ADLRecord.SOPDate))
+                        </td>
+                        <td>
+                            @{
+                                string comments = string.Empty;
+                                if (!string.IsNullOrEmpty(entry.ADLRecord.MileStoneComments))
+                                {
+                                    comments += entry.ADLRecord.MileStoneComments + "<br/>";
+                                }
+                                if (!string.IsNullOrEmpty(entry.ADLRecord.VehicelComments))
+                                {
+                                    comments += entry.ADLRecord.VehicelComments + "<br/>";
+                                }
+                                if (!string.IsNullOrEmpty(entry.ADLRecord.QuotationComments))
+                                {
+                                    comments += entry.ADLRecord.QuotationComments + "<br/>";
+                                }
+                                if (!string.IsNullOrEmpty(entry.ADLRecord.IBPComments))
+                                {
+                                    comments += entry.ADLRecord.IBPComments + "<br/>";
+                                }
+                                if (comments.Length > 0)
+                                {
+                                    comments = comments.Substring(0, comments.LastIndexOf("<br/>"));
+                                }
+                            }
+                            @comments
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+        </table>
+    </div>
+    <div style="margin:-30px 0">
+        @Display(Model.Pager)
+    </div>
+}
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                autoSize:true,
+                dateFormat: "yy/mm/dd"
+            });
+        })
+    </script>
+}

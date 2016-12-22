@@ -1,0 +1,21 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Projections.Models.MemberBindingRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Projections_MemberBindingRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <property name="Type" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Type" length="255" />
+    </property>
+    <property name="Member" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Member" length="64" />
+    </property>
+    <property name="Description" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Description" length="500" />
+    </property>
+    <property name="DisplayName" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="DisplayName" length="64" />
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,36 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Projections.Models.ProjectionPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Projections_ProjectionPartRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="foreign">
+        <param name="property">ContentItemRecord</param>
+      </generator>
+    </id>
+    <property name="Items" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Items" />
+    </property>
+    <property name="ItemsPerPage" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ItemsPerPage" />
+    </property>
+    <property name="Skip" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Skip" />
+    </property>
+    <property name="PagerSuffix" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="PagerSuffix" length="255" />
+    </property>
+    <property name="MaxItems" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="MaxItems" />
+    </property>
+    <property name="DisplayPager" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="DisplayPager" />
+    </property>
+    <many-to-one class="Orchard.Projections.Models.QueryPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" fetch="join" name="QueryPartRecord">
+      <column name="QueryPartRecord_id" />
+    </many-to-one>
+    <many-to-one class="Orchard.Projections.Models.LayoutRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" fetch="join" name="LayoutRecord">
+      <column name="LayoutRecord_id" />
+    </many-to-one>
+    <one-to-one class="Orchard.ContentManagement.Records.ContentItemRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" constrained="true" name="ContentItemRecord" />
+  </class>
+</hibernate-mapping>
