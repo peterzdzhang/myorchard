@@ -1,0 +1,169 @@
+﻿@model Faurecia.ADL.ViewModels.ADLCreateViewModel
+@{
+    Script.Require("jQueryUI");
+    Script.Require("Microsoft_jQueryAjax_Validate");
+    Style.Require("jQueryUI");
+    Style.Require("FaureciaADLStyle");
+}
+<h1 style="margin:5px 10px 10px 10px">
+    @ViewBag.Title
+</h1>
+@using (Ajax.BeginForm("Save", "Default", new AjaxOptions { HttpMethod = "Post"
+                                , OnBegin="beginSave"
+                                , OnComplete="completeSave" }))
+{
+    @Html.AntiForgeryToken()
+    string returnUrl = Request["ReturnUrl"];
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-lg-6 col-sm-8">
+                @if (Model.Action != Faurecia.ADL.ViewModels.EnumActions.View)
+                {
+                    <button class="btn btn-info" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                    <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
+                    <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                }
+                &nbsp;
+                </div>
+                <div class="col-lg-6 col-sm-4 text-right">
+                    @if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        @Html.Link(T("Back").Text, returnUrl,new { @class = "btn btn-default" });
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            @Html.HiddenFor(m => m.Action)
+            <div class="alert fade in hide" resource="alert" id="statusMessage">
+                <button type="button" class="close" onclick="hideStatusMessage()">
+                    <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+                </button>
+                <p></p>
+            </div>
+            <div id="head">
+                @Html.Partial("_Head",Model)
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-3 col-lg-3">
+                        @Html.DropDownListFor(m => m.Head.Quotation, Model.Quotations, new { @class = "form-control", placeholder = "" })
+                        @Html.ValidationMessageFor(m => m.Head.Quotation)
+                    </div>
+                    <div class="col-sm-3 col-lg-3">
+                    </div>
+                    <label class = "col-sm-2 col-lg-2 control-label" style = "text-align:left">
+                        @T("Creator").Text
+                    </label>
+                    <div class="col-sm-2 col-lg-2">
+                        <label class="control-label text-success" style="text-align:left">
+                            @WorkContext.CurrentUser.UserName
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+
+            if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.View") {
+                $("input").attr("readonly", "readonly");
+                $("select").attr("disabled", "disabled");
+                $("textarea").attr("readonly", "readonly");
+            }
+            else
+            {
+                if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.Modify") {
+                    $("#@Html.IdFor(m => m.Head.Customer)").attr("readonly", "readonly");
+                }
+
+                $(".datepicker").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    autoSize: true,
+                    dateFormat: "yy/mm/dd"
+                });
+                $("#@Html.IdFor(m => m.Action)").val("@Model.Action");
+                $("#@Html.IdFor(m => m.Head.Customer)").change(function () {
+                    var customer = $(this).val().toUpperCase();
+                    $(this).val(customer);
+                    $("#@Html.IdFor(m => m.Head.ProjectNo)").val("");
+                    $("#projectNoVersionNo").val("");
+                    changeCustomer(customer);
+                });
+            }
+        })
+        //隐藏状态消息
+        function hideStatusMessage() {
+            $("#statusMessage").addClass("hide");
+        }
+        function showErrorInfo(result) {
+            $("#statusMessage").find("p").html("");
+            var message = result.Message;
+            if (!!result.Detail) {
+                message = message + "(" + result.Detail + ")"
+            }
+            $("#statusMessage").find("p").html(message);
+            $("#statusMessage").removeClass("hide");
+            if (result.Code > 0) {
+                $("#statusMessage").removeClass("alert-success");
+                $("#statusMessage").addClass("alert-danger");
+            }
+            else {
+                $("#statusMessage").removeClass("alert-danger");
+                $("#statusMessage").addClass("alert-success");
+            }
+        }
+
+        function beginSave(obj, req) {
+            hideStatusMessage();
+        }
+
+        function completeSave(req) {
+            var result = $.parseJSON(req.responseJSON);
+            if (result.Action == "@Convert.ToInt32(Faurecia.ADL.ViewModels.EnumActions.Modify)") {
+                $("#@Html.IdFor(m => m.Head.Customer)").attr("readonly", "readonly");
+            }
+            $("#@Html.IdFor(m => m.Head.Id)").val(result.Head.Id);
+            $("#@Html.IdFor(m => m.Action)").val(result.Action);
+            $("#@Html.IdFor(m => m.Head.ProjectNo)").val(result.Head.ProjectNo);
+            $("#@Html.IdFor(m => m.Head.VersionNo)").val(result.Head.VersionNo);
+            $("#projectNoVersionNo").val(result.Head.ProjectNo + "." + result.Head.VersionNo);
+
+            var oldPhase=$("#@Html.IdFor(m => m.Head.Phase)").val();
+            $("#@Html.IdFor(m => m.Head.Phase)").val(result.Head.Phase);
+            $("#@Html.IdFor(m => m.Head.Status)").val(result.Head.Status);
+            $("#PhaseStatus").html(result.Head.Phase + "-" + result.Head.Status);
+
+            var returnUrl = "@Request["ReturnUrl"]";
+            if (result.Head.Phase != oldPhase)
+            {
+                location.href = returnUrl;
+            }
+
+            showErrorInfo(result);
+        }
+
+        function changeCustomer(customer) {
+            if (customer.length < 3) { return; }
+            var url = "@Url.Action("GetProjectNo",new { area = "Faurecia.ADL" })";
+            var timestamp = Math.round(new Date().getTime() / 1000);
+            var reqdata = { customer: customer, key: timestamp };
+
+            $.get(url, reqdata, function (data) {
+                $("#@Html.IdFor(m => m.Head.ProjectNo)").val(data);
+                var versionNo = $("#@Html.IdFor(m => m.Head.VersionNo)").val();
+                var projectNoVersionNo=data+"."+versionNo;
+                $("#projectNoVersionNo").val(projectNoVersionNo);
+            });
+        }
+    </script>
+}

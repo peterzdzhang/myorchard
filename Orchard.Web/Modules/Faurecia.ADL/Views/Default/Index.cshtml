@@ -25,7 +25,7 @@
                     <button class="btn btn-success" type="submit" name="submit.Diff" value="@T("Diff")">@T("Diff")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
-                    @Html.ActionLink(T("Create New").Text, "Index","Create", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink(T("Create New").Text, "Create","Default", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
                 </div>
             </div>
         </div>
@@ -118,19 +118,19 @@
                             @if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
                             {
                                 string url = Url.Action("Index", "Create", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id });
-                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Index", "Create"
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Create", "Default"
                                                     , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl , Id = entry.Id }
                                                     , new { })
                             }
                             else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.Quotation)
                             {
-                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Index", "Quotation"
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Quotation", "Default"
                                , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
                                , new { })
                             }
                             else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
                             {
-                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "Index", "IBP"
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "IBP", "Default"
                                , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
                                , new { })
                             }
@@ -151,13 +151,13 @@
                             @entry.ADLRecord.Type
                         </td>
                         <td>
-                            @(entry.ADLRecord.StartDate == null ? "" : string.Format("yyyy-MM-dd", entry.ADLRecord.StartDate))
+                            @(entry.ADLRecord.StartDate == null ? "" : string.Format("{0:yyyy/MM/dd}", entry.ADLRecord.StartDate.Value))
                         </td>
                         <td>
-                            @(entry.ADLRecord.OfferDate == null ? "" : string.Format("yyyy-MM-dd", entry.ADLRecord.OfferDate))
+                            @(entry.ADLRecord.OfferDate == null ? "" : string.Format("{0:yyyy/MM/dd}", entry.ADLRecord.OfferDate.Value))
                         </td>
                         <td>
-                            @(entry.ADLRecord.SOPDate == null ? "" : string.Format("yyyy-MM-dd", entry.ADLRecord.SOPDate))
+                            @(entry.ADLRecord.SOPDate == null ? "" : string.Format("{0:yyyy/MM/dd}", entry.ADLRecord.SOPDate.Value))
                         </td>
                         <td>
                             @{

@@ -1,0 +1,237 @@
+﻿@model Faurecia.ADL.ViewModels.ADLViewModel
+
+@{ 
+    var projectNoVersionNo = string.Empty;
+    if (!string.IsNullOrWhiteSpace(Model.Head.ProjectNo))
+    {
+        projectNoVersionNo = string.Format("{0}.{1}", Model.Head.ProjectNo, Model.Head.VersionNo);
+    }
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        <input type="hidden" id="@Html.IdFor(m=>m.Head.Id)" name="@Html.NameOf(m => m.Head.Id)" value="@Model.Head.Id"/>
+        @Html.LabelFor(m => m.Head.Customer, T("Customer").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.Customer, new { autofocus = "autofocus", @class = "form-control", @style = "text-transform:uppercase", @maxlength = 3, placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.Customer)
+        </div>
+        @Html.LabelFor(m => m.Head.ProjectNo, T("Project No").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBox("projectNoVersionNo", projectNoVersionNo, new { @readonly = "readonly", @class = "form-control", @disabled = "disabled" })
+            @Html.ValidationMessageFor(m => m.Head.ProjectNo)
+            @Html.HiddenFor(m => m.Head.ProjectNo)
+            @Html.HiddenFor(m => m.Head.VersionNo)
+        </div>
+        @Html.LabelFor(m => m.Head.Currency, T("Currency").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.Currency, new { @class = "form-control", @maxlength = 3, placeholder = "", @style = "text-transform:uppercase" })
+            @Html.ValidationMessageFor(m => m.Head.Currency)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.Name, T("Name").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-10 col-lg-10">
+            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.Name)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.ProgramManager, T("Manager").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.ProgramManager, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.ProgramManager)
+        </div>
+        @Html.LabelFor(m => m.Head.ProgramController, T("Controller").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.ProgramController, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.ProgramController)
+        </div>
+        @Html.Label("Status", T("Status").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <label class="control-label text-warning" style="text-align:left" id="PhaseStatus">
+                @string.Format("{0}-{1}", Model.Head.Phase, Model.Head.Status)
+            </label>
+
+            @Html.HiddenFor(m => m.Head.Phase)
+            @Html.HiddenFor(m => m.Head.Status)
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center">
+    @T("Request info / milestone")
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.Type, T("Type").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.Type)" name="@Html.NameOf(m => m.Head.Type)">
+                @Html.SelectOption(Model.Head.Type, "Adavance phase", T("Adavance phase").ToString())
+                @Html.SelectOption(Model.Head.Type, "RFI", T("RFI").ToString())
+                @Html.SelectOption(Model.Head.Type, "RFQ", T("RFQ").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.Type)
+        </div>
+        @Html.LabelFor(m => m.Head.StartDate, T("Start Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2">
+            @Html.TextBoxFor(m => m.Head.StartDate,"{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.StartDate)
+        </div>
+        @Html.LabelFor(m => m.Head.Mockup, T("Mock up").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.Mockup, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.Mockup)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.OfferDate, T("Offer Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.OfferDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.OfferDate)
+        </div>
+        @Html.LabelFor(m => m.Head.ProtoDate, T("Proto Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.ProtoDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.ProtoDate)
+        </div>
+        @Html.LabelFor(m => m.Head.Award, T("Award").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.Award, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.Award)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.SOPDate, T("SOP Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.SOPDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.SOPDate)
+        </div>
+        @Html.LabelFor(m => m.Head.PTRDate, T("PTR Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.PTRDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.PTRDate)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.MileStoneComments, T("Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-10 col-lg-10">
+            @Html.TextAreaFor(m => m.Head.MileStoneComments, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.MileStoneComments)
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center">
+    @T("Vehicle / frame information")
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.Variant1, T("Variant").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.Variant1)" name="@Html.NameOf(m => m.Head.Variant1)">
+                @Html.SelectOption(Model.Head.Variant1, "1st Row", T("1st Row").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "2W", T("2W").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "Man", T("Man").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "5D", T("5D").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.Variant1)
+        </div>
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.Variant2)" name="@Html.NameOf(m => m.Head.Variant2)">
+                @Html.SelectOption(Model.Head.Variant2, "2nd Row", T("2nd Row").ToString())
+                @Html.SelectOption(Model.Head.Variant2, "4W", T("4W").ToString())
+                @Html.SelectOption(Model.Head.Variant2, "Pow", T("Pow").ToString())
+                @Html.SelectOption(Model.Head.Variant2, "3D", T("3D").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.Variant2)
+        </div>
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.Variant3)" name="@Html.NameOf(m => m.Head.Variant3)">
+                @Html.SelectOption(Model.Head.Variant3, "3rd Row", T("3rd Row").ToString())
+                @Html.SelectOption(Model.Head.Variant3, "6W & More", T("6W & More").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.Variant3)
+        </div>
+
+        @Html.LabelFor(m => m.Head.FrameMaturity, T("Frame maturity").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.FrameMaturity)" name="@Html.NameOf(m => m.Head.FrameMaturity)">
+                @Html.SelectOption(Model.Head.FrameMaturity, "New", T("New").ToString())
+                @Html.SelectOption(Model.Head.FrameMaturity, "Carry over", T("Carry over").ToString())
+                @Html.SelectOption(Model.Head.FrameMaturity, "Unknown", T("Unknown").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.FrameMaturity)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.VehicelComments, T("Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-10 col-lg-10">
+            @Html.TextAreaFor(m => m.Head.VehicelComments, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.VehicelComments)
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center">
+    @T("Products offer")
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.Tracks, T("Tracks").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.Tracks)" name="@Html.NameOf(m => m.Head.Tracks)">
+                @Html.SelectOption(Model.Head.Tracks, "MT30", T("MT30").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "MT36", T("MT36").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "Ultima", T("Ultima").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "4CB", T("4CB").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "4CB II", T("4CB II").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "449", T("449").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "POW", T("POW").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "IL", T("IL").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "SL", T("SL").ToString())
+                @Html.SelectOption(Model.Head.Tracks, "Memo", T("Memo").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.Tracks)
+        </div>
+        @Html.LabelFor(m => m.Head.Recliner, T("Recliner").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.Recliner)" name="@Html.NameOf(m => m.Head.Recliner)">
+                @Html.SelectOption(Model.Head.Recliner, "RD70", T("RD70").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "RD77", T("RD77").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "S3U/D83", T("S3U/D83").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "D93", T("D93").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "RC70 Pow", T("RC70 Pow").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "RC70 Man", T("RC70 Man").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "RC70 IB", T("RC70 IB").ToString())
+                @Html.SelectOption(Model.Head.Recliner, "Other", T("Other").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.Recliner)
+        </div>
+        @Html.LabelFor(m => m.Head.HA, T("HA").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.HA)" name="@Html.NameOf(m => m.Head.HA)">
+                @Html.SelectOption(Model.Head.HA, "Nano 2.0", T("Nano 2.0").ToString())
+                @Html.SelectOption(Model.Head.HA, "Nan 1.0", T("Nan 1.0").ToString())
+                @Html.SelectOption(Model.Head.HA, "G3", T("G3").ToString())
+                @Html.SelectOption(Model.Head.HA, "G2", T("G2").ToString())
+                @Html.SelectOption(Model.Head.HA, "Epump 1.0", T("Epump 1.0").ToString())
+                @Html.SelectOption(Model.Head.HA, "Epump 2.0", T("Epump 2.0").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.HA)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Head.Ballfix, T("Ballfix").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.Ballfix, new { @class = "form-control", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.Ballfix)
+        </div>
+        @Html.LabelFor(m => m.Head.KEZE, T("Recliner").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-lg-2">
+            <select id="@Html.IdFor(m=>m.Head.KEZE)" name="@Html.NameOf(m => m.Head.KEZE)">
+                @Html.SelectOption(Model.Head.KEZE, "RD77", T("RD77").ToString())
+                @Html.SelectOption(Model.Head.KEZE, "RD70", T("RD70").ToString())
+                @Html.SelectOption(Model.Head.KEZE, "RC70 Pow", T("RC70 Pow").ToString())
+                @Html.SelectOption(Model.Head.KEZE, "RC70 Man", T("RC70 Man").ToString())
+            </select>
+            @Html.ValidationMessageFor(m => m.Head.KEZE)
+        </div>
+    </div>
+</div>
