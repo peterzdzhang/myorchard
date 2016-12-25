@@ -144,7 +144,7 @@
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
     <Content Include="Module.txt" />
-    <Content Include="Views\Quotation\Index.cshtml" />
+    <Content Include="Views\Default\Quotation.cshtml" />
     <Content Include="Views\Default\_Head.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handler\" />
-    <Folder Include="Views\Create\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -1,5 +1,5 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Maps.Models.MapRecord, App_Web_ax3e0jmy, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Maps_MapRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Maps.Models.MapRecord, App_Web_ehdksrwc, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Maps_MapRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />

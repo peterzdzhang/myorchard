@@ -299,7 +299,6 @@ namespace Faurecia.ADL.Controllers
             };
         }
 
-
         [HttpPost, ActionName("Index")]
         [Orchard.Mvc.FormValueRequired("submit.Confirm")]
         public ActionResult ConfirmPost()

@@ -149,12 +149,153 @@ namespace Faurecia.ADL.Controllers
             return View(viewModel);
         }
 
+
+        public ActionResult Quotation(int Id=0)
+        {
+            ViewBag.Title = T("ADL Quotation").Text;
+            var viewModel = new ADLQuotationViewModel()
+            {
+                Action = EnumActions.New,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
+            SetIBPs(viewModel);
+            //SetActivityTypes(viewModel);
+            var record = _adlRecords.Get(Id);
+            if (record != null)
+            {
+                if (record.IsLastest)
+                {
+                    viewModel.Action = EnumActions.Modify;
+                }
+                else
+                {
+                    viewModel.Action = EnumActions.View;
+                    ViewBag.Title = T("ADL View").Text;
+                }
+                SetHeadViewModel(viewModel, record);
+
+                SetYears(viewModel);
+                SetActivityTypes(viewModel);
+                SetDetailViewModel(viewModel, record);
+            }
+            return View(viewModel);
+        }
         private void SetQuotations(ADLCreateViewModel viewModel)
         {
             viewModel.Quotations = new List<SelectListItem>()
             {
                 new SelectListItem() { Text=T("Any Quotation Person").Text,Value="" }
             };
+        }
+
+        private void SetIBPs(ADLQuotationViewModel viewModel)
+        {
+            viewModel.IBPs = new List<SelectListItem>()
+            {
+                new SelectListItem() { Text=T("Any IBP Person").Text,Value="" }
+            };
+        }
+
+        private void SetYears(ADLViewModel viewModel)
+        {
+            int startYear = DateTime.Now.Date.Year;
+            int endYear = DateTime.Now.Date.Year;
+
+            if (viewModel.Head.StartDate != null)
+            {
+                if (viewModel.Head.StartDate.Value.Year < startYear)
+                {
+                    startYear = viewModel.Head.StartDate.Value.Year;
+                }
+                if (viewModel.Head.StartDate.Value.Year > endYear)
+                {
+                    endYear = viewModel.Head.StartDate.Value.Year;
+                }
+            }
+            if (viewModel.Head.SOPDate != null)
+            {
+                if (viewModel.Head.SOPDate.Value.Year < startYear)
+                {
+                    startYear = viewModel.Head.SOPDate.Value.Year;
+                }
+                if (viewModel.Head.SOPDate.Value.Year > endYear)
+                {
+                    endYear = viewModel.Head.SOPDate.Value.Year;
+                }
+            }
+            if (viewModel.Head.PTRDate != null)
+            {
+                if (viewModel.Head.PTRDate.Value.Year < startYear)
+                {
+                    startYear = viewModel.Head.PTRDate.Value.Year;
+                }
+                if (viewModel.Head.PTRDate.Value.Year > endYear)
+                {
+                    endYear = viewModel.Head.PTRDate.Value.Year;
+                }
+            }
+            if (viewModel.Head.ProtoDate != null)
+            {
+                if (viewModel.Head.ProtoDate.Value.Year < startYear)
+                {
+                    startYear = viewModel.Head.ProtoDate.Value.Year;
+                }
+                if (viewModel.Head.ProtoDate.Value.Year > endYear)
+                {
+                    endYear = viewModel.Head.ProtoDate.Value.Year;
+                }
+            }
+            if (viewModel.Head.OfferDate != null)
+            {
+                if (viewModel.Head.OfferDate.Value.Year < startYear)
+                {
+                    startYear = viewModel.Head.OfferDate.Value.Year;
+                }
+                if (viewModel.Head.OfferDate.Value.Year > endYear)
+                {
+                    endYear = viewModel.Head.OfferDate.Value.Year;
+                }
+            }
+            for (int year = startYear; year <= endYear; year++)
+            {
+                viewModel.Years.Add(year);
+                ADLDetailEntry entry = new ADLDetailEntry();
+                entry.Year = year;
+                viewModel.Detail.Entries.Add(entry);
+            }
+        }
+
+        private void SetActivityTypes(ADLQuotationViewModel viewModel)
+        {
+            viewModel.ActivityTypes = new List<ActivityTypeEntry>();
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "Material", CostCenter = "SH13R001", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Leader engineer", RMBHour = "Product Design Mech", CostCenter = "SH13R001", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "Product Design Mech", CostCenter = "", ActivityType = "HDEVB" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Leader engineer", RMBHour = "ENG_SPG_Design_Mechanism", CostCenter = "Wuxi 1772R002", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_Design_Mechanism", CostCenter = "Wuxi 1772R002", ActivityType = "HDEVB" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_TESTING_Mechanism  Pilot", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_TESTING_Mechanism", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Machine", RMBHour = "ENG_SPG_TESTING_Mechanism", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVC" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_PROTOTYPE_Mechanism", CostCenter = "Wuxi 1772R007", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Machine", RMBHour = "ENG_SPG_PROTOTYPE_Mechanism", CostCenter = "Wuxi 1772R007", ActivityType = "HDEVC" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_FEA_Mechanism", CostCenter = "Wuxi 1772R008", ActivityType = "HDEVB" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "EU Support Eng hours", RMBHour = "EU rate", CostCenter = "No", ActivityType = "No" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "PML Mecha", CostCenter = "Wuxi 1772R003", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Press", CostCenter = "Wuxi 1772R004", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Pre-assy", CostCenter = "Wuxi 1772R005", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Laser welding", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Assy line", CostCenter = "Wuxi 1772R007", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Post assy (HDM)", CostCenter = "Wuxi 1772R008", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "PC&L", CostCenter = "SH11A001", ActivityType = "HDEVB" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Cost Engineering", CostCenter = "SH11F001", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Program Controller", CostCenter = "SH11F001", ActivityType = "HDEVB" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "ASQ Engineer", CostCenter = "SH11P001", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Buyer", CostCenter = "SH11P001", ActivityType = "HDEVB" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Quality Engineer", CostCenter = "SH11Q001", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Program Manager-Mech", CostCenter = "SH11R003", ActivityType = "HDEVA" });
+            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Acquisition Manager-Mech", CostCenter = "SH11S002", ActivityType = "HDEVA" });
         }
 
         private void SetHeadViewModel(ADLViewModel viewModel,ADLRecord adl)
@@ -190,6 +331,25 @@ namespace Faurecia.ADL.Controllers
             viewModel.Head.VehicelComments = adl.VehicelComments;
             viewModel.Head.VersionNo = adl.VersionNo;
         }
+
+        private void SetDetailViewModel(ADLViewModel viewModel,ADLRecord adl)
+        {
+            foreach (int year in viewModel.Years)
+            {
+                ADLDetailEntry entry = viewModel.Detail.Entries.SingleOrDefault(w => w.Year == year);
+                if(entry==null) { continue; }
+                //HeadCounts
+
+                //HourRatios
+                //Costs
+                //WorkingHours
+                entry.WorkingHours.Add(new WorkingHourEntry()
+                {
+                    Year = year
+                });
+            }
+        }
+
 
         [HttpPost, ActionName("Save")]
         [Orchard.Mvc.FormValueRequired("submit.Save")]

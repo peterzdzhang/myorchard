@@ -10,9 +10,15 @@ namespace Faurecia.ADL.ViewModels
 {
     public class ADLViewModel
     {
+        public ADLViewModel()
+        {
+            Head = new ADLHeadViewModel();
+            Detail = new ADLDetailViewModel();
+        }
         public EnumActions Action { get; set; }
         public string Message { get; set; }
         public int Code { get; set; }
+        public IList<int> Years { get; set; }
         public ADLHeadViewModel Head { get; set; }
         public ADLDetailViewModel Detail { get; set; }
     }

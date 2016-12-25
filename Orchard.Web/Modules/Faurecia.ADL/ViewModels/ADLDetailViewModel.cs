@@ -7,11 +7,33 @@ namespace Faurecia.ADL.ViewModels
 {
     public class ADLDetailViewModel
     {
+        
+        public ADLDetailViewModel()
+        {
+            Entries = new List<ADLDetailEntry>();
+        }
+
+        public IList<ADLDetailEntry> Entries { get; set; }
+    }
+
+    public class ADLDetailEntry
+    {
+        public ADLDetailEntry()
+        {
+            HeadCounts = new List<HeadCountEntry>();
+            HourRatios = new List<HourRatioEntry>();
+            Costs = new List<CostEntry>();
+            WorkingHours = new List<WorkingHourEntry>();
+        }
+
+        public int Year { get; set; }
+        
         public IList<HeadCountEntry> HeadCounts { get; set; }
         public IList<HourRatioEntry> HourRatios { get; set; }
         public IList<CostEntry> Costs { get; set; }
         public IList<WorkingHourEntry> WorkingHours { get; set; }
     }
+
 
     public class ActivityTypeEntry
     {
