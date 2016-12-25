@@ -32,8 +32,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>Faurecia.BM</ModuleName>
-    <VirtualPath>~/Themes/Faurecia.BM/Faurecia.BM.csproj</VirtualPath>
-    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Themes/Faurecia.BM/bin/Faurecia.BM.dll</VirtualPath>
+    <LoaderName>PrecompiledExtensionLoader</LoaderName>
     <References />
   </Dependency>
   <Dependency>
@@ -61,8 +61,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>Maps</ModuleName>
-    <VirtualPath>~/Modules/Maps/Maps.csproj</VirtualPath>
-    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Modules/Maps/bin/Maps.dll</VirtualPath>
+    <LoaderName>PrecompiledExtensionLoader</LoaderName>
     <References />
   </Dependency>
   <Dependency>
@@ -1858,8 +1858,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>PJS.Bootstrap</ModuleName>
-    <VirtualPath>~/Themes/PJS.Bootstrap/PJS.Bootstrap.csproj</VirtualPath>
-    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Themes/PJS.Bootstrap/bin/PJS.Bootstrap.dll</VirtualPath>
+    <LoaderName>PrecompiledExtensionLoader</LoaderName>
     <References>
       <Reference>
         <Name>JetBrains.Annotations</Name>

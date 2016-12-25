@@ -1,22 +1,10 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLCostRecord, App_Web_fv3qfcgx, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLCostRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLCostRecord, App_Web_qbgcpjol, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLCostRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />
       <generator class="identity" />
     </id>
-    <property name="Comment" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="Comment" />
-    </property>
-    <property name="RMBHour" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="RMBHour" />
-    </property>
-    <property name="CostCenter" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="CostCenter" />
-    </property>
-    <property name="ActivityType" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="ActivityType" />
-    </property>
     <property name="Year" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Year" />
     </property>
@@ -56,7 +44,10 @@
     <property name="Dev" type="System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Dev" />
     </property>
-    <many-to-one class="Faurecia.ADL.Models.ADLRecord, App_Web_fv3qfcgx, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ADLRecord">
+    <many-to-one class="Faurecia.ADL.Models.ActivityTypeRecord, App_Web_qbgcpjol, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ActivityTypeRecord">
+      <column name="ActivityTypeRecord_id" />
+    </many-to-one>
+    <many-to-one class="Faurecia.ADL.Models.ADLRecord, App_Web_qbgcpjol, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ADLRecord">
       <column name="ADLRecord_id" />
     </many-to-one>
   </class>
