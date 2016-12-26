@@ -105,11 +105,14 @@
     <Compile Include="Models\ADLHourRatioRecord.cs" />
     <Compile Include="Models\ADLHeadCountRecord.cs" />
     <Compile Include="Models\ADLRecord.cs" />
+    <Compile Include="Models\ActivityTypeRecord.cs" />
+    <Compile Include="Models\WorkingHourRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="ViewModels\ADLHeadViewModel.cs" />
     <Compile Include="ViewModels\ADLDetailViewModel.cs" />
+    <Compile Include="ViewModels\ShowActivityTypeViewModel.cs" />
     <Compile Include="ViewModels\ADLQuotationViewModel.cs" />
     <Compile Include="ViewModels\ADLCreateViewModel.cs" />
     <Compile Include="ViewModels\ADLIndexViewModel.cs" />
@@ -146,6 +149,8 @@
     <Content Include="Module.txt" />
     <Content Include="Views\Default\Quotation.cshtml" />
     <Content Include="Views\Default\_Head.cshtml" />
+    <Content Include="Views\Default\_ActivityTypeList.cshtml" />
+    <Content Include="Views\Default\_ActivityTypeQueryResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -219,13 +224,13 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>45979</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/Faurecia.ADL</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
+          <UseCustomServer>True</UseCustomServer>
           <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>

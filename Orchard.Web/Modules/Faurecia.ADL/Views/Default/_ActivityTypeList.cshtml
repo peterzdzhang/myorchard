@@ -1,0 +1,32 @@
+﻿@model Faurecia.ADL.ViewModels.ShowActivityTypeViewModel
+@using Faurecia.ADL.ViewModels;
+@using (Ajax.BeginForm("QueryActivityTypeResult", "Default", new AjaxOptions { HttpMethod = "Post"
+                                , UpdateTargetId="activityTypeQueryResults"  }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-inline form-group alert alert-info">
+        @Html.HiddenFor(m => m.ADLRecordId)
+        <select id="@Html.IdFor(m=>m.Options.Column)" name="@Html.NameOf(m => m.Options.Column)" class="form-control">
+            @Html.SelectOption(Model.Options.Column, ActivityTypeColumnType.Id, T("Id").ToString())
+            @Html.SelectOption(Model.Options.Column, ActivityTypeColumnType.ActivityType, T("Activity Type").ToString())
+            @Html.SelectOption(Model.Options.Column, ActivityTypeColumnType.CostCenter, T("Cost Center").ToString())
+            @Html.SelectOption(Model.Options.Column, ActivityTypeColumnType.RMBHour, T("RMB/Hour").ToString())
+            @Html.SelectOption(Model.Options.Column, ActivityTypeColumnType.Comment, T("Comment").ToString())
+        </select>
+
+        @Html.TextBoxFor(m => m.Options.SearchText, new { @class = "form-control", placeholder = "Search Text" })
+
+        @Html.LabelFor(m => m.Options.Order, T("Order By").ToString(), new { @class = "control-label", @style = "text-align:left" })
+        <select id="@Html.IdFor(m=>m.Options.Order)" name="@Html.NameOf(m => m.Options.Order)" class="form-control">
+            @Html.SelectOption(Model.Options.Order, ActivityTypeColumnType.Id, T("Id").ToString())
+            @Html.SelectOption(Model.Options.Order, ActivityTypeColumnType.ActivityType, T("Activity Type").ToString())
+            @Html.SelectOption(Model.Options.Order, ActivityTypeColumnType.CostCenter, T("Cost Center").ToString())
+            @Html.SelectOption(Model.Options.Order, ActivityTypeColumnType.RMBHour, T("RMB/Hour").ToString())
+            @Html.SelectOption(Model.Options.Order, ActivityTypeColumnType.Comment, T("Comment").ToString())
+        </select>
+        <button class="btn btn-info" type="submit" name="submit.Query" value="@T("Query")">@T("Query")</button>
+    </div>
+    <div id="activityTypeQueryResults">
+        @Html.Partial("_ActivityTypeQueryResults",Model)
+    </div>
+}

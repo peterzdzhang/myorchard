@@ -17,14 +17,10 @@
         @T("HEAD COUNT")
     </div>
     <div style="overflow-y:inherit;font-size:12px">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed" id="detailHeadCount_@entryIndex">
             <thead>
                 <tr class="active">
-                    <th>@Ajax.ActionLink("+", "AddRow", "Default"
-                                    , new AjaxOptions()
-                                    {
-                                        HttpMethod = "Post"
-                                    }, new { @class = "btn btn-default", @style = "padding:1px 6px" })</th>
+                    <th></th>
                     <th>@T("Comment")</th>
                     <th>@T("RMB/Hour")</th>
                     <th>@T("Cost Center")</th>
@@ -45,16 +41,25 @@
                 </tr>
             </thead>
             <tr class="success">
-                <td style="padding:1px;">
-                    &nbsp;
+                <td style="">
+                    @Ajax.ActionLink("+", actionName: null
+                                        , routeValues: null
+                                        , ajaxOptions: new AjaxOptions()
+                                        {
+                                            HttpMethod = "GET",
+                                            UpdateTargetId = "activityTypeContent",
+                                            OnSuccess = "showActivityTypeModal",
+                                            Url = Url.Action("ShowActivityTypeList", "Default",new { Area = "Faurecia.ADL", ADLRecordId = Model.Head.Id})
+                                        }
+                                        , htmlAttributes: new { @class= "btn btn-primary btn-sm" })
                 </td>
-                <td style="padding:1px;"></td>
-                <td style="padding:1px;"></td>
-                <td style="padding:1px;"></td>
-                <td style="padding:1px;"></td>
+                <td style=""></td>
+                <td style=""></td>
+                <td style=""></td>
+                <td style=""></td>
                 @for (int k = 1; k <= 12; k++)
                 {
-                    <td style="padding:1px;">
+                    <td style="">
                     @if (Model.Head.StartDate != null && Model.Head.StartDate.Value.Year == currentYear && Model.Head.StartDate.Value.Month == k)
                     {
                         <div class="label label-success" style="display:block;line-height:2;padding:0px;cursor:pointer;"  title="@T("Start Date")">
@@ -87,74 +92,111 @@
                     }
                     </td>
                 }
-                <td style="padding:1px;"></td>
+                <td style=""></td>
             </tr>
             @foreach (var item in Model.Detail.Entries[entryIndex].HeadCounts)
             {
-                <tr>
-                    <td style="padding:1px;">
-                        @Ajax.ActionLink("-", "AddRow", "Default"
-                                    , new AjaxOptions()
-                                    {
-                                        HttpMethod = "Post"
-                                    }, new { @class = "btn btn-default", @style = "padding:1px 6px" })
+                <tr class="data">
+                    <td style="">
+                        @Ajax.ActionLink("-", actionName: null
+                                        , routeValues: null
+                                        , ajaxOptions: new AjaxOptions()
+                                        {
+                                            HttpMethod = "GET",
+                                            OnSuccess="CompleteDeleteDetailRecord",
+                                            Url = Url.Action("DeleteDetailRecord", "Default"
+                                                    , new { Area = "Faurecia.ADL"
+                                                            , ActivityTypeId = item.ActivityType.Id
+                                                            , Year=currentYear
+                                                            , ADLRecordId=Model.Head.Id
+                                                            , EntryIndex=entryIndex})
+                                        }
+                                        , htmlAttributes: new { @class = "btn btn-warning btn-sm" })
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Id)" />
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].Year)
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.Id)
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.Comment)
                         @Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.Comment
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jan" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jan" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jan)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Feb" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Feb)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Feb" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Feb)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Mar" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Mar)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Mar" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Mar)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Apr" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Apr)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Apr" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Apr)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].May" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].May)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].May" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].May)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jun" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jun)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jun" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jun)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jul" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jul" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jul)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Aug" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Aug)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Aug" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Aug)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Sep" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Sep)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Sep" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Sep)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Oct" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Oct)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Oct" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Oct)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Nov" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Nov)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Nov" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Nov)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Dev" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Dev)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Dev" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Dev)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Y1" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Y1)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Y1" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Y1)" />
                     </td>
                 </tr>
                 index++;
@@ -167,7 +209,7 @@
         @T("Hour Ratio bases")
     </div>
     <div style="overflow-y:inherit;font-size:12px">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" id="detailHourRatio_@entryIndex">
             <thead>
                 <tr class="active">
                     <th>@T("Comment")</th>
@@ -191,63 +233,91 @@
             </thead>
             @foreach (var item in Model.Detail.Entries[entryIndex].HourRatios)
             {
-                <tr>
-                    <td style="padding:1px;">
+                <tr  class="data">
+                    <td style="">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Id)" />
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].Year)
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Id)
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Comment)
                         @Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Comment
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jan" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jan"
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jan)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Feb" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Feb)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Feb" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Feb)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Mar" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Mar)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Mar" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Mar)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Apr" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Apr)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Apr" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Apr)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].May" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].May)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].May" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].May)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jun" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jun)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jun" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jun)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jul" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jul" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jul)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Aug" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Aug)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Aug" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Aug)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Sep" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Sep)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Sep" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Sep)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Oct" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Oct)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Oct" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Oct)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Nov" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Nov)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Nov" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Nov)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Dev" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Dev)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Dev" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Dev)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Y1" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Y1)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Y1" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Y1)" />
                     </td>
                 </tr>
                 index++;
@@ -283,46 +353,73 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].WorkingHours)
             {
                 <tr>
-                    <td style="padding:1px;">
+                    <td style="">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Id)" />
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jan)" />
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].WorkingHours[index].Year)
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jan)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Feb)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Feb)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Mar)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Mar)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Apr)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Apr)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].May)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].May)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jun)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jun)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jul)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Aug)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Aug)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Sep)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Sep)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Oct)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Oct)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Nov)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Nov)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Dev)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Dev)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Y1" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Y1)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Y1" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Y1)" />
                     </td>
                 </tr>
                 index++;
@@ -335,7 +432,7 @@
         @T("COST")
     </div>
     <div style="overflow-y:inherit;font-size:12px">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" id="detailCost_@entryIndex">
             <thead>
                 <tr class="active">
                     <th>@T("Comment")</th>
@@ -359,62 +456,91 @@
             </thead>
             @foreach (var item in Model.Detail.Entries[entryIndex].Costs)
             {
-                <tr>
-                    <td style="padding:1px;">
-                        <input type="hidden" value="@Model.Detail.Entries[entryIndex].Costs[index].Id" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Id)" />
+                <tr  class="data">
+                    <td style="">
+                        <input type="hidden" value="@Model.Detail.Entries[entryIndex].Costs[index].Id" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Id)" />
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].Year)
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.Id)
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.Comment)
                         @Model.Detail.Entries[entryIndex].Costs[index].ActivityType.Comment
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                     </td>
-                    <td style="padding:1px;">
+                    <td style="">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Jan" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Jan" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jan)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Feb" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Feb)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Feb" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Feb)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Mar" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Mar)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Mar" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Mar)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Apr" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Apr)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Apr" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Apr)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].May" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].May)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].May" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].May)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Jun" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jun)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Jun" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jun)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Jul" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jan)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Jul" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jul)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Aug" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Aug)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Aug" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Aug)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Sep" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Sep)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Sep" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Sep)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Oct" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Oct)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Oct" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Oct)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Nov" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Nov)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Nov" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Nov)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Dev" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Dev)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Dev" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Dev)" />
                     </td>
-                    <td style="padding:1px;">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" value="@Model.Detail.Entries[entryIndex].Costs[index].Y1" name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Y1)" />
+                    <td style="">
+                        <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
+                               value="@Model.Detail.Entries[entryIndex].Costs[index].Y1" 
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Y1)" />
                     </td>
                 </tr>
                 index++;

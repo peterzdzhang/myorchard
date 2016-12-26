@@ -1,0 +1,26 @@
+﻿@model ShowActivityTypeViewModel
+@using Faurecia.ADL.ViewModels;
+<table class="table table-bordered">
+    <thead>
+        <tr class="active">
+            <th scope="col"></th>
+            <th scope="col">@T("Activity Type")</th>
+            <th scope="col">@T("Cost Center")</th>
+            <th scope="col">@T("RMB Hour")</th>
+            <th scope="col">@T("Comment")</th>
+        </tr>
+    </thead>
+    @foreach (var row in Model.ActivityTypes)
+    {
+        <tr>
+            <td><input type="checkbox" value="@row.Id" name="@("Checkbox." + row.Id)" style="cursor:pointer"/></td>
+            <td>@row.ActivityType</td>
+            <td>@row.CostCenter</td>
+            <td>@row.RMBHour</td>
+            <td>@row.Comment</td>
+        </tr>
+    }
+</table>
+<div style="margin:-30px 0">
+    @Display(Model.Pager)
+</div>

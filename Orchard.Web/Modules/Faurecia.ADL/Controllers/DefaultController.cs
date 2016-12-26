@@ -25,14 +25,35 @@ namespace Faurecia.ADL.Controllers
         private readonly IOrchardServices _orchardService;
         private readonly ISiteService _siteService;
         private readonly IRepository<ADLRecord> _adlRecords;
+        private readonly IRepository<ADLWorkingHourRecord> _adlWorkingHourRecords;
+        private readonly IRepository<ADLHeadCountRecord> _adlHeadCountRecords;
+        private readonly IRepository<ADLHourRatioRecord> _adlHourRatioRecords;
+        private readonly IRepository<ADLCostRecord> _adlCostRecords;
+        private readonly IRepository<ActivityTypeRecord> _activityTypeRecords;
+        private readonly IRepository<WorkingHourRecord> _workingHourRecords;
+
         public DefaultController(IOrchardServices orchardService,
             ISiteService siteService,
             IShapeFactory shapeFactory,
-            IRepository<ADLRecord> adlRecords)
+            IRepository<ADLRecord> adlRecords,
+            IRepository<ADLWorkingHourRecord> adlWorkingHourRecords,
+            IRepository<ADLHeadCountRecord> adlHeadCountRecords,
+            IRepository<ADLHourRatioRecord> adlHourRatioRecords,
+            IRepository<ADLCostRecord> adlCostRecords,
+            IRepository<ActivityTypeRecord> activityTypeRecords,
+            IRepository<WorkingHourRecord> workingHourRecords)
         {
             _siteService = siteService;
             _orchardService = orchardService;
             _adlRecords = adlRecords;
+            _adlWorkingHourRecords = adlWorkingHourRecords;
+            _adlHeadCountRecords = adlHeadCountRecords;
+            _adlHourRatioRecords = adlHourRatioRecords;
+            _adlCostRecords = adlCostRecords;
+            _adlRecords = adlRecords;
+            _activityTypeRecords = activityTypeRecords;
+            _workingHourRecords = workingHourRecords;
+
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             New = shapeFactory;
@@ -116,10 +137,7 @@ namespace Faurecia.ADL.Controllers
             };
             return View(model);
         }
-
-
         // GET: Create
-
         public ActionResult Create(int Id = 0)
         {
             ViewBag.Title = T("ADL Create New").Text;
@@ -148,8 +166,6 @@ namespace Faurecia.ADL.Controllers
             }
             return View(viewModel);
         }
-
-
         public ActionResult Quotation(int Id=0)
         {
             ViewBag.Title = T("ADL Quotation").Text;
@@ -177,7 +193,7 @@ namespace Faurecia.ADL.Controllers
                 SetHeadViewModel(viewModel, record);
 
                 SetYears(viewModel);
-                SetActivityTypes(viewModel);
+                viewModel.ActivityTypes = GetActivityTypes();
                 SetDetailViewModel(viewModel, record);
             }
             return View(viewModel);
@@ -189,7 +205,6 @@ namespace Faurecia.ADL.Controllers
                 new SelectListItem() { Text=T("Any Quotation Person").Text,Value="" }
             };
         }
-
         private void SetIBPs(ADLQuotationViewModel viewModel)
         {
             viewModel.IBPs = new List<SelectListItem>()
@@ -197,7 +212,6 @@ namespace Faurecia.ADL.Controllers
                 new SelectListItem() { Text=T("Any IBP Person").Text,Value="" }
             };
         }
-
         private void SetYears(ADLViewModel viewModel)
         {
             int startYear = DateTime.Now.Date.Year;
@@ -266,38 +280,26 @@ namespace Faurecia.ADL.Controllers
                 viewModel.Detail.Entries.Add(entry);
             }
         }
-
-        private void SetActivityTypes(ADLQuotationViewModel viewModel)
+        private IList<ActivityTypeEntry> GetActivityTypes()
         {
-            viewModel.ActivityTypes = new List<ActivityTypeEntry>();
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "Material", CostCenter = "SH13R001", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Leader engineer", RMBHour = "Product Design Mech", CostCenter = "SH13R001", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "Product Design Mech", CostCenter = "", ActivityType = "HDEVB" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Leader engineer", RMBHour = "ENG_SPG_Design_Mechanism", CostCenter = "Wuxi 1772R002", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_Design_Mechanism", CostCenter = "Wuxi 1772R002", ActivityType = "HDEVB" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_TESTING_Mechanism  Pilot", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_TESTING_Mechanism", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Machine", RMBHour = "ENG_SPG_TESTING_Mechanism", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVC" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_PROTOTYPE_Mechanism", CostCenter = "Wuxi 1772R007", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "Machine", RMBHour = "ENG_SPG_PROTOTYPE_Mechanism", CostCenter = "Wuxi 1772R007", ActivityType = "HDEVC" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ENG_SPG_FEA_Mechanism", CostCenter = "Wuxi 1772R008", ActivityType = "HDEVB" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "EU Support Eng hours", RMBHour = "EU rate", CostCenter = "No", ActivityType = "No" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "PML Mecha", CostCenter = "Wuxi 1772R003", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Press", CostCenter = "Wuxi 1772R004", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Pre-assy", CostCenter = "Wuxi 1772R005", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Laser welding", CostCenter = "Wuxi 1772R006", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Assy line", CostCenter = "Wuxi 1772R007", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "engineer", RMBHour = "ME: Post assy (HDM)", CostCenter = "Wuxi 1772R008", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "PC&L", CostCenter = "SH11A001", ActivityType = "HDEVB" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Cost Engineering", CostCenter = "SH11F001", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Program Controller", CostCenter = "SH11F001", ActivityType = "HDEVB" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "ASQ Engineer", CostCenter = "SH11P001", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Buyer", CostCenter = "SH11P001", ActivityType = "HDEVB" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Quality Engineer", CostCenter = "SH11Q001", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Program Manager-Mech", CostCenter = "SH11R003", ActivityType = "HDEVA" });
-            viewModel.ActivityTypes.Add(new ActivityTypeEntry() { Comment = "", RMBHour = "Acquisition Manager-Mech", CostCenter = "SH11S002", ActivityType = "HDEVA" });
+            var queries = _activityTypeRecords.Table.Where(w => w.IsUsed == true)
+                                                    .OrderBy(w=>w.ActivityType)
+                                                    .OrderBy(w=>w.CostCenter)
+                                                    .OrderBy(w=>w.Id);
+            List<ActivityTypeEntry> lst= new List<ActivityTypeEntry>();
+            foreach(var item in queries)
+            {
+                lst.Add(new ActivityTypeEntry()
+                {
+                    Id=item.Id,
+                    ActivityType=item.ActivityType,
+                    CostCenter=item.CostCenter,
+                    RMBHour=item.RMBHour,
+                    Comment=item.Comment
+                });
+            }
+            return lst;
         }
-
         private void SetHeadViewModel(ADLViewModel viewModel,ADLRecord adl)
         {
             viewModel.Head.Id = adl.Id;
@@ -331,26 +333,235 @@ namespace Faurecia.ADL.Controllers
             viewModel.Head.VehicelComments = adl.VehicelComments;
             viewModel.Head.VersionNo = adl.VersionNo;
         }
-
-        private void SetDetailViewModel(ADLViewModel viewModel,ADLRecord adl)
+        private void SetDetailViewModel(ADLQuotationViewModel viewModel,ADLRecord adl)
         {
             foreach (int year in viewModel.Years)
             {
                 ADLDetailEntry entry = viewModel.Detail.Entries.SingleOrDefault(w => w.Year == year);
                 if(entry==null) { continue; }
-                //HeadCounts
-
-                //HourRatios
-                //Costs
-                //WorkingHours
-                entry.WorkingHours.Add(new WorkingHourEntry()
+                foreach (var item in viewModel.ActivityTypes)
                 {
-                    Year = year
-                });
+                    //HeadCounts
+                    HeadCountEntry headCount = GetHeadCountEntry(adl, item, year);
+                    entry.HeadCounts.Add(headCount);
+                    //HourRatios
+                    HourRatioEntry hourRatio= GetHourRatioEntry(adl, item, year);
+                    entry.HourRatios.Add(hourRatio);
+                    //Costs
+                    CostEntry cost = GetCostEntry(adl, item, year);
+                    entry.Costs.Add(cost);
+                }
+                //WorkingHours
+                WorkingHourEntry workingHourEntry = GetWorkingHourEntry(adl, year);
+                entry.WorkingHours.Add(workingHourEntry);
             }
         }
-
-
+        private HeadCountEntry GetHeadCountEntry(ADLRecord adl, ActivityTypeEntry activityType, int year)
+        {
+            HeadCountEntry entry = new HeadCountEntry() { Year = year };
+            entry.ActivityType = new ActivityTypeEntry()
+            {
+                Id = activityType.Id,
+                ActivityType = activityType.ActivityType,
+                Comment = activityType.Comment,
+                CostCenter = activityType.CostCenter,
+                RMBHour = activityType.RMBHour
+            };
+            ADLHeadCountRecord record = _adlHeadCountRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id
+                                                                    && w.ActivityTypeRecord.Id == activityType.Id
+                                                                    && w.Year==year);
+            if (record != null)
+            {
+                entry.Id = record.Id;
+                entry.Jan = record.Jan;
+                entry.Jul = record.Jul;
+                entry.Jun = record.Jun;
+                entry.Mar = record.Mar;
+                entry.May = record.May;
+                entry.Nov = record.Nov;
+                entry.Oct = record.Oct;
+                entry.Sep = record.Sep;
+                entry.Apr = record.Apr;
+                entry.Aug = record.Aug;
+                entry.Dev = record.Dev;
+                entry.Feb = record.Feb;
+                entry.Year = record.Year;
+                entry.Y1 = record.Jan
+                            + record.Jul
+                            + record.Jun
+                            + record.Mar
+                            + record.May
+                            + record.Nov
+                            + record.Oct
+                            + record.Sep
+                            + record.Apr
+                            + record.Aug
+                            + record.Dev
+                            + record.Feb;
+            }
+            return entry;
+        }
+        private HourRatioEntry GetHourRatioEntry(ADLRecord adl, ActivityTypeEntry activityType,int year)
+        {
+            HourRatioEntry entry = new HourRatioEntry() { Year = year };
+            entry.ActivityType = new ActivityTypeEntry()
+            {
+                Id = activityType.Id,
+                ActivityType = activityType.ActivityType,
+                Comment = activityType.Comment,
+                CostCenter = activityType.CostCenter,
+                RMBHour = activityType.RMBHour
+            };
+            ADLHourRatioRecord record=_adlHourRatioRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id
+                                        && w.ActivityTypeRecord.Id == activityType.Id
+                                        && w.Year == year);
+            if (record != null)
+            {
+                entry.Id = record.Id;
+                entry.Jan = record.Jan;
+                entry.Jul = record.Jul;
+                entry.Jun = record.Jun;
+                entry.Mar = record.Mar;
+                entry.May = record.May;
+                entry.Nov = record.Nov;
+                entry.Oct = record.Oct;
+                entry.Sep = record.Sep;
+                entry.Apr = record.Apr;
+                entry.Aug = record.Aug;
+                entry.Dev = record.Dev;
+                entry.Feb = record.Feb;
+                entry.Year = record.Year;
+                entry.Y1 = record.Jan
+                            + record.Jul
+                            + record.Jun
+                            + record.Mar
+                            + record.May
+                            + record.Nov
+                            + record.Oct
+                            + record.Sep
+                            + record.Apr
+                            + record.Aug
+                            + record.Dev
+                            + record.Feb;
+            }
+            return entry;
+        }
+        private CostEntry GetCostEntry(ADLRecord adl, ActivityTypeEntry activityType, int year)
+        {
+            CostEntry entry = new CostEntry() { Year = year };
+            entry.ActivityType = new ActivityTypeEntry()
+            {
+                Id = activityType.Id,
+                ActivityType = activityType.ActivityType,
+                Comment = activityType.Comment,
+                CostCenter = activityType.CostCenter,
+                RMBHour = activityType.RMBHour
+            };
+            ADLCostRecord record = _adlCostRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id 
+                                            && w.ActivityTypeRecord.Id == activityType.Id
+                                            && w.Year == year);
+            if (record != null)
+            {
+                entry.Id = record.Id;
+                entry.Jan = record.Jan;
+                entry.Jul = record.Jul;
+                entry.Jun = record.Jun;
+                entry.Mar = record.Mar;
+                entry.May = record.May;
+                entry.Nov = record.Nov;
+                entry.Oct = record.Oct;
+                entry.Sep = record.Sep;
+                entry.Apr = record.Apr;
+                entry.Aug = record.Aug;
+                entry.Dev = record.Dev;
+                entry.Feb = record.Feb;
+                entry.Year = record.Year;
+                entry.Y1 = record.Jan
+                            + record.Jul
+                            + record.Jun
+                            + record.Mar
+                            + record.May
+                            + record.Nov
+                            + record.Oct
+                            + record.Sep
+                            + record.Apr
+                            + record.Aug
+                            + record.Dev
+                            + record.Feb;
+            }
+            return entry;
+        }
+        private WorkingHourEntry GetWorkingHourEntry(ADLRecord adl,int year)
+        {
+            WorkingHourEntry workingHourEntry = new WorkingHourEntry()
+            {
+                Year=year
+            };
+            ADLWorkingHourRecord workingHourRecord = _adlWorkingHourRecords.Table
+                                                                           .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
+            if (workingHourRecord != null)
+            {
+                workingHourEntry.Id = workingHourRecord.Id;
+                workingHourEntry.Jan = workingHourRecord.Jan;
+                workingHourEntry.Jul = workingHourRecord.Jul;
+                workingHourEntry.Jun = workingHourRecord.Jun;
+                workingHourEntry.Mar = workingHourRecord.Mar;
+                workingHourEntry.May = workingHourRecord.May;
+                workingHourEntry.Nov = workingHourRecord.Nov;
+                workingHourEntry.Oct = workingHourRecord.Oct;
+                workingHourEntry.Sep = workingHourRecord.Sep;
+                workingHourEntry.Apr = workingHourRecord.Apr;
+                workingHourEntry.Aug = workingHourRecord.Aug;
+                workingHourEntry.Dev = workingHourRecord.Dev;
+                workingHourEntry.Feb = workingHourRecord.Feb;
+                workingHourEntry.Year = workingHourRecord.Year;
+                workingHourEntry.Y1 = workingHourEntry.Jan
+                                        + workingHourEntry.Jul
+                                        + workingHourEntry.Jun
+                                        + workingHourEntry.Mar
+                                        + workingHourEntry.May
+                                        + workingHourEntry.Nov
+                                        + workingHourEntry.Oct
+                                        + workingHourEntry.Sep
+                                        + workingHourEntry.Apr
+                                        + workingHourEntry.Aug
+                                        + workingHourEntry.Dev
+                                        + workingHourEntry.Feb;
+            }
+            else
+            {
+                WorkingHourRecord record=_workingHourRecords.Table.SingleOrDefault(w => w.Year == year);
+                if (record != null)
+                {
+                    workingHourEntry.Jan = record.Jan;
+                    workingHourEntry.Jul = record.Jul;
+                    workingHourEntry.Jun = record.Jun;
+                    workingHourEntry.Mar = record.Mar;
+                    workingHourEntry.May = record.May;
+                    workingHourEntry.Nov = record.Nov;
+                    workingHourEntry.Oct = record.Oct;
+                    workingHourEntry.Sep = record.Sep;
+                    workingHourEntry.Apr = record.Apr;
+                    workingHourEntry.Aug = record.Aug;
+                    workingHourEntry.Dev = record.Dev;
+                    workingHourEntry.Feb = record.Feb;
+                    workingHourEntry.Year = record.Year;
+                    workingHourEntry.Y1 = record.Jan
+                                            + record.Jul
+                                            + record.Jun
+                                            + record.Mar
+                                            + record.May
+                                            + record.Nov
+                                            + record.Oct
+                                            + record.Sep
+                                            + record.Apr
+                                            + record.Aug
+                                            + record.Dev
+                                            + record.Feb;
+                }
+            }
+            return workingHourEntry;
+        }
         [HttpPost, ActionName("Save")]
         [Orchard.Mvc.FormValueRequired("submit.Save")]
         public ActionResult SavePost()
@@ -370,6 +581,7 @@ namespace Faurecia.ADL.Controllers
                 }
                 viewModel.Action = EnumActions.Modify;
                 viewModel.Message = T("Save ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                SetRedirectUrl(viewModel);
             }
             else
             {
@@ -381,10 +593,8 @@ namespace Faurecia.ADL.Controllers
                 }
                 viewModel.Message=viewModel.Message.Substring(0, viewModel.Message.Length - 5);
             }
-
             return Json(JsonConvert.SerializeObject(viewModel));
         }
-        
         [HttpPost, ActionName("Save")]
         [Orchard.Mvc.FormValueRequired("submit.Confirm")]
         public ActionResult ConfirmPost()
@@ -405,6 +615,7 @@ namespace Faurecia.ADL.Controllers
                 }
                 viewModel.Action = EnumActions.Modify;
                 viewModel.Message = T("Confirm ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                SetRedirectUrl(viewModel);
             }
             else
             {
@@ -418,7 +629,6 @@ namespace Faurecia.ADL.Controllers
             }
             return Json(JsonConvert.SerializeObject(viewModel));
         }
-
         [HttpPost, ActionName("Save")]
         [Orchard.Mvc.FormValueRequired("submit.Submit")]
         public ActionResult SubmitPost()
@@ -451,6 +661,7 @@ namespace Faurecia.ADL.Controllers
                 }
                 viewModel.Action = EnumActions.Modify;
                 viewModel.Message = T("Submit ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                SetRedirectUrl(viewModel);
             }
             else
             {
@@ -464,7 +675,6 @@ namespace Faurecia.ADL.Controllers
             }
             return Json(JsonConvert.SerializeObject(viewModel));
         }
-
         private ADLRecord Common_CreateNew(ADLViewModel viewModel)
         {
             var adl = _adlRecords.Get(viewModel.Head.Id);
@@ -480,6 +690,37 @@ namespace Faurecia.ADL.Controllers
             };
             SetADLRecord(adl, viewModel);
             _adlRecords.Create(adl);
+
+            if (viewModel.Detail!=null)
+            {
+                foreach (ADLDetailEntry entry in viewModel.Detail.Entries)
+                {
+                    //创建新的Working Hours
+                    foreach(WorkingHourEntry whEntry in entry.WorkingHours)
+                    {
+                        ADLWorkingHourRecord record = GetWorkingHourRecord(adl, whEntry, true);
+                        _adlWorkingHourRecords.Create(record);
+                    }
+                    //创建新的Hour Ratio
+                    foreach (HourRatioEntry hrEntry in entry.HourRatios)
+                    {
+                        ADLHourRatioRecord record = GetHourRatioRecord(adl, hrEntry, true);
+                        _adlHourRatioRecords.Create(record);
+                    }
+                    //创建新的Head Count
+                    foreach (HeadCountEntry hcEntry in entry.HeadCounts)
+                    {
+                        ADLHeadCountRecord record = GetHeadCountRecord(adl, hcEntry, true);
+                        _adlHeadCountRecords.Create(record);
+                    }
+                    //创建新的Cost
+                    foreach (CostEntry costEntry in entry.Costs)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry,true);
+                        _adlCostRecords.Create(record);
+                    }
+                }
+            }
             viewModel.Head.Id = adl.Id;
             return adl;
         }
@@ -530,10 +771,66 @@ namespace Faurecia.ADL.Controllers
                 SetADLRecord(adl, viewModel);
             };
             _adlRecords.Update(adl);
+            if (viewModel.Detail != null)
+            {
+                foreach (ADLDetailEntry entry in viewModel.Detail.Entries)
+                {
+                    //创建/更新新的Working Hours
+                    foreach (WorkingHourEntry whEntry in entry.WorkingHours)
+                    {
+                        ADLWorkingHourRecord record = GetWorkingHourRecord(adl, whEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlWorkingHourRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlWorkingHourRecords.Update(record);
+                        }
+                    }
+                    //创建新的Hour Ratio
+                    foreach (HourRatioEntry hrEntry in entry.HourRatios)
+                    {
+                        ADLHourRatioRecord record = GetHourRatioRecord(adl, hrEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlHourRatioRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlHourRatioRecords.Update(record);
+                        }
+                    }
+                    //创建新的Head Count
+                    foreach (HeadCountEntry hcEntry in entry.HeadCounts)
+                    {
+                        ADLHeadCountRecord record = GetHeadCountRecord(adl, hcEntry,false);
+                        if (record.Id == 0)
+                        {
+                            _adlHeadCountRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlHeadCountRecords.Update(record);
+                        }
+                    }
+                    //创建新的Cost
+                    foreach (CostEntry costEntry in entry.Costs)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlCostRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlCostRecords.Update(record);
+                        }
+                    }
+                }
+            }
             return adl;
         }
-
-
         private void SetADLRecord(ADLRecord adl,ADLViewModel viewModel)
         {
             adl.ProjectNo = viewModel.Head.ProjectNo;
@@ -569,6 +866,261 @@ namespace Faurecia.ADL.Controllers
             adl.Editor = _orchardService.WorkContext.CurrentUser.UserName;
             adl.IsLastest = true;
         }
+
+        private void SetRedirectUrl(ADLViewModel viewModel)
+        {
+            if (viewModel.Head.Phase == EnumPhase.Creating)
+            {
+                viewModel.RedirectToHref = Url.Action("Create", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+            }
+            else if (viewModel.Head.Phase == EnumPhase.Quotation)
+            {
+                viewModel.RedirectToHref = Url.Action("Quotation", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+            }
+            else if (viewModel.Head.Phase == EnumPhase.IBP)
+            {
+                viewModel.RedirectToHref = Url.Action("IBP", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+            }
+        }
+        private ADLWorkingHourRecord GetWorkingHourRecord(ADLRecord adl,WorkingHourEntry entry,bool isCreateNew)
+        {
+            ADLWorkingHourRecord record =null;
+            if (!isCreateNew)
+            {
+                record = _adlWorkingHourRecords.Get(entry.Id);
+            }
+
+            if (record == null)
+            {
+                record = new ADLWorkingHourRecord();
+            }
+            record.ADLRecord = adl;
+            record.Apr = entry.Apr;
+            record.Aug = entry.Aug;
+            record.Dev = entry.Dev;
+            record.Feb = entry.Feb;
+            record.Jan = entry.Jan;
+            record.Jul = entry.Jul;
+            record.Jun = entry.Jun;
+            record.Mar = entry.Mar;
+            record.May = entry.May;
+            record.Nov = entry.Nov;
+            record.Oct = entry.Oct;
+            record.Sep = entry.Sep;
+            record.Year = entry.Year;
+            return record;
+        }
+        private ADLHourRatioRecord GetHourRatioRecord(ADLRecord adl, HourRatioEntry entry, bool isCreateNew)
+        {
+            ADLHourRatioRecord record = null;
+            if (!isCreateNew)
+            {
+                record = _adlHourRatioRecords.Get(entry.Id);
+            }
+            if (record == null)
+            {
+                record = new ADLHourRatioRecord();
+            }
+            record.ActivityTypeRecord = new ActivityTypeRecord()
+            {
+                Id=entry.ActivityType.Id
+            };
+            record.ADLRecord = adl;
+            record.Apr = entry.Apr;
+            record.Aug = entry.Aug;
+            record.Dev = entry.Dev;
+            record.Feb = entry.Feb;
+            record.Jan = entry.Jan;
+            record.Jul = entry.Jul;
+            record.Jun = entry.Jun;
+            record.Mar = entry.Mar;
+            record.May = entry.May;
+            record.Nov = entry.Nov;
+            record.Oct = entry.Oct;
+            record.Sep = entry.Sep;
+            record.Year = entry.Year;
+            return record;
+        }
+        private ADLCostRecord GetCostRecord(ADLRecord adl, CostEntry entry, bool isCreateNew)
+        {
+            ADLCostRecord record = null;
+            if (!isCreateNew)
+            {
+                record = _adlCostRecords.Get(entry.Id);
+            }
+            
+            if (record == null)
+            {
+                record = new ADLCostRecord();
+            }
+            record.ActivityTypeRecord = new ActivityTypeRecord()
+            {
+                Id = entry.ActivityType.Id
+            };
+            record.ADLRecord = adl;
+            record.Apr = entry.Apr;
+            record.Aug = entry.Aug;
+            record.Dev = entry.Dev;
+            record.Feb = entry.Feb;
+            record.Jan = entry.Jan;
+            record.Jul = entry.Jul;
+            record.Jun = entry.Jun;
+            record.Mar = entry.Mar;
+            record.May = entry.May;
+            record.Nov = entry.Nov;
+            record.Oct = entry.Oct;
+            record.Sep = entry.Sep;
+            record.Year = entry.Year;
+            return record;
+        }
+        private ADLHeadCountRecord GetHeadCountRecord(ADLRecord adl, HeadCountEntry entry, bool isCreateNew)
+        {
+            ADLHeadCountRecord record = null;
+            if (!isCreateNew)
+            {
+                record = _adlHeadCountRecords.Get(entry.Id);
+            }
+            
+            if (record == null)
+            {
+                record = new ADLHeadCountRecord();
+            }
+            record.ActivityTypeRecord = new ActivityTypeRecord()
+            {
+                Id = entry.ActivityType.Id
+            };
+            record.ADLRecord = adl;
+            record.Apr = entry.Apr;
+            record.Aug = entry.Aug;
+            record.Dev = entry.Dev;
+            record.Feb = entry.Feb;
+            record.Jan = entry.Jan;
+            record.Jul = entry.Jul;
+            record.Jun = entry.Jun;
+            record.Mar = entry.Mar;
+            record.May = entry.May;
+            record.Nov = entry.Nov;
+            record.Oct = entry.Oct;
+            record.Sep = entry.Sep;
+            record.Year = entry.Year;
+            return record;
+        }
+
+        //GET ShowActivityTypeList
+        public ActionResult ShowActivityTypeList(int ADLRecordId,ShowActivityTypeOptions options, PagerParameters pagerParameters)
+        {
+            var model = GetShowActivityTypeViewModel(ADLRecordId, options, pagerParameters);
+            return PartialView("_ActivityTypeList", model);
+        }
+
+        public ActionResult QueryActivityTypeResult(int ADLRecordId, ShowActivityTypeOptions options, PagerParameters pagerParameters)
+        {
+            var model = GetShowActivityTypeViewModel(ADLRecordId, options, pagerParameters);
+            return PartialView("_ActivityTypeQueryResults", model);
+        }
+
+        public ShowActivityTypeViewModel GetShowActivityTypeViewModel(int ADLRecordId, ShowActivityTypeOptions options, PagerParameters pagerParameters)
+        {
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var queries = _activityTypeRecords.Table.Where(w => w.IsUsed == true);
+            if (!string.IsNullOrWhiteSpace(options.SearchText))
+            {
+                switch (options.Column)
+                {
+                    case ActivityTypeColumnType.Id:
+                        queries = queries.Where(w => w.Id.ToString().Contains(options.SearchText));
+                        break;
+                    case ActivityTypeColumnType.ActivityType:
+                        queries = queries.Where(w => w.ActivityType.Contains(options.SearchText));
+                        break;
+                    case ActivityTypeColumnType.CostCenter:
+                        queries = queries.Where(w => w.CostCenter.Contains(options.SearchText));
+                        break;
+                    case ActivityTypeColumnType.RMBHour:
+                        queries = queries.Where(w => w.RMBHour.Contains(options.SearchText));
+                        break;
+                    case ActivityTypeColumnType.Comment:
+                        queries = queries.Where(w => w.Comment.Contains(options.SearchText));
+                        break;
+                }
+            }
+            var pagerShape = New.Pager(pager).TotalItemCount(queries.Count());
+            switch (options.Order)
+            {
+                case ActivityTypeColumnType.Id:
+                    queries = queries.OrderBy(u => u.Id);
+                    break;
+                case ActivityTypeColumnType.ActivityType:
+                    queries = queries.OrderBy(u => u.ActivityType);
+                    break;
+                case ActivityTypeColumnType.CostCenter:
+                    queries = queries.OrderBy(u => u.CostCenter);
+                    break;
+                case ActivityTypeColumnType.RMBHour:
+                    queries = queries.OrderBy(u => u.RMBHour);
+                    break;
+                case ActivityTypeColumnType.Comment:
+                    queries = queries.OrderBy(u => u.Comment);
+                    break;
+            }
+
+            if (pager.GetStartIndex() > 0)
+            {
+                queries = queries.Skip(pager.GetStartIndex());
+            }
+            if (pager.PageSize > 0)
+            {
+                queries = queries.Take(pager.PageSize);
+            }
+            var results = queries.ToList();
+            var model = new ShowActivityTypeViewModel()
+            {
+                ADLRecordId = ADLRecordId,
+                ActivityTypes = results.Select(x => new ActivityTypeEntry
+                {
+                    Id = x.Id,
+                    ActivityType = x.ActivityType,
+                    RMBHour = x.RMBHour,
+                    CostCenter = x.CostCenter,
+                    Comment = x.Comment
+                }).ToList(),
+                Options = options,
+                Pager = pagerShape
+            };
+            return model;
+        }
+        
+        public ActionResult DeleteDetailRecord(int ADLRecordId,int entryIndex,int year,int activityTypeId)
+        {
+            var message = string.Empty;
+            try
+            {
+                //删除Head Count Record
+                var queriesHC = _adlHeadCountRecords.Table.Where(w =>w.ADLRecord.Id==ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId && w.Year==year);
+                foreach (var item in queriesHC)
+                {
+                    _adlHeadCountRecords.Delete(item);
+                }
+                //删除Hour Ratio Record
+                var queriesHR = _adlHourRatioRecords.Table.Where(w => w.ADLRecord.Id == ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId && w.Year == year);
+                foreach (var item in queriesHR)
+                {
+                    _adlHourRatioRecords.Delete(item);
+                }
+                //删除Cost Record
+                var queriesCT = _adlCostRecords.Table.Where(w => w.ADLRecord.Id == ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId && w.Year == year);
+                foreach (var item in queriesCT)
+                {
+                    _adlCostRecords.Delete(item);
+                }
+            }
+            catch(Exception ex)
+            {
+                message = ex.Message;
+            }
+            return Json(new { EntryIndex= entryIndex,Year = year, ActivityTypeId= activityTypeId, Message = message }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public string GetProjectNo(string customer)
         {

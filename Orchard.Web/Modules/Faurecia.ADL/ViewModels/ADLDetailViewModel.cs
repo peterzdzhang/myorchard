@@ -42,28 +42,7 @@ namespace Faurecia.ADL.ViewModels
         public string RMBHour { get; set; }
         public string CostCenter { get; set; }
         public string ActivityType { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            var that = obj as ActivityTypeEntry;
-            if (that == null) return false;
-            if (this.ActivityType == that.ActivityType
-                && this.RMBHour == that.RMBHour
-                && this.CostCenter == that.CostCenter
-                && this.Comment == that.Comment)
-            {
-                return true;
-            }
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.ActivityType.GetHashCode()
-                    + this.RMBHour.GetHashCode()
-                    + this.CostCenter.GetHashCode()
-                    + this.Comment.GetHashCode();
-        }
+        
     }
 
     public class HeadCountEntry

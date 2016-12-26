@@ -1,16 +1,13 @@
-﻿using Orchard.ContentManagement.Records;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace Faurecia.ADL.Models
 {
-    public class ADLHourRatioRecord
+    public class WorkingHourRecord
     {
-
         public virtual int Id { get; set; }
-        public virtual ActivityTypeRecord ActivityTypeRecord { get; set; }
         public virtual int Year { get; set; }
         public virtual double? Jan { get; set; }
         public virtual double? Feb { get; set; }
@@ -24,7 +21,5 @@ namespace Faurecia.ADL.Models
         public virtual double? Oct { get; set; }
         public virtual double? Nov { get; set; }
         public virtual double? Dev { get; set; }
-
-        public ADLRecord ADLRecord { get; set; }
     }
 }

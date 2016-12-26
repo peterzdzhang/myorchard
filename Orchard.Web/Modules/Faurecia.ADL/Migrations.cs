@@ -11,13 +11,35 @@ namespace Faurecia.ADL {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
+
+            // Creating table ActivityTypeRecord
+            SchemaBuilder.CreateTable("ActivityTypeRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("ActivityType", DbType.String)
+                .Column("CostCenter", DbType.String)
+                .Column("RMBHour", DbType.String)
+                .Column("Comment", DbType.String)
+                .Column("IsUsed", DbType.Boolean)
+            );
+            SchemaBuilder.CreateTable("WorkingHourRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("Year", DbType.Int32)
+                .Column("Jan", DbType.Double)
+                .Column("Feb", DbType.Double)
+                .Column("Mar", DbType.Double)
+                .Column("Apr", DbType.Double)
+                .Column("May", DbType.Double)
+                .Column("Jun", DbType.Double)
+                .Column("Jul", DbType.Double)
+                .Column("Aug", DbType.Double)
+                .Column("Sep", DbType.Double)
+                .Column("Oct", DbType.Double)
+                .Column("Nov", DbType.Double)
+                .Column("Dev", DbType.Double)
+            );
             // Creating table ADLCostRecord
             SchemaBuilder.CreateTable("ADLCostRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
-				.Column("Comment", DbType.String)
-				.Column("RMBHour", DbType.String)
-				.Column("CostCenter", DbType.String)
-				.Column("ActivityType", DbType.String)
 				.Column("Year", DbType.Int32)
 				.Column("Jan", DbType.Double)
 				.Column("Feb", DbType.Double)
@@ -31,6 +53,7 @@ namespace Faurecia.ADL {
 				.Column("Oct", DbType.Double)
 				.Column("Nov", DbType.Double)
 				.Column("Dev", DbType.Double)
+                .Column<int>("ActivityTypeRecord_Id")
                 .Column<int>("ADLRecord_Id")
             );
 
@@ -56,10 +79,6 @@ namespace Faurecia.ADL {
 			// Creating table ADLHourRatioRecord
 			SchemaBuilder.CreateTable("ADLHourRatioRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
-                .Column("Comment", DbType.String)
-				.Column("RMBHour", DbType.String)
-				.Column("CostCenter", DbType.String)
-				.Column("ActivityType", DbType.String)
 				.Column("Year", DbType.Int32)
 				.Column("Jan", DbType.Double)
 				.Column("Feb", DbType.Double)
@@ -73,16 +92,13 @@ namespace Faurecia.ADL {
 				.Column("Oct", DbType.Double)
 				.Column("Nov", DbType.Double)
 				.Column("Dev", DbType.Double)
+                .Column<int>("ActivityTypeRecord_Id")
                 .Column<int>("ADLRecord_Id")
             );
 
 			// Creating table ADLHeadCountRecord
 			SchemaBuilder.CreateTable("ADLHeadCountRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
-                .Column("Comment", DbType.String)
-				.Column("RMBHour", DbType.String)
-				.Column("CostCenter", DbType.String)
-				.Column("ActivityType", DbType.String)
 				.Column("Year", DbType.Int32)
 				.Column("Jan", DbType.Double)
 				.Column("Feb", DbType.Double)
@@ -96,6 +112,7 @@ namespace Faurecia.ADL {
 				.Column("Oct", DbType.Double)
 				.Column("Nov", DbType.Double)
 				.Column("Dev", DbType.Double)
+                .Column<int>("ActivityTypeRecord_Id")
                 .Column<int>("ADLRecord_Id")
             );
 

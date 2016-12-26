@@ -15,6 +15,7 @@ namespace Faurecia.ADL.ViewModels
             Head = new ADLHeadViewModel();
             Detail = new ADLDetailViewModel();
         }
+        public string RedirectToHref { get; set; }
         public EnumActions Action { get; set; }
         public string Message { get; set; }
         public int Code { get; set; }

@@ -108,9 +108,6 @@
         function showErrorInfo(result) {
             $("#statusMessage").find("p").html("");
             var message = result.Message;
-            if (!!result.Detail) {
-                message = message + "(" + result.Detail + ")"
-            }
             $("#statusMessage").find("p").html(message);
             $("#statusMessage").removeClass("hide");
             if (result.Code > 0) {
@@ -143,13 +140,21 @@
             $("#@Html.IdFor(m => m.Head.Status)").val(result.Head.Status);
             $("#PhaseStatus").html(result.Head.Phase + "-" + result.Head.Status);
 
-            var returnUrl = "@Request["ReturnUrl"]";
-            if (result.Head.Phase != oldPhase)
-            {
-                location.href = returnUrl;
-            }
-
             showErrorInfo(result);
+
+            var returnUrl = "@Request["ReturnUrl"]";
+            var redirectUrl = result.RedirectToHref;
+            if (!!returnUrl) {
+                if (result.Head.Phase != oldPhase) {
+                    redirectUrl = returnUrl;
+                }
+                else {
+                    redirectUrl = redirectUrl + "?returnUrl=" + returnUrl;
+                }
+            }
+            setTimeout(function () {
+                location.replace(redirectUrl);
+            }, 2000)
         }
 
         function changeCustomer(customer) {
