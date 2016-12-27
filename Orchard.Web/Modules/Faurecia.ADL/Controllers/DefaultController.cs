@@ -193,7 +193,7 @@ namespace Faurecia.ADL.Controllers
                 SetHeadViewModel(viewModel, record);
 
                 SetYears(viewModel);
-                viewModel.ActivityTypes = GetActivityTypes();
+                //viewModel.ActivityTypes = GetActivityTypes();
                 SetDetailViewModel(viewModel, record);
             }
             return View(viewModel);
@@ -339,16 +339,26 @@ namespace Faurecia.ADL.Controllers
             {
                 ADLDetailEntry entry = viewModel.Detail.Entries.SingleOrDefault(w => w.Year == year);
                 if(entry==null) { continue; }
-                foreach (var item in viewModel.ActivityTypes)
+                var queries= _adlHeadCountRecords.Table.Where(w => w.ADLRecord.Id == adl.Id && w.Year == year).Select(w=>w.ActivityTypeRecord);
+
+                foreach (var item in queries)
                 {
+                    var activityTypeEntry = new ActivityTypeEntry()
+                    {
+                        Id = item.Id,
+                        ActivityType = item.ActivityType,
+                        CostCenter = item.CostCenter,
+                        RMBHour = item.RMBHour,
+                        Comment = item.Comment
+                    };
                     //HeadCounts
-                    HeadCountEntry headCount = GetHeadCountEntry(adl, item, year);
+                    HeadCountEntry headCount = GetHeadCountEntry(adl, activityTypeEntry, year);
                     entry.HeadCounts.Add(headCount);
                     //HourRatios
-                    HourRatioEntry hourRatio= GetHourRatioEntry(adl, item, year);
+                    HourRatioEntry hourRatio= GetHourRatioEntry(adl, activityTypeEntry, year);
                     entry.HourRatios.Add(hourRatio);
                     //Costs
-                    CostEntry cost = GetCostEntry(adl, item, year);
+                    CostEntry cost = GetCostEntry(adl, activityTypeEntry, year);
                     entry.Costs.Add(cost);
                 }
                 //WorkingHours

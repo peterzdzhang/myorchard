@@ -114,7 +114,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-primary" id="btnAddActivityTypeRow" onclick="AddActivityTypeRow()">Save</button>
             </div>
         </div>
     </div>
@@ -211,7 +211,7 @@
 
     @*Show Or Hide Activity Type Content*@
     <script type="text/javascript" language="javascript">
-        //修改资源
+
         function showActivityTypeModal(result) {
             $('#activityTypeModal').modal('show')
         }
@@ -219,52 +219,411 @@
         function beginSaveModify() {
         }
 
-        function completeSaveModify(result) {
+        function AddActivityTypeRow() {
+            
+            var tabpanel = $("div.active[role='tabpanel']");
+            var activityTypeQueryResults = $("#activityTypeQueryResults");
+            var activityTypes = $(activityTypeQueryResults).find("input:checked");
+
+            for (var i = 0; i < activityTypes.length; i++) {
+
+                var activityTypeId=$(activityTypes[i]).val();
+                var activityType=$(activityTypes[i]).parent().parent().find("td:eq(1)").text();
+                var costCenter=$(activityTypes[i]).parent().parent().find("td:eq(2)").text();
+                var RMBHour=$(activityTypes[i]).parent().parent().find("td:eq(3)").text();
+                var comment=$(activityTypes[i]).parent().parent().find("td:eq(4)").text();
+                var activityType = { Id: activityTypeId, Comment: comment, RMBHour: RMBHour, CostCenter: costCenter, ActivityType: activityType };
+                //Add Head Count Record Row
+                AddDetailRecordRow(activityType, "HeadCount")
+                //Add Hour Ratio Record Row
+                AddDetailRecordRow(activityType, "HourRatio");
+                //Add Cost Record Row
+                AddDetailRecordRow(activityType, "Cost");
+            }
+            
+        }
+        
+        function AddHeadCountRecordRow(activityType) {
+            var tabpanel = $("div.active[role='tabpanel']");
+            var table = $(tabpanel).find("table[id^='detailHeadCount_']");
+            var adlRecordId = $("#Head_Id").val();
+            var year = $(tabpanel).data("year");
+            var entryIndex = $(table).data("entryindex");
+            var lastRowHC = $(table).find("tr:last");
+            var lastRowHCCells = $(lastRowHC).find("td");
+            var lastRowActivityTypeId = $(lastRowHC).find("input[name$='.ActivityType.Id']");
+            var lastRowIndex = $(lastRowActivityTypeId).data("index");
+            var newindex = lastRowIndex + 1;
+
+            var rowHC = $("<tr></tr>");
+            for (var i = 0; i < lastRowHCCells.length; i++) {
+                if (i == 0) {
+                    var prefixName = "Detail.Entries[" + entryIndex + "].HeadCounts[" + newindex + "]";
+                    //TD1
+                    var td1 = $("<td></td>");
+                    var url = "/ADL/Default/DeleteDetailRecord?ActivityTypeId=" + activityType.Id + "&Year=" + year + "&ADLRecordId=" + adlRecordId + "&EntryIndex=" + entryIndex;
+                    var href = $("<a class='btn btn-warning btn-sm' href='#'>-</a>");
+                    $(href).attr("data-ajax", "true");
+                    $(href).attr("data-ajax-method", "GET");
+                    $(href).attr("data-ajax-success", "CompleteDeleteDetailRecord");
+                    $(href).attr("data-ajax-url", url);
+                    td1.append(href);
+                    rowHC.append(td1);
+                }
+                else if(i==1){
+                    //TD2
+                    var td2 = $("<td></td>");
+                    var hcId=$("<input type='hidden' value='0' name='"+prefixName+".Id'/>")
+                    var hcYear = $("<input name='" + prefixName + ".Year' type='hidden' value='" + year + "'/>")
+                    var hcActivityTypeId = $("<input name='" + prefixName + ".ActivityType.Id' type='hidden' value='" + activityType.Id + "'/>");
+                    var hcActivityTypeComment = $("<input name='" + prefixName + ".ActivityType.Comment' type='hidden' value='" + activityType.Comment + "'/>");
+                    td2.append(hcId);
+                    td2.append(hcYear);
+                    td2.append(hcActivityTypeId);
+                    td2.append(hcActivityTypeComment);
+                    td2.append(activityType.Comment);
+                    rowHC.append(td2);
+                }
+                else if(i==2){
+                    //TD3
+                    var td3 = $("<td></td>");
+                    var hcRMBHour = $("<input name='" + prefixName + ".ActivityType.RMBHour' type='hidden' value='" + activityType.RMBHour + "'/>");
+                    td3.append(hcRMBHour);
+                    td3.append(activityType.RMBHour);
+                    rowHC.append(td3);
+                }
+                else if (i ==3) {
+                    //TD4
+                    var td4= $("<td></td>");
+                    var hcCostCenter = $("<input name='" + prefixName + ".ActivityType.CostCenter' type='hidden' value='" + activityType.CostCenter + "'/>");
+                    td4.append(hcCostCenter);
+                    td4.append(activityType.CostCenter);
+                    rowHC.append(td4);
+                }
+                else if (i == 4) {
+                    //TD5
+                    var td5 = $("<td></td>");
+                    var hcActitityType = $("<input name='" + prefixName + ".ActivityType.ActivityType' type='hidden' value='" + activityType.ActivityType + "'/>");
+                    td5.append(hcActitityType);
+                    td5.append(activityType.ActivityType);
+                    rowHC.append(td5);
+                }
+                else if (i == 5) {
+                    //TD6
+                    var td6 = $("<td></td>");
+                    var jan = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jan'/>");
+                    td6.append(jan);
+                    rowHC.append(td6);
+                }
+                else if (i ==6) {
+                    //TD7
+                    var td7 = $("<td></td>");
+                    var feb = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Feb'/>");
+                    td7.append(feb);
+                    rowHC.append(td7);
+                }
+                else if (i == 7) {
+                    //TD8
+                    var td8 = $("<td></td>");
+                    var mar = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Mar'/>");
+                    td8.append(mar);
+                    rowHC.append(td8);
+                }
+                else if (i ==8) {
+                    //TD9
+                    var td9 = $("<td></td>");
+                    var apr = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Apr'/>");
+                    td9.append(apr);
+                    rowHC.append(td9);
+                }
+                else if (i == 9) {
+                    //TD10
+                    var td10 = $("<td></td>");
+                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".May'/>");
+                    td10.append(may);
+                    rowHC.append(td10);
+                }
+                else if (i == 10) {
+                    //TD11
+                    var td11 = $("<td></td>");
+                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jun'/>");
+                    td11.append(may);
+                    rowHC.append(td11);
+                }
+                else if (i == 11) {
+                    //TD12
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jul'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else if (i == 12) {
+                    //TD13
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Aug'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else if (i == 13) {
+                    //TD14
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Sep'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else if (i == 14) {
+                    //TD15
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Oct'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else if (i == 15) {
+                    //TD16
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Nov'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else if (i == 16) {
+                    //TD17
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Dev'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else if (i == 17) {
+                    //TD18
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' readonly='readonly' name='" + prefixName + ".Y1'/>");
+                    td.append(input);
+                    rowHC.append(td);
+                }
+                else {
+                    rowHC.append($("<td></td>"));
+                }
+            }
+            $(table).append(rowHC);
+        }
+        function AddDetailRecordRow(activityType,tableName) {
+            var tabpanel = $("div.active[role='tabpanel']");
+            var table = $(tabpanel).find("table[id^='detail" + tableName + "_']");
+
+            var adlRecordId = $("#Head_Id").val();
+            var year = $(tabpanel).data("year");
+            var entryIndex = $(table).data("entryindex");
+
+            var lastRow = $(table).find("tr:last");
+            var lastRowCells = $(lastRow).find("td");
+            if (lastRowCells.length == 0) {
+                lastRowCells = $(lastRow).find("th");
+            }
+            var lastRowActivityTypeId = $(lastRow).find("input[name$='.ActivityType.Id']");
+            var lastRowIndex = $(lastRowActivityTypeId).data("index");
+            if (!$.isNumeric(lastRowIndex)) { lastRowIndex = -1;}
+            var newindex = lastRowIndex + 1;
+            var prefixName = "Detail.Entries[" + entryIndex + "]." + tableName + "s[" + newindex + "]";
+            var row = $("<tr></tr>");
+            var startIndex = 1;
+            var endIndex = lastRowCells.length + 1;
+
+            if (tableName == "HeadCount") {
+                startIndex = 0;
+                endIndex = lastRowCells.length;
+            }
+            for (var i = startIndex; i < endIndex; i++) {
+                if (i == 0) {
+                    //TD1
+                    var td1 = $("<td></td>");
+                    var url = "/ADL/Default/DeleteDetailRecord?ActivityTypeId=" + activityType.Id + "&Year=" + year + "&ADLRecordId=" + adlRecordId + "&EntryIndex=" + entryIndex;
+                    var href = $("<a class='btn btn-warning btn-sm' href='#'>-</a>");
+                    $(href).attr("data-ajax", "true");
+                    $(href).attr("data-ajax-method", "GET");
+                    $(href).attr("data-ajax-success", "CompleteDeleteDetailRecord");
+                    $(href).attr("data-ajax-url", url);
+                    td1.append(href);
+                    row.append(td1);
+                }
+                else if (i == 1) {
+                    //TD2
+                    var td2 = $("<td></td>");
+                    var hcId = $("<input type='hidden' value='0' name='" + prefixName + ".Id'/>")
+                    var hcYear = $("<input name='" + prefixName + ".Year' type='hidden' value='" + year + "'/>")
+                    var hcActivityTypeId = $("<input name='" + prefixName + ".ActivityType.Id' type='hidden' value='" + activityType.Id + "'/>");
+                    $(hcActivityTypeId).attr("data-index", newindex);
+                    var hcActivityTypeComment = $("<input name='" + prefixName + ".ActivityType.Comment' type='hidden' value='" + activityType.Comment + "'/>");
+                    td2.append(hcId);
+                    td2.append(hcYear);
+                    td2.append(hcActivityTypeId);
+                    td2.append(hcActivityTypeComment);
+                    td2.append(activityType.Comment);
+                    row.append(td2);
+                }
+                else if (i == 2) {
+                    //TD3
+                    var td3 = $("<td></td>");
+                    var hcRMBHour = $("<input name='" + prefixName + ".ActivityType.RMBHour' type='hidden' value='" + activityType.RMBHour + "'/>");
+                    td3.append(hcRMBHour);
+                    td3.append(activityType.RMBHour);
+                    row.append(td3);
+                }
+                else if (i == 3) {
+                    //TD4
+                    var td4 = $("<td></td>");
+                    var hcCostCenter = $("<input name='" + prefixName + ".ActivityType.CostCenter' type='hidden' value='" + activityType.CostCenter + "'/>");
+                    td4.append(hcCostCenter);
+                    td4.append(activityType.CostCenter);
+                    row.append(td4);
+                }
+                else if (i == 4) {
+                    //TD5
+                    var td5 = $("<td></td>");
+                    var hcActitityType = $("<input name='" + prefixName + ".ActivityType.ActivityType' type='hidden' value='" + activityType.ActivityType + "'/>");
+                    td5.append(hcActitityType);
+                    td5.append(activityType.ActivityType);
+                    row.append(td5);
+                }
+                else if (i == 5) {
+                    //TD6
+                    var td6 = $("<td></td>");
+                    var jan = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jan'/>");
+                    td6.append(jan);
+                    row.append(td6);
+                }
+                else if (i == 6) {
+                    //TD7
+                    var td7 = $("<td></td>");
+                    var feb = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Feb'/>");
+                    td7.append(feb);
+                    row.append(td7);
+                }
+                else if (i == 7) {
+                    //TD8
+                    var td8 = $("<td></td>");
+                    var mar = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Mar'/>");
+                    td8.append(mar);
+                    row.append(td8);
+                }
+                else if (i == 8) {
+                    //TD9
+                    var td9 = $("<td></td>");
+                    var apr = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Apr'/>");
+                    td9.append(apr);
+                    row.append(td9);
+                }
+                else if (i == 9) {
+                    //TD10
+                    var td10 = $("<td></td>");
+                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".May'/>");
+                    td10.append(may);
+                    row.append(td10);
+                }
+                else if (i == 10) {
+                    //TD11
+                    var td11 = $("<td></td>");
+                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jun'/>");
+                    td11.append(may);
+                    row.append(td11);
+                }
+                else if (i == 11) {
+                    //TD12
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jul'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else if (i == 12) {
+                    //TD13
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Aug'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else if (i == 13) {
+                    //TD14
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Sep'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else if (i == 14) {
+                    //TD15
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Oct'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else if (i == 15) {
+                    //TD16
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Nov'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else if (i == 16) {
+                    //TD17
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Dev'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else if (i == 17) {
+                    //TD18
+                    var td = $("<td></td>");
+                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' readonly='readonly' name='" + prefixName + ".Y1'/>");
+                    td.append(input);
+                    row.append(td);
+                }
+                else {
+                    row.append($("<td></td>"));
+                }
+            }
+            if (tableName == "Cost") {
+                row.find("input[type='text']").each(function (x, xitem) {
+                    $(xitem).attr("readonly", "readonly");
+                })
+            }
+            $(table).append(row);
         }
 
         function CompleteDeleteDetailRecord(result) {
-
             if (!!result.Message) {
                 alert(result.Message);
                 return;
             }
-
             //Delete Head Record Row
             var headCountTable = $("#detailHeadCount_" + result.EntryIndex);
-            var rows = $(headCountTable).find("tr.data");
-            for(var i=0;i<rows.length;i++)
-            {
-                var row = rows[i];
-                var activityTypeInput = $(row).find("input[name$='.ActivityType.Id']");
-                var activityTypeId = $(activityTypeInput).val();
-                if(activityTypeId==result.ActivityTypeId)
-                {
-                    $(row).remove();
-                }
-            }
+            var activityTypeIds = $(headCountTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
+            replaceInputName(result, activityTypeIds, "HeadCounts");
             //Delete Hour Ratio Record Row
             var hourRatioTable = $("#detailHourRatio_" + result.EntryIndex);
-            rows = $(hourRatioTable).find("tr.data");
-            for (var i = 0; i < rows.length; i++) {
-                var row = rows[i];
-                var activityTypeInput = $(row).find("input[name$='.ActivityType.Id']");
-                var activityTypeId = $(activityTypeInput).val();
-                if (activityTypeId == result.ActivityTypeId) {
-                    $(row).remove();
-                }
-            }
+            activityTypeIds = $(hourRatioTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
+            replaceInputName(result, activityTypeIds, "HourRatios");
             //Delete Cost Record Row
             var costTable = $("#detailCost_" + result.EntryIndex);
-            rows = $(costTable).find("tr.data");
-            for (var i = 0; i < rows.length; i++) {
-                var row = rows[i];
-                var activityTypeInput = $(row).find("input[name$='.ActivityType.Id']");
-                var activityTypeId = $(activityTypeInput).val();
-                if (activityTypeId == result.ActivityTypeId) {
-                    $(row).remove();
-                }
+            activityTypeIds = $(costTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
+            replaceInputName(result,activityTypeIds, "Costs");
+        }
+
+        function replaceInputName(result, activityTypeIds, tableName) {
+            for (var i = 0; i < activityTypeIds.length; i++) {
+                var index = $(activityTypeIds[i]).data("index");
+                var row = $(activityTypeIds[i]).parent().parent();
+                $(row).nextAll().each(function (k, item) {
+                    var activityTypeId = $(item).find("input[name$='.ActivityType.Id']");
+                    var oldindex = $(activityTypeId).data("index");
+                    var newindex = index + k;
+                    var name = "Detail.Entries[" + result.EntryIndex + "]." + tableName + "[" + oldindex + "]";
+                    var newname = "Detail.Entries[" + result.EntryIndex + "]." + tableName + "[" + newindex + "]";
+
+                    $(activityTypeId).attr("data-index", newindex);
+                    $(item).find("input[name^='" + name + "']").each(function (xi, xitem) {
+                        var xitemName = $(xitem).attr("name").replace(name, newname);
+                        $(xitem).attr("name", xitemName);
+                    });
+                });
+                $(row).remove();
             }
-           
         }
     </script>
 }
