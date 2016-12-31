@@ -15,7 +15,5 @@ namespace Faurecia.ADL.ViewModels
             Years = new List<int>();
             IBPs = new List<SelectListItem>();
         }
-        public IEnumerable<SelectListItem> IBPs { get; set; }
-        public IList<ActivityTypeEntry> ActivityTypes { get; set; }
     }
 }

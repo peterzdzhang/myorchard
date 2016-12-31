@@ -1,0 +1,9 @@
+﻿@if (!Request.IsAjaxRequest())
+{
+    <a id="pager-current" href="#">@Model.Value</a>
+}
+else
+{
+    <a data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace"
+       href="#">@Model.Value</a>
+}

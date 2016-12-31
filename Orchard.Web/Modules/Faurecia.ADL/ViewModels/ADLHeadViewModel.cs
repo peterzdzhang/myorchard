@@ -33,11 +33,11 @@ namespace Faurecia.ADL.ViewModels
         public int VersionNo { get; set; }
 
         [Required]
-        [StringLength(255)]
+        [StringLength(5)]
         public string Name { get; set; }
 
         [Required]
-        [StringLength(3,MinimumLength =3)]
+        [StringLength(25)]
         public string Customer { get; set; }
 
         [Required]
@@ -63,11 +63,10 @@ namespace Faurecia.ADL.ViewModels
         public DateTime? PTRDate { get; set; }
 
         public DateTime? SOPDate { get; set; }
+        
+        public DateTime? Mockup { get; set; }
 
-        [StringLength(50)]
-        public string Mockup { get; set; }
-        [StringLength(50)]
-        public string Award { get; set; }
+        public DateTime? Award { get; set; }
         [StringLength(255)]
         public string MileStoneComments { get; set; }
 

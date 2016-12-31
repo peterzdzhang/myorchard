@@ -8,11 +8,11 @@
     }
 }
 <div class="form-horizontal">
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         <input type="hidden" id="@Html.IdFor(m=>m.Head.Id)" name="@Html.NameOf(m => m.Head.Id)" value="@Model.Head.Id"/>
         @Html.LabelFor(m => m.Head.Customer, T("Customer").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
-            @Html.TextBoxFor(m => m.Head.Customer, new { autofocus = "autofocus", @class = "form-control", @style = "text-transform:uppercase", @maxlength = 3, placeholder = "" })
+            @Html.TextBoxFor(m => m.Head.Customer, new { autofocus = "autofocus", @class = "form-control", @style = "text-transform:uppercase", placeholder = "" })
             @Html.ValidationMessageFor(m => m.Head.Customer)
         </div>
         @Html.LabelFor(m => m.Head.ProjectNo, T("Project No").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
@@ -28,14 +28,14 @@
             @Html.ValidationMessageFor(m => m.Head.Currency)
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Head.Name, T("Name").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Name, T("Name").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left"})
         <div class="col-sm-10 col-lg-10">
-            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "" })
+            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "", @style = "text-transform:uppercase", @maxlength = 5 })
             @Html.ValidationMessageFor(m => m.Head.Name)
         </div>
     </div>
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.ProgramManager, T("Manager").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             @Html.TextBoxFor(m => m.Head.ProgramManager, new { @class = "form-control", placeholder = "" })
@@ -57,11 +57,18 @@
         </div>
     </div>
 </div>
-<div class="alert alert-info text-center">
-    @T("Request info / milestone")
+<div class="alert alert-info text-center" style="padding:2px;margin:2px;">
+    <div class="row" style="padding:5px;">
+        <div class="col-lg-11 col-sm-11">
+            @T("Request info / milestone")
+        </div>
+        <div class="col-lg-1 col-sm-1 text-right">
+            <button type="button" class="btn btn-sm btn-warning glyphicon-collapse-down" data-toggle="collapse" data-target="#requestInfo" />
+        </div>
+    </div>
 </div>
-<div class="form-horizontal">
-    <div class="form-group">
+<div class="form-horizontal collapse in" id="requestInfo">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.Type, T("Type").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Type)" name="@Html.NameOf(m => m.Head.Type)">
@@ -78,11 +85,11 @@
         </div>
         @Html.LabelFor(m => m.Head.Mockup, T("Mock up").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
-            @Html.TextBoxFor(m => m.Head.Mockup, new { @class = "form-control", placeholder = "" })
+            @Html.TextBoxFor(m => m.Head.Mockup, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
             @Html.ValidationMessageFor(m => m.Head.Mockup)
         </div>
     </div>
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.OfferDate, T("Offer Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             @Html.TextBoxFor(m => m.Head.OfferDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
@@ -95,11 +102,11 @@
         </div>
         @Html.LabelFor(m => m.Head.Award, T("Award").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
-            @Html.TextBoxFor(m => m.Head.Award, new { @class = "form-control", placeholder = "" })
+            @Html.TextBoxFor(m => m.Head.Award, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
             @Html.ValidationMessageFor(m => m.Head.Award)
         </div>
     </div>
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.SOPDate, T("SOP Date").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             @Html.TextBoxFor(m => m.Head.SOPDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
@@ -111,7 +118,7 @@
             @Html.ValidationMessageFor(m => m.Head.PTRDate)
         </div>
     </div>
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.MileStoneComments, T("Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-10 col-lg-10">
             @Html.TextAreaFor(m => m.Head.MileStoneComments, new { @class = "form-control", placeholder = "" })
@@ -119,11 +126,18 @@
         </div>
     </div>
 </div>
-<div class="alert alert-info text-center">
-    @T("Vehicle / frame information")
+<div class="alert alert-info text-center" style="padding:2px;margin:2px;">
+    <div class="row" style="padding:5px;">
+        <div class="col-lg-11 col-sm-11">
+            @T("Vehicle / frame information")
+        </div>
+        <div class="col-lg-1 col-sm-1 text-right">
+            <button type="button" class="btn btn-sm btn-warning glyphicon-collapse-down" data-toggle="collapse" data-target="#vehicleInfo" />
+        </div>
+    </div>
 </div>
-<div class="form-horizontal">
-    <div class="form-group">
+<div class="form-horizontal collapse in" id="vehicleInfo">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.Variant1, T("Variant").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant1)" name="@Html.NameOf(m => m.Head.Variant1)">
@@ -161,7 +175,7 @@
             @Html.ValidationMessageFor(m => m.Head.FrameMaturity)
         </div>
     </div>
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.VehicelComments, T("Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-10 col-lg-10">
             @Html.TextAreaFor(m => m.Head.VehicelComments, new { @class = "form-control", placeholder = "" })
@@ -169,14 +183,22 @@
         </div>
     </div>
 </div>
-<div class="alert alert-info text-center">
-    @T("Products offer")
+<div class="alert alert-info text-center" style="padding:2px;margin:2px;">
+    <div class="row" style="padding:5px;">
+        <div class="col-lg-11 col-sm-11">
+            @T("Products offer")
+        </div>
+        <div class="col-lg-1 col-sm-1 text-right">
+            <button type="button" class="btn btn-sm btn-warning glyphicon-collapse-down" data-toggle="collapse" data-target="#productsOffer" />
+        </div>
+    </div>
 </div>
-<div class="form-horizontal">
-    <div class="form-group">
+<div class="form-horizontal collapse in" id="productsOffer">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.Tracks, T("Tracks").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Tracks)" name="@Html.NameOf(m => m.Head.Tracks)">
+                @Html.SelectOption(Model.Head.Tracks, "N/A", T("N/A").ToString())
                 @Html.SelectOption(Model.Head.Tracks, "MT30", T("MT30").ToString())
                 @Html.SelectOption(Model.Head.Tracks, "MT36", T("MT36").ToString())
                 @Html.SelectOption(Model.Head.Tracks, "Ultima", T("Ultima").ToString())
@@ -217,7 +239,7 @@
             @Html.ValidationMessageFor(m => m.Head.HA)
         </div>
     </div>
-    <div class="form-group">
+    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.Ballfix, T("Ballfix").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-lg-2">
             @Html.TextBoxFor(m => m.Head.Ballfix, new { @class = "form-control", placeholder = "" })

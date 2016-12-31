@@ -39,37 +39,9 @@
                     </div>
                     @Html.LabelFor(m => m.Options.Customer, T("Customer").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.Options.Customer, new { @class = "form-control", @maxlength = 3, placeholder = "Customer Name" })
+                        @Html.TextBoxFor(m => m.Options.Customer, new { @class = "form-control", @maxlength = 25, placeholder = "Customer Name" })
                         @Html.ValidationMessageFor(m => m.Options.Customer)
                     </div>
-                    @Html.LabelFor(m => m.Options.ProgramManager, T("ADL/PDL").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.Options.ProgramManager, new { @class = "form-control", placeholder = "ADL/PDL" })
-                        @Html.ValidationMessageFor(m => m.Options.ProgramManager)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Options.StartDate1, T("Strat Date").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.Options.StartDate1, new { @class = "form-control datepicker", placeholder = "Start Date" })
-                        @Html.ValidationMessageFor(m => m.Options.StartDate1)
-                    </div>
-                     @Html.LabelFor(m => m.Options.StartDate2, T("-").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.Options.StartDate2, new { @class = "form-control datepicker", placeholder = "End Date" })
-                        @Html.ValidationMessageFor(m => m.Options.StartDate2)
-                    </div>
-                    @Html.LabelFor(m => m.Options.Order, T("Order By").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        <select id="@Html.IdFor(m=>m.Options.Order)" name="@Html.NameOf(m => m.Options.Order)">
-                            @Html.SelectOption(Model.Options.Order, ADLOrder.ProjectNo, T("Project No").ToString())
-                            @Html.SelectOption(Model.Options.Order, ADLOrder.Customer, T("Customer").ToString())
-                            @Html.SelectOption(Model.Options.Order, ADLOrder.ProgramManager, T("ADL/PDL").ToString())
-                            @Html.SelectOption(Model.Options.Order, ADLOrder.StartDate, T("Strat Date").ToString())
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
                     @Html.LabelFor(m => m.Options.Filter, T("Filter").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-lg-2">
                         <select id="@Html.IdFor(m=>m.Options.Filter)" name="@Html.NameOf(m => m.Options.Filter)">

@@ -1,4 +1,4 @@
-﻿@model Faurecia.ADL.ViewModels.ADLQuotationViewModel
+﻿@model Faurecia.ADL.ViewModels.ADLViewModel
 @{
     Script.Require("jQueryUI");
     Script.Require("Microsoft_jQueryAjax_Validate");
@@ -31,69 +31,95 @@
                     {
                         @Html.Link(T("Back").Text, returnUrl,new { @class = "btn btn-default" });
                     }
+                    <button type="button" class="btn btn-sm btn-warning glyphicon-collapse-down" data-toggle="collapse" data-target="#baseInfo"/>
                 </div>
             </div>
         </div>
+        <div class="alert fade in hide" resource="alert" id="statusMessage">
+            <button type="button" class="close" onclick="hideStatusMessage()">
+                <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+            </button>
+            <p></p>
+        </div>
+        <div id="baseInfo" class="collapse in" >
         <div class="panel-body">
             @Html.HiddenFor(m=>m.Action)
-            <div class="alert fade in hide" resource="alert" id="statusMessage">
-                <button type="button" class="close" onclick="hideStatusMessage()">
-                    <span aria-hidden="true">×</span><span class="sr-only">Close</span>
-                </button>
-                <p></p>
-            </div>
             <div id="head">
                 @Html.Partial("_Head", Model)
             </div>
         </div>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist" id="detailTab">
-        @for (int i = 0; i < Model.Years.Count; i++)
-        {
-            int year = Model.Years[i];
-            var tabName = string.Format("YEAR{0}", year);
-            if (i==0)
-            {
-                <li role="presentation" class="active">
-                    <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
-                    @Html.HiddenFor(m => m.Years[i])
-                </li>
-            }
-            else
-            {
-                <li role="presentation">
-                    <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
-                    @Html.HiddenFor(m => m.Years[i])
-                </li>
-            }
-        }
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            @Html.Partial("_Detail", Model)
+        </div>
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist" id="detailTab">
+                @for (int i = 0; i < Model.Years.Count; i++)
+                {
+                    int year = Model.Years[i];
+                    var tabName = string.Format("YEAR{0}", year);
+                    if (i==0)
+                    {
+                        <li role="presentation" class="active">
+                            <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
+                            @Html.HiddenFor(m => m.Years[i])
+                        </li>
+                    }
+                    else
+                    {
+                        <li role="presentation">
+                            <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
+                            @Html.HiddenFor(m => m.Years[i])
+                        </li>
+                    }
+                }
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                @Html.Partial("_Detail", Model)
+            </div>
         </div>
         <div class="panel-footer">
             <div class="form-horizontal">
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        @Html.DropDownListFor(m => m.Head.IBP, Model.IBPs, new { @class = "form-control", placeholder = "" })
-                        @Html.ValidationMessageFor(m => m.Head.IBP)
-                    </div>
-                    @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        <label class="control-label text-success" style="text-align:left">
-                            @WorkContext.CurrentUser.UserName
+                    @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
+                    {
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-3 col-lg-3">
+                            @Html.DropDownListFor(m => m.Head.Quotation, Model.Quotations, new { @class = "form-control", placeholder = "" })
+                            @Html.ValidationMessageFor(m => m.Head.Quotation)
+                        </div>
+                        <div class="col-sm-3 col-lg-3">
+                        </div>
+                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                            @T("Creator").Text
                         </label>
-                    </div>
-                    <label class = "col-sm-2 col-lg-2 control-label" style = "text-align:left">
-                        @T("Creator").Text
-                    </label>
-                    <div class="col-sm-2 col-lg-2">
-                        <label class="control-label text-success" style="text-align:left">
-                            @Model.Head.Creator
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @WorkContext.CurrentUser.UserName
+                            </label>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2">
+                            @Html.DropDownListFor(m => m.Head.IBP, Model.IBPs, new { @class = "form-control", placeholder = "" })
+                            @Html.ValidationMessageFor(m => m.Head.IBP)
+                        </div>
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @WorkContext.CurrentUser.UserName
+                            </label>
+                        </div>
+                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                            @T("Creator").Text
                         </label>
-                    </div>
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @Model.Head.Creator
+                            </label>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -131,9 +157,9 @@
             }
             else
             {
-                if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.Modify") {
-                    $("#@Html.IdFor(m => m.Head.Customer)").attr("readonly", "readonly");
-                }
+                @*if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.Modify") {
+                    $("#@Html.IdFor(m => m.Head.Name)").attr("readonly", "readonly");
+                }*@
 
                 $(".datepicker").datepicker({
                     changeMonth: true,
@@ -142,7 +168,7 @@
                     dateFormat: "yy/mm/dd"
                 });
                 $("#@Html.IdFor(m => m.Action)").val("@Model.Action");
-                $("#@Html.IdFor(m => m.Head.Customer)").change(function () {
+                $("#@Html.IdFor(m => m.Head.Name)").change(function () {
                     var customer = $(this).val().toUpperCase();
                     $(this).val(customer);
                     $("#@Html.IdFor(m => m.Head.ProjectNo)").val("");
@@ -176,9 +202,9 @@
 
         function completeSave(req) {
             var result = $.parseJSON(req.responseJSON);
-            if (result.Action == "@Convert.ToInt32(Faurecia.ADL.ViewModels.EnumActions.Modify)") {
-                $("#@Html.IdFor(m => m.Head.Customer)").attr("readonly", "readonly");
-            }
+            @*if (result.Action == "@Convert.ToInt32(Faurecia.ADL.ViewModels.EnumActions.Modify)") {
+                $("#@Html.IdFor(m => m.Head.Name)").attr("readonly", "readonly");
+            }*@
             $("#@Html.IdFor(m => m.Head.Id)").val(result.Head.Id);
             $("#@Html.IdFor(m => m.Action)").val(result.Action);
             $("#@Html.IdFor(m => m.Head.ProjectNo)").val(result.Head.ProjectNo);
@@ -192,20 +218,35 @@
 
 
             showErrorInfo(result);
-
-            var returnUrl = "@Request["ReturnUrl"]";
-            var redirectUrl = result.RedirectToHref;
-            if (!!returnUrl) {
-                if (result.Head.Phase != oldPhase) {
-                    redirectUrl = returnUrl;
+            if (result.Code == 0) {
+                var returnUrl = "@Request["ReturnUrl"]";
+                var redirectUrl = result.RedirectToHref;
+                if (!!returnUrl) {
+                    if (result.Head.Phase != oldPhase) {
+                        redirectUrl = returnUrl;
+                    }
+                    else {
+                        redirectUrl = redirectUrl + "?returnUrl=" + returnUrl;
+                    }
                 }
-                else {
-                    redirectUrl = redirectUrl + "?returnUrl=" + returnUrl;
-                }
+                setTimeout(function () {
+                    location.replace(redirectUrl);
+                }, 2000);
             }
-            setTimeout(function () {
-                location.replace(redirectUrl);
-            }, 2000)
+        }
+
+        function changeCustomer(customer) {
+            if (customer.length < 3) { return; }
+            var url = "@Url.Action("GetProjectNo",new { area = "Faurecia.ADL" })";
+            var timestamp = Math.round(new Date().getTime() / 1000);
+            var reqdata = { customer: customer, key: timestamp };
+
+            $.get(url, reqdata, function (data) {
+                $("#@Html.IdFor(m => m.Head.ProjectNo)").val(data);
+                var versionNo = $("#@Html.IdFor(m => m.Head.VersionNo)").val();
+                var projectNoVersionNo=data+"."+versionNo;
+                $("#projectNoVersionNo").val(projectNoVersionNo);
+            });
         }
     </script>
 
@@ -220,7 +261,7 @@
         }
 
         function AddActivityTypeRow() {
-            
+
             var tabpanel = $("div.active[role='tabpanel']");
             var activityTypeQueryResults = $("#activityTypeQueryResults");
             var activityTypes = $(activityTypeQueryResults).find("input:checked");
@@ -234,177 +275,30 @@
                 var comment=$(activityTypes[i]).parent().parent().find("td:eq(4)").text();
                 var activityType = { Id: activityTypeId, Comment: comment, RMBHour: RMBHour, CostCenter: costCenter, ActivityType: activityType };
                 //Add Head Count Record Row
-                AddDetailRecordRow(activityType, "HeadCount")
+                if (!HasDetailRecordRow(activityType, "HeadCount"))
+                {
+                    AddDetailRecordRow(activityType, "HeadCount")
+                }
                 //Add Hour Ratio Record Row
-                AddDetailRecordRow(activityType, "HourRatio");
+                if (!HasDetailRecordRow(activityType, "HourRatio")) {
+                    AddDetailRecordRow(activityType, "HourRatio");
+                }
                 //Add Cost Record Row
-                AddDetailRecordRow(activityType, "Cost");
+                if (!HasDetailRecordRow(activityType, "Cost")) {
+                    AddDetailRecordRow(activityType, "Cost");
+                }
             }
-            
+            $("#activityTypeModal").modal("hide");
         }
-        
-        function AddHeadCountRecordRow(activityType) {
-            var tabpanel = $("div.active[role='tabpanel']");
-            var table = $(tabpanel).find("table[id^='detailHeadCount_']");
-            var adlRecordId = $("#Head_Id").val();
-            var year = $(tabpanel).data("year");
-            var entryIndex = $(table).data("entryindex");
-            var lastRowHC = $(table).find("tr:last");
-            var lastRowHCCells = $(lastRowHC).find("td");
-            var lastRowActivityTypeId = $(lastRowHC).find("input[name$='.ActivityType.Id']");
-            var lastRowIndex = $(lastRowActivityTypeId).data("index");
-            var newindex = lastRowIndex + 1;
 
-            var rowHC = $("<tr></tr>");
-            for (var i = 0; i < lastRowHCCells.length; i++) {
-                if (i == 0) {
-                    var prefixName = "Detail.Entries[" + entryIndex + "].HeadCounts[" + newindex + "]";
-                    //TD1
-                    var td1 = $("<td></td>");
-                    var url = "/ADL/Default/DeleteDetailRecord?ActivityTypeId=" + activityType.Id + "&Year=" + year + "&ADLRecordId=" + adlRecordId + "&EntryIndex=" + entryIndex;
-                    var href = $("<a class='btn btn-warning btn-sm' href='#'>-</a>");
-                    $(href).attr("data-ajax", "true");
-                    $(href).attr("data-ajax-method", "GET");
-                    $(href).attr("data-ajax-success", "CompleteDeleteDetailRecord");
-                    $(href).attr("data-ajax-url", url);
-                    td1.append(href);
-                    rowHC.append(td1);
-                }
-                else if(i==1){
-                    //TD2
-                    var td2 = $("<td></td>");
-                    var hcId=$("<input type='hidden' value='0' name='"+prefixName+".Id'/>")
-                    var hcYear = $("<input name='" + prefixName + ".Year' type='hidden' value='" + year + "'/>")
-                    var hcActivityTypeId = $("<input name='" + prefixName + ".ActivityType.Id' type='hidden' value='" + activityType.Id + "'/>");
-                    var hcActivityTypeComment = $("<input name='" + prefixName + ".ActivityType.Comment' type='hidden' value='" + activityType.Comment + "'/>");
-                    td2.append(hcId);
-                    td2.append(hcYear);
-                    td2.append(hcActivityTypeId);
-                    td2.append(hcActivityTypeComment);
-                    td2.append(activityType.Comment);
-                    rowHC.append(td2);
-                }
-                else if(i==2){
-                    //TD3
-                    var td3 = $("<td></td>");
-                    var hcRMBHour = $("<input name='" + prefixName + ".ActivityType.RMBHour' type='hidden' value='" + activityType.RMBHour + "'/>");
-                    td3.append(hcRMBHour);
-                    td3.append(activityType.RMBHour);
-                    rowHC.append(td3);
-                }
-                else if (i ==3) {
-                    //TD4
-                    var td4= $("<td></td>");
-                    var hcCostCenter = $("<input name='" + prefixName + ".ActivityType.CostCenter' type='hidden' value='" + activityType.CostCenter + "'/>");
-                    td4.append(hcCostCenter);
-                    td4.append(activityType.CostCenter);
-                    rowHC.append(td4);
-                }
-                else if (i == 4) {
-                    //TD5
-                    var td5 = $("<td></td>");
-                    var hcActitityType = $("<input name='" + prefixName + ".ActivityType.ActivityType' type='hidden' value='" + activityType.ActivityType + "'/>");
-                    td5.append(hcActitityType);
-                    td5.append(activityType.ActivityType);
-                    rowHC.append(td5);
-                }
-                else if (i == 5) {
-                    //TD6
-                    var td6 = $("<td></td>");
-                    var jan = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jan'/>");
-                    td6.append(jan);
-                    rowHC.append(td6);
-                }
-                else if (i ==6) {
-                    //TD7
-                    var td7 = $("<td></td>");
-                    var feb = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Feb'/>");
-                    td7.append(feb);
-                    rowHC.append(td7);
-                }
-                else if (i == 7) {
-                    //TD8
-                    var td8 = $("<td></td>");
-                    var mar = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Mar'/>");
-                    td8.append(mar);
-                    rowHC.append(td8);
-                }
-                else if (i ==8) {
-                    //TD9
-                    var td9 = $("<td></td>");
-                    var apr = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Apr'/>");
-                    td9.append(apr);
-                    rowHC.append(td9);
-                }
-                else if (i == 9) {
-                    //TD10
-                    var td10 = $("<td></td>");
-                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".May'/>");
-                    td10.append(may);
-                    rowHC.append(td10);
-                }
-                else if (i == 10) {
-                    //TD11
-                    var td11 = $("<td></td>");
-                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jun'/>");
-                    td11.append(may);
-                    rowHC.append(td11);
-                }
-                else if (i == 11) {
-                    //TD12
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jul'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else if (i == 12) {
-                    //TD13
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Aug'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else if (i == 13) {
-                    //TD14
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Sep'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else if (i == 14) {
-                    //TD15
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Oct'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else if (i == 15) {
-                    //TD16
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Nov'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else if (i == 16) {
-                    //TD17
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Dev'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else if (i == 17) {
-                    //TD18
-                    var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' readonly='readonly' name='" + prefixName + ".Y1'/>");
-                    td.append(input);
-                    rowHC.append(td);
-                }
-                else {
-                    rowHC.append($("<td></td>"));
-                }
-            }
-            $(table).append(rowHC);
+        function HasDetailRecordRow(activityType, tableName)
+        {
+            var tabpanel = $("div.active[role='tabpanel']");
+            var table = $(tabpanel).find("table[id^='detail" + tableName + "_']");
+            var activityTypeIds = $(table).find("input[name$='.ActivityType.Id'][value='" + activityType.Id + "']");
+            return activityTypeIds.length > 0;
         }
+
         function AddDetailRecordRow(activityType,tableName) {
             var tabpanel = $("div.active[role='tabpanel']");
             var table = $(tabpanel).find("table[id^='detail" + tableName + "_']");
@@ -426,10 +320,14 @@
             var row = $("<tr></tr>");
             var startIndex = 1;
             var endIndex = lastRowCells.length + 1;
-
+            var style = "style='padding:0px;width:50px;height:auto;'";
             if (tableName == "HeadCount") {
                 startIndex = 0;
                 endIndex = lastRowCells.length;
+            }
+            if (tableName != "Cost")
+            {
+                style = style + "  maxlength='5'";
             }
             for (var i = startIndex; i < endIndex; i++) {
                 if (i == 0) {
@@ -486,91 +384,91 @@
                 else if (i == 5) {
                     //TD6
                     var td6 = $("<td></td>");
-                    var jan = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jan'/>");
+                    var jan = $("<input type='text' "+style+" name='" + prefixName + ".Jan'/>");
                     td6.append(jan);
                     row.append(td6);
                 }
                 else if (i == 6) {
                     //TD7
                     var td7 = $("<td></td>");
-                    var feb = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Feb'/>");
+                    var feb = $("<input type='text' "+style+" name='" + prefixName + ".Feb'/>");
                     td7.append(feb);
                     row.append(td7);
                 }
                 else if (i == 7) {
                     //TD8
                     var td8 = $("<td></td>");
-                    var mar = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Mar'/>");
+                    var mar = $("<input type='text' "+style+" name='" + prefixName + ".Mar'/>");
                     td8.append(mar);
                     row.append(td8);
                 }
                 else if (i == 8) {
                     //TD9
                     var td9 = $("<td></td>");
-                    var apr = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Apr'/>");
+                    var apr = $("<input type='text' "+style+" name='" + prefixName + ".Apr'/>");
                     td9.append(apr);
                     row.append(td9);
                 }
                 else if (i == 9) {
                     //TD10
                     var td10 = $("<td></td>");
-                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".May'/>");
+                    var may = $("<input type='text' "+style+" name='" + prefixName + ".May'/>");
                     td10.append(may);
                     row.append(td10);
                 }
                 else if (i == 10) {
                     //TD11
                     var td11 = $("<td></td>");
-                    var may = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jun'/>");
+                    var may = $("<input type='text' "+style+" name='" + prefixName + ".Jun'/>");
                     td11.append(may);
                     row.append(td11);
                 }
                 else if (i == 11) {
                     //TD12
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Jul'/>");
+                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Jul'/>");
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 12) {
                     //TD13
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Aug'/>");
+                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Aug'/>");
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 13) {
                     //TD14
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Sep'/>");
+                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Sep'/>");
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 14) {
                     //TD15
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Oct'/>");
+                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Oct'/>");
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 15) {
                     //TD16
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Nov'/>");
+                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Nov'/>");
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 16) {
                     //TD17
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' name='" + prefixName + ".Dev'/>");
+                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Dev'/>");
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 17) {
                     //TD18
                     var td = $("<td></td>");
-                    var input = $("<input type='text' style='padding:0px;width:50px;height:auto;' readonly='readonly' name='" + prefixName + ".Y1'/>");
+                    var input = $("<input type='text' "+style+" readonly='readonly' name='" + prefixName + ".Y1'/>");
                     td.append(input);
                     row.append(td);
                 }
@@ -581,11 +479,81 @@
             if (tableName == "Cost") {
                 row.find("input[type='text']").each(function (x, xitem) {
                     $(xitem).attr("readonly", "readonly");
-                })
+                });
             }
+            else {
+                row.find("input[type='text']").each(function (x, xitem) {
+                    $(xitem).bind("keypress", function (event) {
+                        var val = $(this).val();
+                        var key = event.key;
+                        if ((key < "0" || key > "9") && key != ".") {
+                            event.preventDefault();
+                        }
+                        if (val.indexOf(".") >= 0 && key == ".") {
+                            event.preventDefault();
+                        }
+                        if (val.length == 0 && key == ".") {
+                            event.preventDefault();
+                        }
+                        if (val.length == 1 && val == "0" && key != ".") {
+                            event.preventDefault();
+                        }
+                    }).bind("paste", function (event) {
+                        var val = undefined;
+                        if (window.clipboardData && window.clipboardData.getData) {
+                            val = win.clipboardData.getData("Text");
+                        }
+                        else {
+                            val = event.originalEvent.clipboardData.getData("Text");
+                        }
+                        var r = /^[0-9]+.?[0-9]*$/
+                        if (!r.test(val)) {
+                            event.preventDefault();
+                            alert("\""+val+"\"@T(" is not valid value.")");
+                        }
+                    }).bind("input", function (event) {
+                        var val = $(this).val();
+                        var r = /^[0-9]+.?[0-9]*$/
+                        if (!r.test(val)) {
+                            event.preventDefault();
+                            alert("\""+val+"\"@T(" is not valid value.")");
+                        }
+                        var name = $(this).attr("name");
+                        CalcCost(tableName,name);
+                    });
+                });
+            }
+
             $(table).append(row);
         }
 
+        function CalcCost(tableName,name) {
+            var tabpanel = $("div.active[role='tabpanel']");
+            //HeadCount Input
+            var headCountInputName = name.replace(tableName, "HeadCount");
+            var headCount = $("input[name='" + headCountInputName + "']").val();
+            if (!$.isNumeric(headCount)) {
+                headCount = 0;
+            }
+            //Cost Input
+            var hourRatioInputName = name.replace(tableName, "HourRatio");
+            var hourRatio = $("input[name='" + hourRatioInputName + "']").val();
+            if (!$.isNumeric(hourRatio)) {
+                hourRatio = 0;
+            }
+            //Working hour
+            var reg=new RegExp(tableName+"s\[[0-9]*\]");
+            var workingHourInputName = name.replace(reg, "WorkingHours[0]");
+            var workingHour = $("input[name='" + workingHourInputName + "']").val();
+            if (!$.isNumeric(workingHour)) {
+                workingHour = 0;
+            }
+            //
+            var cost = Math.round(headCount * hourRatio * workingHour * 100) / 100;
+            //Cost Input
+            var costInputName = name.replace(tableName, "Cost");
+            $("input[name='" + costInputName + "']").val(cost);
+        }
         function CompleteDeleteDetailRecord(result) {
             if (!!result.Message) {
                 alert(result.Message);

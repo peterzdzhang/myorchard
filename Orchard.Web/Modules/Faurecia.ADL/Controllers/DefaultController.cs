@@ -162,9 +162,15 @@ namespace Faurecia.ADL.Controllers
                     viewModel.Action = EnumActions.View;
                     ViewBag.Title = T("ADL View").Text;
                 }
-                SetHeadViewModel(viewModel, record);
             }
-            return View(viewModel);
+            else
+            {
+                record = new ADLRecord() { VersionNo=1,Currency= "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            return View("Quotation",viewModel);
         }
         public ActionResult Quotation(int Id=0)
         {
@@ -190,22 +196,63 @@ namespace Faurecia.ADL.Controllers
                     viewModel.Action = EnumActions.View;
                     ViewBag.Title = T("ADL View").Text;
                 }
-                SetHeadViewModel(viewModel, record);
-
-                SetYears(viewModel);
-                //viewModel.ActivityTypes = GetActivityTypes();
-                SetDetailViewModel(viewModel, record);
             }
+            else
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            SetHeadViewModel(viewModel, record);
+            
             return View(viewModel);
         }
-        private void SetQuotations(ADLCreateViewModel viewModel)
+
+        public ActionResult IBP(int Id = 0)
+        {
+            ViewBag.Title = T("ADL IBP").Text;
+            var viewModel = new ADLIBPViewModel()
+            {
+                Action = EnumActions.New,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
+            SetIBPs(viewModel);
+            //SetActivityTypes(viewModel);
+            var record = _adlRecords.Get(Id);
+            if (record != null)
+            {
+                if (record.IsLastest)
+                {
+                    viewModel.Action = EnumActions.Modify;
+                }
+                else
+                {
+                    viewModel.Action = EnumActions.View;
+                    ViewBag.Title = T("ADL View").Text;
+                }
+            }
+            else
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            SetHeadViewModel(viewModel, record);
+            return View("Quotation", viewModel);
+        }
+
+        private void SetQuotations(ADLViewModel viewModel)
         {
             viewModel.Quotations = new List<SelectListItem>()
             {
                 new SelectListItem() { Text=T("Any Quotation Person").Text,Value="" }
             };
         }
-        private void SetIBPs(ADLQuotationViewModel viewModel)
+        private void SetIBPs(ADLViewModel viewModel)
         {
             viewModel.IBPs = new List<SelectListItem>()
             {
@@ -272,6 +319,7 @@ namespace Faurecia.ADL.Controllers
                     endYear = viewModel.Head.OfferDate.Value.Year;
                 }
             }
+            if (endYear < startYear + 4) endYear = startYear + 4;
             for (int year = startYear; year <= endYear; year++)
             {
                 viewModel.Years.Add(year);
@@ -302,6 +350,7 @@ namespace Faurecia.ADL.Controllers
         }
         private void SetHeadViewModel(ADLViewModel viewModel,ADLRecord adl)
         {
+            if (adl == null) return;
             viewModel.Head.Id = adl.Id;
             viewModel.Head.Award = adl.Award;
             viewModel.Head.Ballfix = adl.Ballfix;
@@ -332,8 +381,9 @@ namespace Faurecia.ADL.Controllers
             viewModel.Head.Variant3 = adl.Variant3;
             viewModel.Head.VehicelComments = adl.VehicelComments;
             viewModel.Head.VersionNo = adl.VersionNo;
+            viewModel.Head.Creator = adl.Creator;
         }
-        private void SetDetailViewModel(ADLQuotationViewModel viewModel,ADLRecord adl)
+        private void SetDetailViewModel(ADLViewModel viewModel,ADLRecord adl)
         {
             foreach (int year in viewModel.Years)
             {
@@ -1020,6 +1070,10 @@ namespace Faurecia.ADL.Controllers
         public ActionResult ShowActivityTypeList(int ADLRecordId,ShowActivityTypeOptions options, PagerParameters pagerParameters)
         {
             var model = GetShowActivityTypeViewModel(ADLRecordId, options, pagerParameters);
+            if (pagerParameters!=null && pagerParameters.Page!=null)
+            {
+                return PartialView("_ActivityTypeQueryResults", model);
+            }
             return PartialView("_ActivityTypeList", model);
         }
 
@@ -1031,7 +1085,8 @@ namespace Faurecia.ADL.Controllers
 
         public ShowActivityTypeViewModel GetShowActivityTypeViewModel(int ADLRecordId, ShowActivityTypeOptions options, PagerParameters pagerParameters)
         {
-            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
+            pager.UpdateTargetId = "activityTypeQueryResults";
             var queries = _activityTypeRecords.Table.Where(w => w.IsUsed == true);
             if (!string.IsNullOrWhiteSpace(options.SearchText))
             {

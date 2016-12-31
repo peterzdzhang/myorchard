@@ -1,0 +1,28 @@
+﻿@{
+    var RouteValues = (object)Model.RouteValues;
+    RouteValueDictionary rvd;
+    if (RouteValues == null) {
+        rvd = new RouteValueDictionary();
+    }
+    else {
+        rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+    }
+    if (rvd.ContainsKey("X-Requested-With"))
+    {
+        rvd.Remove("X-Requested-With");
+    }
+    if (!rvd.ContainsKey("page"))
+    {
+        rvd.Add("page", 1);
+    }
+}
+@if (!Request.IsAjaxRequest())
+{
+    <a href="@Url.Action((string)rvd["action"], rvd)"><i class="fa fa-angle-left"></i></a>
+}
+else
+{
+    <a data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace"
+       data-ajax-update="#@Model.Pager.UpdateTargetId"
+       href="@Url.Action((string)rvd["action"], rvd)"><i class="fa fa-angle-left"></i></a>
+}

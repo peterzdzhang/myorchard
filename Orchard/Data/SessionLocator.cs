@@ -96,6 +96,10 @@ namespace Orchard.Data {
                         _session.Transaction.Commit();
                     }
                 }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex.ToString());
+                }
                 finally {
                     if (_contentManagerSession != null) {
                         _contentManagerSession.Clear();

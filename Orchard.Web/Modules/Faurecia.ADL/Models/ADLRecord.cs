@@ -33,8 +33,8 @@ namespace Faurecia.ADL.Models
 
         public virtual DateTime? PTRDate { get; set; }
         public virtual DateTime? SOPDate { get; set; }
-        public virtual string MockUp { get; set; }
-        public virtual string Award { get; set; }
+        public virtual DateTime? MockUp { get; set; }
+        public virtual DateTime? Award { get; set; }
 
         public virtual string MileStoneComments { get; set; }
         //Vehicle/Frame information

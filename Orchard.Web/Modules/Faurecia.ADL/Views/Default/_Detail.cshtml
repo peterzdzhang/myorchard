@@ -16,7 +16,7 @@
     <div class="alert-info text-center" style="padding:5px">
         @T("HEAD COUNT")
     </div>
-    <div style="overflow-y:inherit;font-size:12px">
+    <div style="overflow:auto;font-size:12px">
         <table class="table table-bordered table-condensed" id="detailHeadCount_@entryIndex" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
@@ -145,8 +145,12 @@
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
+                               data-valid="true"
+                               data-val-length="The field Currency must be a string with a maximum length of 5."
+                               data-val-required="The Customer field is required."
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Mar" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Mar)" />
+                        <span class="field-validation-valid" data-valmsg-for="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Mar)" data-valmsg-replace="true"></span>
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
@@ -208,7 +212,7 @@
     <div class="alert-info text-center" style="padding:5px">
         @T("Hour Ratio bases")
     </div>
-    <div style="overflow-y:inherit;font-size:12px">
+    <div style="overflow:auto;font-size:12px">
         <table class="table table-bordered table-condensed table-hover" id="detailHourRatio_@entryIndex" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
@@ -326,8 +330,8 @@
     </div>
     <!--WorkingHours-->
     @{ index = 0; }
-    <div style="overflow-y:inherit;font-size:12px">
-        <table class="table table-bordered table-condensed table-hover" style="width:auto" data-entryIndex="@entryIndex">
+    <div style="overflow:auto;font-size:12px">
+        <table class="table table-bordered table-condensed table-hover" style="width:auto;margin-right:0px;margin-left:Auto" data-entryIndex="@entryIndex">
             <thead>
                 <tr>
                     <td colspan="13" class="alert-info text-center" style="padding:5px">
@@ -354,84 +358,85 @@
             {
                 <tr>
                     <td style="">
-                        <input type="hidden" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Id" 
-                                             name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Id)" />
+                        <input type="hidden" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Id"
+                               name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].WorkingHours[index].Year)
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jan)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Feb)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Mar)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Apr)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].May)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jun)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jul)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Aug)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Sep)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Oct)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Nov)" />
                     </td>
                     <td style="">
-                        <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev" 
+                        <input type="text" style="padding:0px;width:50px;height:auto;"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Dev)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Y1" 
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Y1"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Y1)" />
                     </td>
                 </tr>
                 index++;
             }
         </table>
+
     </div>
     <!--Costs-->
     @{ index = 0; }
     <div class="alert-info text-center" style="padding:5px">
         @T("COST")
     </div>
-    <div style="overflow-y:inherit;font-size:12px">
+    <div style="overflow:auto;font-size:12px">
         <table class="table table-bordered table-condensed table-hover" id="detailCost_@entryIndex" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">

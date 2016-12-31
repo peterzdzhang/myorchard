@@ -32,8 +32,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>Faurecia.BM</ModuleName>
-    <VirtualPath>~/Themes/Faurecia.BM/bin/Faurecia.BM.dll</VirtualPath>
-    <LoaderName>PrecompiledExtensionLoader</LoaderName>
+    <VirtualPath>~/Themes/Faurecia.BM/Faurecia.BM.csproj</VirtualPath>
+    <LoaderName>DynamicExtensionLoader</LoaderName>
     <References />
   </Dependency>
   <Dependency>
