@@ -22,7 +22,5 @@
 }
 else
 {
-    <a data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace"
-       data-ajax-update="#@Model.Pager.UpdateTargetId"
-       href="@Url.Action((string)rvd["action"], rvd)"><i class="fa fa-angle-left"></i></a>
+    <button class="btn btn-default" type="submit" name="page" value="@rvd["page"]"><i class="fa fa-angle-left"></i></button>
 }

@@ -155,6 +155,7 @@
     <Content Include="Views\Default\_Head.cshtml" />
     <Content Include="Views\Default\_ActivityTypeList.cshtml" />
     <Content Include="Views\Default\_ActivityTypeQueryResults.cshtml" />
+    <Content Include="Views\Default\_IndexQueryResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -176,9 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Default\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Default\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />

@@ -67,7 +67,8 @@ namespace Faurecia.ADL.Controllers
         // GET: Default
         public ActionResult Index(ADLIndexOptions options, PagerParameters pagerParameters)
         {
-            var pager = new Pager(_siteService.GetSiteSettings(),pagerParameters);
+            var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
+            pager.UpdateTargetId = "indexQueryResults";
 
             if (options == null)
             {
@@ -137,6 +138,10 @@ namespace Faurecia.ADL.Controllers
                 Options = options,
                 Pager = pagerShape
             };
+            if(Request.IsAjaxRequest())
+            {
+                return PartialView("_IndexQueryResult", model);
+            }
             return View(model);
         }
         // GET: Create

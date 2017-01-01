@@ -1,0 +1,130 @@
+﻿@model ADLIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    var index = 0;
+    var pageSizes = new List<int?>() { 10, 20, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize))
+    {
+        pageSizes.Add(defaultPageSize);
+    }
+}
+<table class="table table-bordered table-condensed table-hover">
+    <thead>
+        <tr class="active">
+            <th>@T("Item No")</th>
+            <th>@T("Project No")</th>
+            <th>@T("Version No")</th>
+            <th>@T("Status")</th>
+            <th>@T("ADL/PDL")</th>
+            <th>@T("Customer")</th>
+            <th>@T("Type")</th>
+            <th>@T("Start Date")</th>
+            <th>@T("Offer Date")</th>
+            <th>@T("SOP Date")</th>
+            <th>@T("Comments")</th>
+        </tr>
+    </thead>
+    @if (Model.ADLs.Count == 0)
+    {
+        <tr>
+            <td colspan="11" class="warning text-center">
+                @T("No Data Found.")
+            </td>
+        </tr>
+    }
+    else
+    {
+        foreach (var entry in Model.ADLs)
+        {
+            <tr>
+                <td>
+                    <input type="hidden" value="@Model.ADLs[index].Id" name="@Html.NameOf(m => m.ADLs[index].Id)" />
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.ADLs[index].IsChecked)" />
+                    @(index + 1)
+                </td>
+                <td>
+                    @if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
+                    {
+                        string url = Url.Action("Index", "Create", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id });
+                        @Html.ActionLink(entry.ADLRecord.ProjectNo, "Create", "Default"
+                                            , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl , Id = entry.Id }
+                                            , new { })
+                    }
+                    else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.Quotation)
+                    {
+                        @Html.ActionLink(entry.ADLRecord.ProjectNo, "Quotation", "Default"
+                        , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
+                        , new { })
+                    }
+                    else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+                    {
+                        @Html.ActionLink(entry.ADLRecord.ProjectNo, "IBP", "Default"
+                        , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
+                        , new { })
+                    }
+                    else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.ECR)
+                    {
+                        @Html.ActionLink(entry.ADLRecord.ProjectNo, "ECR", "Default"
+                        , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
+                        , new { })
+                    }
+                </td>
+                <td>
+                    @entry.ADLRecord.VersionNo
+                </td>
+                <td>
+                    @(entry.ADLRecord.Phase + "-" + entry.ADLRecord.Status)
+                </td>
+                <td>
+                    @entry.ADLRecord.ProgramManager
+                </td>
+                <td>
+                    @entry.ADLRecord.Customer
+                </td>
+                <td>
+                    @entry.ADLRecord.Type
+                </td>
+                <td>
+                    @(entry.ADLRecord.StartDate == null ? "" : string.Format("{0:yyyy/MM/dd}", entry.ADLRecord.StartDate.Value))
+                </td>
+                <td>
+                    @(entry.ADLRecord.OfferDate == null ? "" : string.Format("{0:yyyy/MM/dd}", entry.ADLRecord.OfferDate.Value))
+                </td>
+                <td>
+                    @(entry.ADLRecord.SOPDate == null ? "" : string.Format("{0:yyyy/MM/dd}", entry.ADLRecord.SOPDate.Value))
+                </td>
+                <td>
+                    @{
+                        string comments = string.Empty;
+                        if (!string.IsNullOrEmpty(entry.ADLRecord.MileStoneComments))
+                        {
+                            comments += entry.ADLRecord.MileStoneComments + "<br/>";
+                        }
+                        if (!string.IsNullOrEmpty(entry.ADLRecord.VehicelComments))
+                        {
+                            comments += entry.ADLRecord.VehicelComments + "<br/>";
+                        }
+                        if (!string.IsNullOrEmpty(entry.ADLRecord.QuotationComments))
+                        {
+                            comments += entry.ADLRecord.QuotationComments + "<br/>";
+                        }
+                        if (!string.IsNullOrEmpty(entry.ADLRecord.IBPComments))
+                        {
+                            comments += entry.ADLRecord.IBPComments + "<br/>";
+                        }
+                        if (comments.Length > 0)
+                        {
+                            comments = comments.Substring(0, comments.LastIndexOf("<br/>"));
+                        }
+                    }
+                    @(new MvcHtmlString(comments))
+                </td>
+            </tr>
+            index++;
+        }
+    }
+</table>
+<div style="margin:-30px 0">
+    @Display(Model.Pager)
+</div>

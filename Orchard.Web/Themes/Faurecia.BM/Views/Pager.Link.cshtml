@@ -21,9 +21,5 @@
     <a href="@Url.Action((string)rvd["action"], rvd)">@rvd["page"]</a>
 }
 else {
-    @Ajax.ActionLink(Convert.ToString(rvd["page"]), actionName: (string)rvd["action"], routeValues: rvd, ajaxOptions: new AjaxOptions()
-    {
-        HttpMethod = "GET",
-        UpdateTargetId= (string)Model.Pager.UpdateTargetId
-    })
+    <button class="btn btn-default" type="submit" name="page" value="@rvd["page"]">@rvd["page"]</button>
 }
