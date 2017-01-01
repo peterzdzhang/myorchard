@@ -156,6 +156,7 @@
     <Content Include="Views\Default\_ActivityTypeList.cshtml" />
     <Content Include="Views\Default\_ActivityTypeQueryResults.cshtml" />
     <Content Include="Views\Default\_IndexQueryResult.cshtml" />
+    <Content Include="Views\Default\Diff.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

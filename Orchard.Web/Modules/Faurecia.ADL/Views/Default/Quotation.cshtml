@@ -226,7 +226,30 @@
         <div class="panel-footer">
             <div class="form-horizontal">
                 <div class="form-group">
-                    @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
+                    @if (Model.Action == Faurecia.ADL.ViewModels.EnumActions.View)
+                    {
+                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @Model.Head.IBP
+                            </label>
+                        </div>
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @Model.Head.Quotation
+                            </label>
+                        </div>
+                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                            @T("Creator").Text
+                        </label>
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @Model.Head.Creator
+                            </label>
+                        </div>
+                    }
+                    else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
                     {
                         @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
                         <div class="col-sm-3 col-lg-3">
@@ -420,7 +443,8 @@
                 var returnUrl = "@Request["ReturnUrl"]";
                 var redirectUrl = result.RedirectToHref;
                 if (!!returnUrl) {
-                    if (result.Head.NextPhase != oldPhase || result.Head.NextPhase=='@Faurecia.ADL.Models.EnumPhase.IBP') {
+                    if ( (result.Head.NextPhase != '@Faurecia.ADL.Models.EnumPhase.ECR' && result.Head.NextPhase != oldPhase)
+                        || result.Head.NextPhase == '@Faurecia.ADL.Models.EnumPhase.IBP') {
                         redirectUrl = returnUrl;
                     }
                     else {

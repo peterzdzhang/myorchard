@@ -189,8 +189,6 @@ namespace Faurecia.ADL.Controllers
                 Detail = new ADLDetailViewModel(),
                 Message = string.Empty
             };
-            SetIBPs(viewModel);
-            //SetActivityTypes(viewModel);
             var record = _adlRecords.Get(Id);
             if (record != null)
             {
@@ -212,8 +210,7 @@ namespace Faurecia.ADL.Controllers
             SetYears(viewModel);
             SetDetailViewModel(viewModel, record);
             SetHeadViewModel(viewModel, record);
-            
-            return View(viewModel);
+            return View("Quotation", viewModel);
         }
 
         public ActionResult IBP(int Id = 0)
@@ -285,6 +282,36 @@ namespace Faurecia.ADL.Controllers
             SetDetailViewModel(viewModel, record);
             SetHeadViewModel(viewModel, record);
             return View("Quotation", viewModel);
+        }
+
+        public ActionResult View(int Id = 0)
+        {
+            var viewModel = new ADLQuotationViewModel()
+            {
+                Action = EnumActions.New,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
+            viewModel.Action = EnumActions.View;
+            ViewBag.Title = T("ADL View").Text;
+            SetIBPs(viewModel);
+            //SetActivityTypes(viewModel);
+            var record = _adlRecords.Get(Id);
+            if (record == null)
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            SetHeadViewModel(viewModel, record);
+            return View("Quotation", viewModel);
+        }
+
+        public ActionResult Diff()
+        {
+            return View("Diff");
         }
         private void SetQuotations(ADLViewModel viewModel)
         {
@@ -1226,7 +1253,14 @@ namespace Faurecia.ADL.Controllers
             }
             else if (viewModel.Head.Phase == EnumPhase.IBP)
             {
-                viewModel.RedirectToHref = Url.Action("IBP", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+                if (viewModel.Head.NextPhase == EnumPhase.ECR)
+                {
+                    viewModel.RedirectToHref = Url.Action("ECR", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+                }
+                else
+                {
+                    viewModel.RedirectToHref = Url.Action("IBP", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+                }
             }
             else if (viewModel.Head.Phase == EnumPhase.ECR)
             {

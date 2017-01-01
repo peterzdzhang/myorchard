@@ -1,0 +1,62 @@
+﻿@using Faurecia.ADL.ViewModels;
+@{
+    Script.Require("jQueryUI");
+    Script.Require("Microsoft_jQueryAjax_Validate");
+    Style.Require("jQueryUI");
+    Style.Require("FaureciaADLStyle");
+}
+<h1 style="margin:5px 10px 10px 10px">
+    @Html.TitleForPage(T("ADL Diff").ToString())
+</h1>
+<div class="row">
+    <div class="col-lg-6 col-sm-6 col-xs-6" style="padding:5px;margin:0px">
+        <div class="panel panel-default"  style="margin:0px">
+            <div class="panel-heading"></div>
+            <div class="panel-body" style="padding:0px;margin:0px;overflow:auto"  id="div1">
+                <iframe name="left" scrolling="no" style="width:600px;height:600px;border:none" src="/ADL/Default/View/1"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-6 col-xs-6" style="padding:5px;margin:0px">
+        <div class="panel panel-default" style="margin:0px">
+            <div class="panel-heading"></div>
+            <div class="panel-body" style="padding:0px;margin:0px;overflow:auto"  id="div2">
+                <iframe name="right" scrolling="no" style="width:600px;height:600px;border:none" src="/ADL/Default/View/2"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#div1").bind("scroll", function () {
+                var scrollLeft = $("#div1").scrollLeft();
+                var scrollTop = $("#div1").scrollTop();
+                $("#div2").scrollTop(scrollTop);
+                $("#div2").scrollLeft(scrollLeft);
+            });
+            $("#div2").bind("scroll", function () {
+                var scrollLeft = $("#div2").scrollLeft();
+                var scrollTop = $("#div2").scrollTop();
+                $("#div1").scrollTop(scrollTop);
+                $("#div1").scrollLeft(scrollLeft);
+            });
+
+            $("iframe").each(function (i,item) {
+                $(item.contentWindow).bind("load", function () {
+                    var width = $(item.contentDocument.body).width();
+                    var height = $(item.contentDocument.body).height();
+                    $(item).width(width);
+                    $(item).height(height);
+                });
+                $(item.contentDocument.body).bind("resize", function () {
+                    var width = $(item.contentDocument.body).width();
+                    var height = $(item.contentDocument.body).height();
+                    $(item).width(width);
+                    $(item).height(height);
+                });
+            });
+        })
+    </script>
+}
