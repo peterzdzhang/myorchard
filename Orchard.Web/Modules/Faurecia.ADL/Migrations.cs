@@ -19,11 +19,33 @@ namespace Faurecia.ADL {
                 .Column("CostCenter", DbType.String)
                 .Column("RMBHour", DbType.String)
                 .Column("Comment", DbType.String)
+                .Column("DisplayGroup", DbType.String)
+                .Column("TotalGroup", DbType.String)
                 .Column("IsUsed", DbType.Boolean)
             );
-            SchemaBuilder.CreateTable("WorkingHourRecord", table => table
+
+            // Creating table HourRatioRecord
+            SchemaBuilder.CreateTable("HourRatioRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
                 .Column("Year", DbType.Int32)
+                .Column("Jan", DbType.Double)
+                .Column("Feb", DbType.Double)
+                .Column("Mar", DbType.Double)
+                .Column("Apr", DbType.Double)
+                .Column("May", DbType.Double)
+                .Column("Jun", DbType.Double)
+                .Column("Jul", DbType.Double)
+                .Column("Aug", DbType.Double)
+                .Column("Sep", DbType.Double)
+                .Column("Oct", DbType.Double)
+                .Column("Nov", DbType.Double)
+                .Column("Dev", DbType.Double)
+                .Column<int>("ActivityTypeRecord_Id")
+            );
+
+            SchemaBuilder.CreateTable("WorkingHourRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("Year", DbType.Int32,col=>col.Unique())
                 .Column("Jan", DbType.Double)
                 .Column("Feb", DbType.Double)
                 .Column("Mar", DbType.Double)

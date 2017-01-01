@@ -1,5 +1,8 @@
 ﻿@model ShowActivityTypeViewModel
 @using Faurecia.ADL.ViewModels;
+@{
+    int i = 0;
+}
 <table class="table table-bordered table-condensed">
     <thead>
         <tr class="active">
@@ -13,12 +16,18 @@
     @foreach (var row in Model.ActivityTypes)
     {
         <tr>
-            <td><input type="checkbox" value="@row.Id" name="@("Checkbox." + row.Id)" style="cursor:pointer"/></td>
+            <td>
+                <input type="checkbox" value="@row.Id" name="@("Checkbox." + row.Id)" style="cursor:pointer"/>
+                <input type="hidden" value="@Model.ActivityTypes[i].Id" name="@Html.NameOf(m => m.ActivityTypes[i].Id)" />
+                <input type="hidden" value="@Model.ActivityTypes[i].DisplayGroup" name="@Html.NameOf(m => m.ActivityTypes[i].DisplayGroup)" />
+                <input type="hidden" value="@Model.ActivityTypes[i].TotalGroup" name="@Html.NameOf(m => m.ActivityTypes[i].TotalGroup)" />
+            </td>
             <td>@row.ActivityType</td>
             <td>@row.CostCenter</td>
             <td>@row.RMBHour</td>
             <td>@row.Comment</td>
         </tr>
+        i++;
     }
 </table>
 <div style="margin:-30px 0">

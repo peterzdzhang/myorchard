@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Faurecia.ADL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,6 +24,11 @@ namespace Faurecia.ADL.ViewModels
             HeadCounts = new List<HeadCountEntry>();
             HourRatios = new List<HourRatioEntry>();
             Costs = new List<CostEntry>();
+            DVs = new List<CostEntry>();
+            PVs = new List<CostEntry>();
+            Travels = new List<CostEntry>();
+            Externals = new List<CostEntry>();
+            Capitalizeds = new List<CostEntry>();
             WorkingHours = new List<WorkingHourEntry>();
         }
 
@@ -31,6 +37,13 @@ namespace Faurecia.ADL.ViewModels
         public IList<HeadCountEntry> HeadCounts { get; set; }
         public IList<HourRatioEntry> HourRatios { get; set; }
         public IList<CostEntry> Costs { get; set; }
+
+        public IList<CostEntry> DVs { get; set; }
+        public IList<CostEntry> PVs { get; set; }
+        public IList<CostEntry> Travels { get; set; }
+        public IList<CostEntry> Externals { get; set; }
+        public IList<CostEntry> Capitalizeds { get; set; }
+
         public IList<WorkingHourEntry> WorkingHours { get; set; }
     }
 
@@ -42,7 +55,9 @@ namespace Faurecia.ADL.ViewModels
         public string RMBHour { get; set; }
         public string CostCenter { get; set; }
         public string ActivityType { get; set; }
-        
+        public ActivityTypeDisplayGroup DisplayGroup { get; set; }
+
+        public ActivityTypeTotalGroup TotalGroup { get; set; }
     }
 
     public class HeadCountEntry

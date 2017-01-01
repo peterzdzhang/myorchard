@@ -101,6 +101,7 @@
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ADLCostRecord.cs" />
+    <Compile Include="Models\HourRatioRecord.cs" />
     <Compile Include="Models\ADLWorkingHourRecord.cs" />
     <Compile Include="Models\ADLHourRatioRecord.cs" />
     <Compile Include="Models\ADLHeadCountRecord.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Routes.cs" />
     <Compile Include="ViewModels\ADLHeadViewModel.cs" />
     <Compile Include="ViewModels\ADLDetailViewModel.cs" />
+    <Compile Include="ViewModels\ADLECRViewModel.cs" />
     <Compile Include="ViewModels\ADLIBPViewModel.cs" />
     <Compile Include="ViewModels\AjaxPager.cs" />
     <Compile Include="ViewModels\ShowActivityTypeViewModel.cs" />

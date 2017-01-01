@@ -88,7 +88,8 @@ namespace Faurecia.ADL.Models
     {
         Creating,
         Quotation,
-        IBP
+        IBP,
+        ECR
     }
 
 

@@ -31,6 +31,7 @@ namespace Faurecia.ADL.Controllers
         private readonly IRepository<ADLCostRecord> _adlCostRecords;
         private readonly IRepository<ActivityTypeRecord> _activityTypeRecords;
         private readonly IRepository<WorkingHourRecord> _workingHourRecords;
+        private readonly IRepository<HourRatioRecord> _hourRatioRecords;
 
         public DefaultController(IOrchardServices orchardService,
             ISiteService siteService,
@@ -41,7 +42,8 @@ namespace Faurecia.ADL.Controllers
             IRepository<ADLHourRatioRecord> adlHourRatioRecords,
             IRepository<ADLCostRecord> adlCostRecords,
             IRepository<ActivityTypeRecord> activityTypeRecords,
-            IRepository<WorkingHourRecord> workingHourRecords)
+            IRepository<WorkingHourRecord> workingHourRecords,
+            IRepository<HourRatioRecord> hourRatioRecords)
         {
             _siteService = siteService;
             _orchardService = orchardService;
@@ -53,7 +55,7 @@ namespace Faurecia.ADL.Controllers
             _adlRecords = adlRecords;
             _activityTypeRecords = activityTypeRecords;
             _workingHourRecords = workingHourRecords;
-
+            _hourRatioRecords=hourRatioRecords;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             New = shapeFactory;
@@ -219,6 +221,41 @@ namespace Faurecia.ADL.Controllers
                 Detail = new ADLDetailViewModel(),
                 Message = string.Empty
             };
+            //SetIBPs(viewModel);
+            //SetActivityTypes(viewModel);
+            var record = _adlRecords.Get(Id);
+            if (record != null)
+            {
+                if (record.IsLastest)
+                {
+                    viewModel.Action = EnumActions.Modify;
+                }
+                else
+                {
+                    viewModel.Action = EnumActions.View;
+                    ViewBag.Title = T("ADL View").Text;
+                }
+            }
+            else
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            SetHeadViewModel(viewModel, record);
+            return View("Quotation", viewModel);
+        }
+        public ActionResult ECR(int Id = 0)
+        {
+            ViewBag.Title = T("ADL ECR").Text;
+            var viewModel = new ADLECRViewModel()
+            {
+                Action = EnumActions.New,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
             SetIBPs(viewModel);
             //SetActivityTypes(viewModel);
             var record = _adlRecords.Get(Id);
@@ -244,7 +281,6 @@ namespace Faurecia.ADL.Controllers
             SetHeadViewModel(viewModel, record);
             return View("Quotation", viewModel);
         }
-
         private void SetQuotations(ADLViewModel viewModel)
         {
             viewModel.Quotations = new List<SelectListItem>()
@@ -343,7 +379,9 @@ namespace Faurecia.ADL.Controllers
                     ActivityType=item.ActivityType,
                     CostCenter=item.CostCenter,
                     RMBHour=item.RMBHour,
-                    Comment=item.Comment
+                    Comment=item.Comment,
+                    TotalGroup=item.TotalGroup,
+                    DisplayGroup=item.DisplayGroup
                 });
             }
             return lst;
@@ -380,8 +418,13 @@ namespace Faurecia.ADL.Controllers
             viewModel.Head.Variant2 = adl.Variant2;
             viewModel.Head.Variant3 = adl.Variant3;
             viewModel.Head.VehicelComments = adl.VehicelComments;
+            viewModel.Head.QuotationComments = adl.QuotationComments;
+            viewModel.Head.IBPComments = adl.IBPComments;
             viewModel.Head.VersionNo = adl.VersionNo;
             viewModel.Head.Creator = adl.Creator;
+            viewModel.Head.QuotationTime = adl.QuotationTime;
+            viewModel.Head.IBP = adl.IBP;
+            viewModel.Head.IBPTime = adl.IBPTime;
         }
         private void SetDetailViewModel(ADLViewModel viewModel,ADLRecord adl)
         {
@@ -399,7 +442,9 @@ namespace Faurecia.ADL.Controllers
                         ActivityType = item.ActivityType,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
-                        Comment = item.Comment
+                        Comment = item.Comment,
+                        DisplayGroup=item.DisplayGroup,
+                        TotalGroup=item.TotalGroup
                     };
                     //HeadCounts
                     HeadCountEntry headCount = GetHeadCountEntry(adl, activityTypeEntry, year);
@@ -414,6 +459,96 @@ namespace Faurecia.ADL.Controllers
                 //WorkingHours
                 WorkingHourEntry workingHourEntry = GetWorkingHourEntry(adl, year);
                 entry.WorkingHours.Add(workingHourEntry);
+                //Travels
+                var  travelsRecord = _activityTypeRecords.Table.Where(w => w.IsUsed == true 
+                                                                      && w.DisplayGroup == ActivityTypeDisplayGroup.Travel);
+                foreach(var item in travelsRecord)
+                {
+                    var activityTypeEntry = new ActivityTypeEntry()
+                    {
+                        Id = item.Id,
+                        ActivityType = item.ActivityType,
+                        CostCenter = item.CostCenter,
+                        RMBHour = item.RMBHour,
+                        Comment = item.Comment,
+                        DisplayGroup = item.DisplayGroup,
+                        TotalGroup = item.TotalGroup
+                    };
+                    CostEntry cost = GetCostEntry(adl, activityTypeEntry, year);
+                    entry.Travels.Add(cost);
+                }
+                //DVs
+                var dvsRecord = _activityTypeRecords.Table.Where(w => w.IsUsed == true
+                                                                     && w.DisplayGroup == ActivityTypeDisplayGroup.DV);
+                foreach (var item in dvsRecord)
+                {
+                    var activityTypeEntry = new ActivityTypeEntry()
+                    {
+                        Id = item.Id,
+                        ActivityType = item.ActivityType,
+                        CostCenter = item.CostCenter,
+                        RMBHour = item.RMBHour,
+                        Comment = item.Comment,
+                        DisplayGroup = item.DisplayGroup,
+                        TotalGroup = item.TotalGroup
+                    };
+                    CostEntry cost = GetCostEntry(adl, activityTypeEntry, year);
+                    entry.DVs.Add(cost);
+                }
+                //DVs
+                var pvsRecord = _activityTypeRecords.Table.Where(w => w.IsUsed == true
+                                                                     && w.DisplayGroup == ActivityTypeDisplayGroup.PV);
+                foreach (var item in pvsRecord)
+                {
+                    var activityTypeEntry = new ActivityTypeEntry()
+                    {
+                        Id = item.Id,
+                        ActivityType = item.ActivityType,
+                        CostCenter = item.CostCenter,
+                        RMBHour = item.RMBHour,
+                        Comment = item.Comment,
+                        DisplayGroup = item.DisplayGroup,
+                        TotalGroup = item.TotalGroup
+                    };
+                    CostEntry cost = GetCostEntry(adl, activityTypeEntry, year);
+                    entry.PVs.Add(cost);
+                }
+                //External
+                var externalsRecord = _activityTypeRecords.Table.Where(w => w.IsUsed == true
+                                                                     && w.DisplayGroup == ActivityTypeDisplayGroup.ExternalSupport);
+                foreach (var item in externalsRecord)
+                {
+                    var activityTypeEntry = new ActivityTypeEntry()
+                    {
+                        Id = item.Id,
+                        ActivityType = item.ActivityType,
+                        CostCenter = item.CostCenter,
+                        RMBHour = item.RMBHour,
+                        Comment = item.Comment,
+                        DisplayGroup = item.DisplayGroup,
+                        TotalGroup = item.TotalGroup
+                    };
+                    CostEntry cost = GetCostEntry(adl, activityTypeEntry, year);
+                    entry.Externals.Add(cost);
+                }
+                //Capitalized
+                var capitalizedsRecord = _activityTypeRecords.Table.Where(w => w.IsUsed == true
+                                                                     && w.DisplayGroup == ActivityTypeDisplayGroup.Capitalized);
+                foreach (var item in capitalizedsRecord)
+                {
+                    var activityTypeEntry = new ActivityTypeEntry()
+                    {
+                        Id = item.Id,
+                        ActivityType = item.ActivityType,
+                        CostCenter = item.CostCenter,
+                        RMBHour = item.RMBHour,
+                        Comment = item.Comment,
+                        DisplayGroup = item.DisplayGroup,
+                        TotalGroup = item.TotalGroup
+                    };
+                    CostEntry cost = GetCostEntry(adl, activityTypeEntry, year);
+                    entry.Capitalizeds.Add(cost);
+                }
             }
         }
         private HeadCountEntry GetHeadCountEntry(ADLRecord adl, ActivityTypeEntry activityType, int year)
@@ -425,7 +560,9 @@ namespace Faurecia.ADL.Controllers
                 ActivityType = activityType.ActivityType,
                 Comment = activityType.Comment,
                 CostCenter = activityType.CostCenter,
-                RMBHour = activityType.RMBHour
+                RMBHour = activityType.RMBHour,
+                DisplayGroup=activityType.DisplayGroup,
+                TotalGroup=activityType.TotalGroup
             };
             ADLHeadCountRecord record = _adlHeadCountRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id
                                                                     && w.ActivityTypeRecord.Id == activityType.Id
@@ -446,18 +583,18 @@ namespace Faurecia.ADL.Controllers
                 entry.Dev = record.Dev;
                 entry.Feb = record.Feb;
                 entry.Year = record.Year;
-                entry.Y1 = record.Jan
-                            + record.Jul
-                            + record.Jun
-                            + record.Mar
-                            + record.May
-                            + record.Nov
-                            + record.Oct
-                            + record.Sep
-                            + record.Apr
-                            + record.Aug
-                            + record.Dev
-                            + record.Feb;
+                entry.Y1 = (record.Jan ?? 0)
+                            + (record.Jul ?? 0)
+                            + (record.Jun ?? 0)
+                            + (record.Mar ?? 0)
+                            + (record.May ?? 0)
+                            + (record.Nov ?? 0)
+                            + (record.Oct ?? 0)
+                            + (record.Sep ?? 0)
+                            + (record.Apr ?? 0)
+                            + (record.Aug ?? 0)
+                            + (record.Dev ?? 0)
+                            + (record.Feb ?? 0);
             }
             return entry;
         }
@@ -470,7 +607,9 @@ namespace Faurecia.ADL.Controllers
                 ActivityType = activityType.ActivityType,
                 Comment = activityType.Comment,
                 CostCenter = activityType.CostCenter,
-                RMBHour = activityType.RMBHour
+                RMBHour = activityType.RMBHour,
+                DisplayGroup = activityType.DisplayGroup,
+                TotalGroup = activityType.TotalGroup
             };
             ADLHourRatioRecord record=_adlHourRatioRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id
                                         && w.ActivityTypeRecord.Id == activityType.Id
@@ -491,18 +630,18 @@ namespace Faurecia.ADL.Controllers
                 entry.Dev = record.Dev;
                 entry.Feb = record.Feb;
                 entry.Year = record.Year;
-                entry.Y1 = record.Jan
-                            + record.Jul
-                            + record.Jun
-                            + record.Mar
-                            + record.May
-                            + record.Nov
-                            + record.Oct
-                            + record.Sep
-                            + record.Apr
-                            + record.Aug
-                            + record.Dev
-                            + record.Feb;
+                entry.Y1 = (record.Jan ?? 0)
+                            + (record.Jul ?? 0)
+                            + (record.Jun ?? 0)
+                            + (record.Mar ?? 0)
+                            + (record.May ?? 0)
+                            + (record.Nov ?? 0)
+                            + (record.Oct ?? 0)
+                            + (record.Sep ?? 0)
+                            + (record.Apr ?? 0)
+                            + (record.Aug ?? 0)
+                            + (record.Dev ?? 0)
+                            + (record.Feb ?? 0);
             }
             return entry;
         }
@@ -515,7 +654,9 @@ namespace Faurecia.ADL.Controllers
                 ActivityType = activityType.ActivityType,
                 Comment = activityType.Comment,
                 CostCenter = activityType.CostCenter,
-                RMBHour = activityType.RMBHour
+                RMBHour = activityType.RMBHour,
+                DisplayGroup = activityType.DisplayGroup,
+                TotalGroup = activityType.TotalGroup
             };
             ADLCostRecord record = _adlCostRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id 
                                             && w.ActivityTypeRecord.Id == activityType.Id
@@ -536,91 +677,91 @@ namespace Faurecia.ADL.Controllers
                 entry.Dev = record.Dev;
                 entry.Feb = record.Feb;
                 entry.Year = record.Year;
-                entry.Y1 = record.Jan
-                            + record.Jul
-                            + record.Jun
-                            + record.Mar
-                            + record.May
-                            + record.Nov
-                            + record.Oct
-                            + record.Sep
-                            + record.Apr
-                            + record.Aug
-                            + record.Dev
-                            + record.Feb;
+                entry.Y1 = (record.Jan ?? 0)
+                            + (record.Jul ?? 0)
+                            + (record.Jun ?? 0)
+                            + (record.Mar ?? 0)
+                            + (record.May ?? 0)
+                            + (record.Nov ?? 0)
+                            + (record.Oct ?? 0)
+                            + (record.Sep ?? 0)
+                            + (record.Apr ?? 0)
+                            + (record.Aug ?? 0)
+                            + (record.Dev ?? 0)
+                            + (record.Feb ?? 0);
             }
             return entry;
         }
         private WorkingHourEntry GetWorkingHourEntry(ADLRecord adl,int year)
         {
-            WorkingHourEntry workingHourEntry = new WorkingHourEntry()
+            WorkingHourEntry entry = new WorkingHourEntry()
             {
                 Year=year
             };
-            ADLWorkingHourRecord workingHourRecord = _adlWorkingHourRecords.Table
-                                                                           .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
-            if (workingHourRecord != null)
+            ADLWorkingHourRecord whrecord = _adlWorkingHourRecords.Table
+                                                                .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
+            if (whrecord != null)
             {
-                workingHourEntry.Id = workingHourRecord.Id;
-                workingHourEntry.Jan = workingHourRecord.Jan;
-                workingHourEntry.Jul = workingHourRecord.Jul;
-                workingHourEntry.Jun = workingHourRecord.Jun;
-                workingHourEntry.Mar = workingHourRecord.Mar;
-                workingHourEntry.May = workingHourRecord.May;
-                workingHourEntry.Nov = workingHourRecord.Nov;
-                workingHourEntry.Oct = workingHourRecord.Oct;
-                workingHourEntry.Sep = workingHourRecord.Sep;
-                workingHourEntry.Apr = workingHourRecord.Apr;
-                workingHourEntry.Aug = workingHourRecord.Aug;
-                workingHourEntry.Dev = workingHourRecord.Dev;
-                workingHourEntry.Feb = workingHourRecord.Feb;
-                workingHourEntry.Year = workingHourRecord.Year;
-                workingHourEntry.Y1 = workingHourEntry.Jan
-                                        + workingHourEntry.Jul
-                                        + workingHourEntry.Jun
-                                        + workingHourEntry.Mar
-                                        + workingHourEntry.May
-                                        + workingHourEntry.Nov
-                                        + workingHourEntry.Oct
-                                        + workingHourEntry.Sep
-                                        + workingHourEntry.Apr
-                                        + workingHourEntry.Aug
-                                        + workingHourEntry.Dev
-                                        + workingHourEntry.Feb;
+                entry.Id = whrecord.Id;
+                entry.Jan = whrecord.Jan;
+                entry.Jul = whrecord.Jul;
+                entry.Jun = whrecord.Jun;
+                entry.Mar = whrecord.Mar;
+                entry.May = whrecord.May;
+                entry.Nov = whrecord.Nov;
+                entry.Oct = whrecord.Oct;
+                entry.Sep = whrecord.Sep;
+                entry.Apr = whrecord.Apr;
+                entry.Aug = whrecord.Aug;
+                entry.Dev = whrecord.Dev;
+                entry.Feb = whrecord.Feb;
+                entry.Year = whrecord.Year;
+                entry.Y1 = (whrecord.Jan ?? 0)
+                            + (whrecord.Jul ?? 0)
+                            + (whrecord.Jun ?? 0)
+                            + (whrecord.Mar ?? 0)
+                            + (whrecord.May ?? 0)
+                            + (whrecord.Nov ?? 0)
+                            + (whrecord.Oct ?? 0)
+                            + (whrecord.Sep ?? 0)
+                            + (whrecord.Apr ?? 0)
+                            + (whrecord.Aug ?? 0)
+                            + (whrecord.Dev ?? 0)
+                            + (whrecord.Feb ?? 0);
             }
             else
             {
                 WorkingHourRecord record=_workingHourRecords.Table.SingleOrDefault(w => w.Year == year);
                 if (record != null)
                 {
-                    workingHourEntry.Jan = record.Jan;
-                    workingHourEntry.Jul = record.Jul;
-                    workingHourEntry.Jun = record.Jun;
-                    workingHourEntry.Mar = record.Mar;
-                    workingHourEntry.May = record.May;
-                    workingHourEntry.Nov = record.Nov;
-                    workingHourEntry.Oct = record.Oct;
-                    workingHourEntry.Sep = record.Sep;
-                    workingHourEntry.Apr = record.Apr;
-                    workingHourEntry.Aug = record.Aug;
-                    workingHourEntry.Dev = record.Dev;
-                    workingHourEntry.Feb = record.Feb;
-                    workingHourEntry.Year = record.Year;
-                    workingHourEntry.Y1 = record.Jan
-                                            + record.Jul
-                                            + record.Jun
-                                            + record.Mar
-                                            + record.May
-                                            + record.Nov
-                                            + record.Oct
-                                            + record.Sep
-                                            + record.Apr
-                                            + record.Aug
-                                            + record.Dev
-                                            + record.Feb;
+                    entry.Jan = record.Jan;
+                    entry.Jul = record.Jul;
+                    entry.Jun = record.Jun;
+                    entry.Mar = record.Mar;
+                    entry.May = record.May;
+                    entry.Nov = record.Nov;
+                    entry.Oct = record.Oct;
+                    entry.Sep = record.Sep;
+                    entry.Apr = record.Apr;
+                    entry.Aug = record.Aug;
+                    entry.Dev = record.Dev;
+                    entry.Feb = record.Feb;
+                    entry.Year = record.Year;
+                    entry.Y1 = (record.Jan ?? 0)
+                            + (record.Jul ?? 0)
+                            + (record.Jun ?? 0)
+                            + (record.Mar ?? 0)
+                            + (record.May ?? 0)
+                            + (record.Nov ?? 0)
+                            + (record.Oct ?? 0)
+                            + (record.Sep ?? 0)
+                            + (record.Apr ?? 0)
+                            + (record.Aug ?? 0)
+                            + (record.Dev ?? 0)
+                            + (record.Feb ?? 0);
                 }
             }
-            return workingHourEntry;
+            return entry;
         }
         [HttpPost, ActionName("Save")]
         [Orchard.Mvc.FormValueRequired("submit.Save")]
@@ -631,6 +772,7 @@ namespace Faurecia.ADL.Controllers
             if (ModelState.IsValid)
             {
                 viewModel.Head.Status = EnumStatus.Inwork;
+                viewModel.Head.NextPhase = viewModel.Head.Phase;
                 if (viewModel.Action == EnumActions.New)
                 {
                     Common_CreateNew(viewModel);
@@ -665,6 +807,8 @@ namespace Faurecia.ADL.Controllers
             {
 
                 viewModel.Head.Status = EnumStatus.Frozen;
+                viewModel.Head.NextPhase = viewModel.Head.Phase;
+                
                 if (viewModel.Action == EnumActions.New)
                 {
                     Common_CreateNew(viewModel);
@@ -700,17 +844,19 @@ namespace Faurecia.ADL.Controllers
                 viewModel.Head.Status = EnumStatus.Inwork;
                 if (viewModel.Head.Phase == EnumPhase.Creating)
                 {
-                    viewModel.Head.Phase = EnumPhase.Quotation;
+                    viewModel.Head.NextPhase = EnumPhase.Quotation;
                 }
-                else if (viewModel.Head.Phase == EnumPhase.Quotation)
+                else if (viewModel.Head.Phase == EnumPhase.Quotation
+                        || viewModel.Head.Phase == EnumPhase.ECR)
                 {
-                    viewModel.Head.Phase = EnumPhase.IBP;
+                    viewModel.Head.NextPhase = EnumPhase.IBP;
                 }
-                else if (viewModel.Head.Phase == EnumPhase.Quotation)
+                else if (viewModel.Head.Phase == EnumPhase.IBP)
                 {
                     viewModel.Head.Status = EnumStatus.Frozen;
-                    viewModel.Head.Phase = EnumPhase.IBP;
+                    viewModel.Head.NextPhase = EnumPhase.IBP;
                 }
+
                 if (viewModel.Action == EnumActions.New)
                 {
                     Common_CreateNew(viewModel);
@@ -735,12 +881,91 @@ namespace Faurecia.ADL.Controllers
             }
             return Json(JsonConvert.SerializeObject(viewModel));
         }
+        [HttpPost, ActionName("Save")]
+        [Orchard.Mvc.FormValueRequired("submit.Reject")]
+        public ActionResult RejectPost()
+        {
+            var viewModel = new ADLCreateViewModel();
+            TryUpdateModel(viewModel);
+            if (ModelState.IsValid)
+            {
+                viewModel.Head.Status = EnumStatus.Inwork;
+                if (viewModel.Head.Phase == EnumPhase.Quotation)
+                {
+                    viewModel.Head.NextPhase = EnumPhase.Creating;
+                    viewModel.Head.Status = EnumStatus.Frozen;
+                }
+                else if (viewModel.Head.Phase == EnumPhase.IBP)
+                {
+                    viewModel.Head.Status = EnumStatus.Frozen;
+                    viewModel.Head.NextPhase = EnumPhase.Quotation;
+                }
+                if (viewModel.Action == EnumActions.New)
+                {
+                    Common_CreateNew(viewModel);
+                }
+                else if (viewModel.Action == EnumActions.Modify)
+                {
+                    Common_Modify(viewModel);
+                }
+                viewModel.Action = EnumActions.Modify;
+                viewModel.Message = T("Reject ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                SetRedirectUrl(viewModel);
+            }
+            else
+            {
+                viewModel.Code = 1;
+                foreach (var item in ModelState.Where(w => w.Value.Errors.Count > 0)
+                                                .Select(item => item.Value.Errors.FirstOrDefault()))
+                {
+                    viewModel.Message += item.ErrorMessage + "<br/>";
+                }
+                viewModel.Message = viewModel.Message.Substring(0, viewModel.Message.Length - 5);
+            }
+            return Json(JsonConvert.SerializeObject(viewModel));
+        }
+
+        [HttpPost, ActionName("Save")]
+        [Orchard.Mvc.FormValueRequired("submit.ECR")]
+        public ActionResult ECRPost()
+        {
+            var viewModel = new ADLCreateViewModel();
+            TryUpdateModel(viewModel);
+            if (ModelState.IsValid)
+            {
+
+                viewModel.Head.Status = EnumStatus.Inwork;
+                if (viewModel.Head.Phase == EnumPhase.IBP)
+                {
+                    viewModel.Head.NextPhase = EnumPhase.ECR;
+                }
+
+                if (viewModel.Action == EnumActions.Modify)
+                {
+                    Common_Modify(viewModel);
+                }
+                viewModel.Action = EnumActions.Modify;
+                viewModel.Message = T("Start ADL({0}) ECR success.", viewModel.Head.ProjectNo).Text;
+                SetRedirectUrl(viewModel);
+            }
+            else
+            {
+                viewModel.Code = 1;
+                foreach (var item in ModelState.Where(w => w.Value.Errors.Count > 0)
+                                                .Select(item => item.Value.Errors.FirstOrDefault()))
+                {
+                    viewModel.Message += item.ErrorMessage + "<br/>";
+                }
+                viewModel.Message = viewModel.Message.Substring(0, viewModel.Message.Length - 5);
+            }
+            return Json(JsonConvert.SerializeObject(viewModel));
+        }
         private ADLRecord Common_CreateNew(ADLViewModel viewModel)
         {
             var adl = _adlRecords.Get(viewModel.Head.Id);
             if (adl != null)
             {
-                viewModel.Head.ProjectNo = GetProjectNo(viewModel.Head.Customer);
+                viewModel.Head.ProjectNo = GetProjectNo(viewModel.Head.Name);
                 viewModel.Head.VersionNo = 1;
             }
             adl = new Models.ADLRecord()
@@ -748,6 +973,8 @@ namespace Faurecia.ADL.Controllers
                 CreateTime = DateTime.Now,
                 Creator = _orchardService.WorkContext.CurrentUser.UserName
             };
+
+
             SetADLRecord(adl, viewModel);
             _adlRecords.Create(adl);
 
@@ -777,6 +1004,36 @@ namespace Faurecia.ADL.Controllers
                     foreach (CostEntry costEntry in entry.Costs)
                     {
                         ADLCostRecord record = GetCostRecord(adl, costEntry,true);
+                        _adlCostRecords.Create(record);
+                    }
+                    //创建新的DVs
+                    foreach (CostEntry costEntry in entry.DVs)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, true);
+                        _adlCostRecords.Create(record);
+                    }
+                    //创建新的PVs
+                    foreach (CostEntry costEntry in entry.PVs)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, true);
+                        _adlCostRecords.Create(record);
+                    }
+                    //创建新的Travels
+                    foreach (CostEntry costEntry in entry.Travels)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, true);
+                        _adlCostRecords.Create(record);
+                    }
+                    //创建新的Externals
+                    foreach (CostEntry costEntry in entry.Externals)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, true);
+                        _adlCostRecords.Create(record);
+                    }
+                    //创建新的Capitalizeds
+                    foreach (CostEntry costEntry in entry.Capitalizeds)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, true);
                         _adlCostRecords.Create(record);
                     }
                 }
@@ -828,6 +1085,18 @@ namespace Faurecia.ADL.Controllers
             }
             if (adl != null)
             {
+                if (adl.Phase == EnumPhase.IBP)
+                {
+                    adl.IBPTime = viewModel.Head.IBPTime;
+                    adl.IBPComments = viewModel.Head.IBPComments;
+                    adl.IBP = viewModel.Head.IBP;
+                }
+                else if (adl.Phase == EnumPhase.Quotation)
+                {
+                    adl.QuotationTime = viewModel.Head.QuotationTime;
+                    adl.QuotationComments = viewModel.Head.QuotationComments;
+                    adl.Quotation = viewModel.Head.Quotation;
+                }
                 SetADLRecord(adl, viewModel);
             };
             _adlRecords.Update(adl);
@@ -905,13 +1174,10 @@ namespace Faurecia.ADL.Controllers
             adl.MileStoneComments = viewModel.Head.MileStoneComments;
             adl.MockUp = viewModel.Head.Mockup;
             adl.OfferDate = viewModel.Head.OfferDate;
-            adl.Phase = viewModel.Head.Phase;
-            adl.Status = viewModel.Head.Status;
             adl.ProgramController = viewModel.Head.ProgramController;
             adl.ProgramManager = viewModel.Head.ProgramManager;
             adl.ProtoDate = viewModel.Head.ProtoDate;
             adl.PTRDate = viewModel.Head.PTRDate;
-            adl.Quotation = viewModel.Head.Quotation;
             adl.Recliner = viewModel.Head.Recliner;
             adl.SOPDate = viewModel.Head.SOPDate;
             adl.StartDate = viewModel.Head.StartDate;
@@ -922,6 +1188,22 @@ namespace Faurecia.ADL.Controllers
             adl.Variant3 = viewModel.Head.Variant3;
             adl.VehicelComments = viewModel.Head.VehicelComments;
             adl.Name = viewModel.Head.Name;
+
+            if (viewModel.Head.Phase == EnumPhase.IBP)
+            {
+                adl.IBPTime = DateTime.Now;
+                adl.IBPComments = viewModel.Head.IBPComments;
+                adl.IBP = _orchardService.WorkContext.CurrentUser.UserName;
+            }
+            else if (viewModel.Head.Phase == EnumPhase.Quotation)
+            {
+                adl.QuotationTime = DateTime.Now;
+                adl.QuotationComments = viewModel.Head.QuotationComments;
+                adl.Quotation = _orchardService.WorkContext.CurrentUser.UserName;
+            }
+
+            adl.Phase = viewModel.Head.NextPhase;
+            adl.Status = viewModel.Head.Status;
             adl.EditTime = DateTime.Now;
             adl.Editor = _orchardService.WorkContext.CurrentUser.UserName;
             adl.IsLastest = true;
@@ -940,6 +1222,10 @@ namespace Faurecia.ADL.Controllers
             else if (viewModel.Head.Phase == EnumPhase.IBP)
             {
                 viewModel.RedirectToHref = Url.Action("IBP", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
+            }
+            else if (viewModel.Head.Phase == EnumPhase.ECR)
+            {
+                viewModel.RedirectToHref = Url.Action("ECR", "Default", new { Area = "Faurecia.ADL", returnurl = Request["ReturnUrl"], Id = viewModel.Head.Id });
             }
         }
         private ADLWorkingHourRecord GetWorkingHourRecord(ADLRecord adl,WorkingHourEntry entry,bool isCreateNew)
@@ -1087,7 +1373,7 @@ namespace Faurecia.ADL.Controllers
         {
             var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
             pager.UpdateTargetId = "activityTypeQueryResults";
-            var queries = _activityTypeRecords.Table.Where(w => w.IsUsed == true);
+            var queries = _activityTypeRecords.Table.Where(w => w.IsUsed == true && w.DisplayGroup==ActivityTypeDisplayGroup.DD);
             if (!string.IsNullOrWhiteSpace(options.SearchText))
             {
                 switch (options.Column)
@@ -1147,7 +1433,9 @@ namespace Faurecia.ADL.Controllers
                     ActivityType = x.ActivityType,
                     RMBHour = x.RMBHour,
                     CostCenter = x.CostCenter,
-                    Comment = x.Comment
+                    Comment = x.Comment,
+                    DisplayGroup=x.DisplayGroup,
+                    TotalGroup=x.TotalGroup
                 }).ToList(),
                 Options = options,
                 Pager = pagerShape
@@ -1186,23 +1474,37 @@ namespace Faurecia.ADL.Controllers
             return Json(new { EntryIndex= entryIndex,Year = year, ActivityTypeId= activityTypeId, Message = message }, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetHourRatioRecord(string year,string activityTypeId)
+        {
+            int nYear = 0;
+            int nActivityTypeId = 0;
+            int.TryParse(year, out nYear);
+            int.TryParse(activityTypeId, out nActivityTypeId);
+            var queries = _hourRatioRecords.Table.Where(w => w.Year == nYear && w.ActivityTypeRecord.Id == nActivityTypeId);
+            var item = queries.FirstOrDefault();
+            if (item == null)
+            {
+                item = new HourRatioRecord();
+            }
+            return Json(item,JsonRequestBehavior.AllowGet);
+        }
 
-        public string GetProjectNo(string customer)
+        public string GetProjectNo(string name)
         {
             int currentSeqenceNo = 1;
             var queries = _adlRecords.Table;
-            queries = queries.Where(w => w.Customer == customer);
+            queries = queries.Where(w => w.ProjectNo.StartsWith(name));
             string maxProjectNo = queries.Max(item => item.ProjectNo);
             if (!string.IsNullOrEmpty(maxProjectNo))
             {
-                string maxProjectNoSeqenceNo = maxProjectNo.Substring(3, maxProjectNo.Length - 3);
+                string maxProjectNoSeqenceNo = maxProjectNo.Substring(name.Length, maxProjectNo.Length - name.Length);
                 int maxSeqenceNo = 0;
                 if (int.TryParse(maxProjectNoSeqenceNo, out maxSeqenceNo))
                 {
                     currentSeqenceNo = maxSeqenceNo + 1;
                 }
             }
-            string currentProjectNo = string.Format("{0}{1}", customer, currentSeqenceNo.ToString("00000"));
+            string currentProjectNo = string.Format("{0}{1}", name, currentSeqenceNo.ToString("0000"));
             return currentProjectNo;
         }
     }

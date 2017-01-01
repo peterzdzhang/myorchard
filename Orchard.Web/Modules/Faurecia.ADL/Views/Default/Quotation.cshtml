@@ -20,9 +20,24 @@
                 <div class="col-lg-6 col-sm-8">
                 @if (Model.Action != Faurecia.ADL.ViewModels.EnumActions.View)
                 {
-                    <button class="btn btn-info" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-                    <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
-                    <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                    if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+                    {
+                        if (Model.Head.Status == Faurecia.ADL.Models.EnumStatus.Frozen)
+                        {
+                            <button class="btn btn-info" type="submit" name="submit.ECR" value="@T("ECR")">@T("ECR")</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-info" type="submit" name="submit.Reject" value="@T("Reject")">@T("Reject")</button>
+                            <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                        }
+                    }
+                    else
+                    {
+                        <button class="btn btn-info" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                        <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
+                        <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                    }
                 }
                 &nbsp;
                 </div>
@@ -76,6 +91,137 @@
             <div class="tab-content">
                 @Html.Partial("_Detail", Model)
             </div>
+            <div>
+               <table class="table table-bordered table-condensed table-hover" id="totalTable"
+                      style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:10px">
+                    <thead>
+                        <tr class="active">
+                            <th style="width:auto">@T("Actual H")</th>
+                            @for (int i = 0; i < Model.Years.Count; i++)
+                            {
+                                int year = Model.Years[i];
+                                var titleName = string.Format("Y{0}", year);
+                                <th style="width:61px" data-year="@year">@titleName</th>
+                            }
+                            <th style="width:61px">@T("Total")</th>
+                        </tr>
+                    </thead>
+                   <tbody>
+                       <tr>
+                           <td style="width:auto">@T("Total D&D")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr>
+                           <td style="width:auto">@T("Total FEA")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr>
+                           <td style="width:auto">@T("Total DV")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr>
+                           <td style="width:auto">@T("Total PV")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr class="success">
+                           <td style="width:auto">@T("Total D&D (BP)")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-sum="1" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr>
+                           <td style="width:auto">@T("Total other CT")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr>
+                           <td style="width:auto">@T("Total ME")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr class="success">
+                           <td style="width:auto">@T("Total CT (BP)")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-sum="1" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr class="success">
+                           <td style="width:auto">@T("Total travel")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                               <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                       <tr class="warning">
+                           <td style="width:auto">@T("Total")</td>
+                           @for (int i = 0; i < Model.Years.Count; i++)
+                           {
+                               int year = Model.Years[i];
+                            <td style="width:61px" data-total="1" data-year="@year"></td>
+                           }
+                           <td style="width:61px"></td>
+                       </tr>
+                   </tbody>
+                </table>
+            </div>
+
+            @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation
+                || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+            {
+            <div class="row" style="padding:5px;">
+                @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                <div class="col-sm-10 col-lg-10">
+                    @Html.TextAreaFor(m => m.Head.QuotationComments, new { @class = "form-control", placeholder = "" })
+                    @Html.ValidationMessageFor(m => m.Head.QuotationComments)
+                </div>
+            </div>
+            }
+            @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+            {
+            <div class="row" style="padding:5px;">
+                @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                <div class="col-sm-10 col-lg-10">
+                    @Html.TextAreaFor(m => m.Head.IBPComments, new { @class = "form-control", placeholder = "" })
+                    @Html.ValidationMessageFor(m => m.Head.IBPComments)
+                </div>
+            </div>
+            }
         </div>
         <div class="panel-footer">
             <div class="form-horizontal">
@@ -98,7 +244,7 @@
                             </label>
                         </div>
                     }
-                    else
+                    else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.ECR)
                     {
                         @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
                         <div class="col-sm-2 col-lg-2">
@@ -109,6 +255,29 @@
                         <div class="col-sm-2 col-lg-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @WorkContext.CurrentUser.UserName
+                            </label>
+                        </div>
+                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                            @T("Creator").Text
+                        </label>
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @Model.Head.Creator
+                            </label>
+                        </div>
+                    }
+                    else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+                    {
+                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @WorkContext.CurrentUser.UserName
+                            </label>
+                        </div>
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2">
+                            <label class="control-label text-success" style="text-align:left">
+                                @Model.Head.Quotation
                             </label>
                         </div>
                         <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
@@ -152,15 +321,34 @@
         $(function () {
             if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.View") {
                 $("input").attr("readonly", "readonly");
-                $("select").attr("disabled", "disabled");
+                $("select").bind("focus", function () {
+                    this.defaultIndex = this.selectedIndex;
+                }).bind("change", function () {
+                    this.selectedIndex = this.defaultIndex;
+                }).bind("mousedown", function (event) {
+                    event.preventDefault();
+                });
                 $("textarea").attr("readonly", "readonly");
+            }
+            else if ("@Model.Head.Phase" == "@Faurecia.ADL.Models.EnumPhase.IBP") {
+                $("input").attr("readonly", "readonly");
+                $("select").attr("readonly", "readonly");
+                $("select").bind("focus", function () {
+                    this.defaultIndex = this.selectedIndex;
+                }).bind("change", function () {
+                    this.selectedIndex = this.defaultIndex;
+                }).bind("mousedown", function (event) {
+                    event.preventDefault();
+                });
+                if ("@Model.Head.Status" == "@Faurecia.ADL.Models.EnumStatus.Frozen") {
+                    $("textarea").attr("readonly", "readonly");
+                }
+                else {
+                    $("textarea:not([name$='IBPComments'])").attr("readonly", "readonly");
+                }
             }
             else
             {
-                @*if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.Modify") {
-                    $("#@Html.IdFor(m => m.Head.Name)").attr("readonly", "readonly");
-                }*@
-
                 $(".datepicker").datepicker({
                     changeMonth: true,
                     changeYear: true,
@@ -169,13 +357,23 @@
                 });
                 $("#@Html.IdFor(m => m.Action)").val("@Model.Action");
                 $("#@Html.IdFor(m => m.Head.Name)").change(function () {
-                    var customer = $(this).val().toUpperCase();
-                    $(this).val(customer);
+                    var name = $(this).val().toUpperCase();
+                    $(this).val(name);
                     $("#@Html.IdFor(m => m.Head.ProjectNo)").val("");
                     $("#projectNoVersionNo").val("");
-                    changeCustomer(customer);
+                    GetProjectNo(name);
+                });
+
+                $("table[name='HeadCount'],table[name='HourRatio'],table[name='WorkingHour'],table[name='Travel'],table[name='DV'],table[name='PV'],table[name='External'],table[name='Capitalized']").each(function (xt, xtable) {
+                    $(xtable).find("tr").each(function (xr, xrow) {
+                        BindCostEvent($(xrow));
+                    })
                 });
             }
+
+            setTimeout(function () {
+                InitailizeValue();
+            }, 2000);
         })
         //隐藏状态消息
         function hideStatusMessage() {
@@ -222,7 +420,7 @@
                 var returnUrl = "@Request["ReturnUrl"]";
                 var redirectUrl = result.RedirectToHref;
                 if (!!returnUrl) {
-                    if (result.Head.Phase != oldPhase) {
+                    if (result.Head.NextPhase != oldPhase || result.Head.NextPhase=='@Faurecia.ADL.Models.EnumPhase.IBP') {
                         redirectUrl = returnUrl;
                     }
                     else {
@@ -231,15 +429,15 @@
                 }
                 setTimeout(function () {
                     location.replace(redirectUrl);
-                }, 2000);
+                }, 1000);
             }
         }
 
-        function changeCustomer(customer) {
-            if (customer.length < 3) { return; }
+        function GetProjectNo(name) {
+            if (name.length < 3) { return; }
             var url = "@Url.Action("GetProjectNo",new { area = "Faurecia.ADL" })";
             var timestamp = Math.round(new Date().getTime() / 1000);
-            var reqdata = { customer: customer, key: timestamp };
+            var reqdata = { name: name, key: timestamp };
 
             $.get(url, reqdata, function (data) {
                 $("#@Html.IdFor(m => m.Head.ProjectNo)").val(data);
@@ -252,6 +450,65 @@
 
     @*Show Or Hide Activity Type Content*@
     <script type="text/javascript" language="javascript">
+
+        function InitailizeValue() {
+            var tabpanels = $("div[role='tabpanel']");
+            tabpanels.each(function (xi, xitem) {
+                var costTables = $(xitem).find("table[name='Cost']");
+                costTables.each(function (xt, xtable) {
+                    var firstRow = $(xtable).find("tr:first");
+                    var cells = firstRow.find("td,th");
+                    for (var c = 4; c < cells.length-1; c++) {
+                        var totalRow = $(xtable).find("tfoot>tr:last");
+                        CalcTotal(totalRow, firstRow, cells[c]);
+                    }
+                });
+
+                var tables = $(xitem).find("table[name='Travel'],table[name='DV'],table[name='PV'],table[name='External'],table[name='Capitalized']");
+                tables.each(function (xt, xtable) {
+                    var firstRow = $(xtable).find("tr:first");
+                    var cells = firstRow.find("td,th");
+                    for (var c = 1; c < cells.length - 1; c++) {
+                        var totalRow = $(xtable).find("thead>tr:last");
+                        CalcTotal(totalRow, firstRow, cells[c]);
+                    }
+                });
+
+                var totalTableRows = $("#totalTable").find("tr");
+                for (var r = 1; r < totalTableRows.length - 1; r++) {
+                    var totalGroup = $(totalTableRows[r]).find("td:eq(1)").attr("data-total-group");
+                    if (totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD"
+                        || totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME"
+                        || totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT") {
+                        costTables.each(function (xt, xtable) {
+                            CalcYearTotal($(xitem), $(xtable), totalGroup);
+                        });
+                    }
+                    else if (totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV") {
+                        $(xitem).find("table[name='DV']").each(function (xt, xtable) {
+                            CalcYearTotal($(xitem), $(xtable), totalGroup);
+                        });
+                    }
+                    else if (totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA") {
+                        $(xitem).find("table[name='External']").each(function (xt, xtable) {
+                            CalcYearTotal($(xitem), $(xtable), totalGroup);
+                        });
+                    }
+                    else if (totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV") {
+                        $(xitem).find("table[name='PV']").each(function (xt, xtable) {
+                            CalcYearTotal($(xitem), $(xtable), totalGroup);
+                        });
+                    }
+                    else if (totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel") {
+                        $(xitem).find("table[name='Travel']").each(function (xt, xtable) {
+                            CalcYearTotal($(xitem), $(xtable), totalGroup);
+                        });
+                    }
+                }
+                CalcYearTotalSum($(xitem));
+                CalcGross($(xitem));
+            });
+        }
 
         function showActivityTypeModal(result) {
             $('#activityTypeModal').modal('show')
@@ -268,24 +525,36 @@
 
             for (var i = 0; i < activityTypes.length; i++) {
 
-                var activityTypeId=$(activityTypes[i]).val();
-                var activityType=$(activityTypes[i]).parent().parent().find("td:eq(1)").text();
-                var costCenter=$(activityTypes[i]).parent().parent().find("td:eq(2)").text();
-                var RMBHour=$(activityTypes[i]).parent().parent().find("td:eq(3)").text();
-                var comment=$(activityTypes[i]).parent().parent().find("td:eq(4)").text();
-                var activityType = { Id: activityTypeId, Comment: comment, RMBHour: RMBHour, CostCenter: costCenter, ActivityType: activityType };
+                var activityTypeId = $(activityTypes[i]).val();
+                var row = $(activityTypes[i]).parent().parent();
+                var activityTypeValue = $(row).find("td:eq(1)").text();
+                var costCenter = $(row).find("td:eq(2)").text();
+                var RMBHour = $(row).find("td:eq(3)").text();
+                var comment = $(row).find("td:eq(4)").text();
+                var displayGroup = $(row).find("input[name$='.DisplayGroup']").val();
+                var totalGroup = $(row).find("input[name$='.TotalGroup']").val();
+
+                var activityType = { Id: activityTypeId, Comment: comment, RMBHour: RMBHour, CostCenter: costCenter, ActivityType: activityTypeValue, DisplayGroup: displayGroup, TotalGroup: totalGroup };
                 //Add Head Count Record Row
                 if (!HasDetailRecordRow(activityType, "HeadCount"))
                 {
-                    AddDetailRecordRow(activityType, "HeadCount")
+                    AddDetailRecordRow(activityType, "HeadCount", null)
                 }
                 //Add Hour Ratio Record Row
                 if (!HasDetailRecordRow(activityType, "HourRatio")) {
-                    AddDetailRecordRow(activityType, "HourRatio");
+                    var tabpanel = $("div.active[role='tabpanel']");
+                    var year = $(tabpanel).data("year");
+                    var url = "@Url.Action("GetHourRatioRecord", new { area = "Faurecia.ADL" })";
+                    var timestamp = Math.round(new Date().getTime() / 1000);
+                    var reqdata = { Year: year, ActivityTypeId: activityType.Id, key: timestamp };
+                    $.get(url, reqdata, function (data) {
+                        AddDetailRecordRow(activityType, "HourRatio",data);
+                    });
                 }
                 //Add Cost Record Row
                 if (!HasDetailRecordRow(activityType, "Cost")) {
-                    AddDetailRecordRow(activityType, "Cost");
+                    AddDetailRecordRow(activityType, "Cost", null);
+
                 }
             }
             $("#activityTypeModal").modal("hide");
@@ -299,7 +568,7 @@
             return activityTypeIds.length > 0;
         }
 
-        function AddDetailRecordRow(activityType,tableName) {
+        function AddDetailRecordRow(activityType,tableName,defaultValue) {
             var tabpanel = $("div.active[role='tabpanel']");
             var table = $(tabpanel).find("table[id^='detail" + tableName + "_']");
 
@@ -310,6 +579,7 @@
             var lastRow = $(table).find("tr:last");
             var lastRowCells = $(lastRow).find("td");
             if (lastRowCells.length == 0) {
+                lastRow = $(table).find("thead tr:last");
                 lastRowCells = $(lastRow).find("th");
             }
             var lastRowActivityTypeId = $(lastRow).find("input[name$='.ActivityType.Id']");
@@ -350,10 +620,14 @@
                     var hcActivityTypeId = $("<input name='" + prefixName + ".ActivityType.Id' type='hidden' value='" + activityType.Id + "'/>");
                     $(hcActivityTypeId).attr("data-index", newindex);
                     var hcActivityTypeComment = $("<input name='" + prefixName + ".ActivityType.Comment' type='hidden' value='" + activityType.Comment + "'/>");
+                    var hcDisplayGroupComment = $("<input name='" + prefixName + ".ActivityType.DisplayGroup' type='hidden' value='" + activityType.DisplayGroup + "'/>");
+                    var hcTotalGroupComment = $("<input name='" + prefixName + ".ActivityType.TotalGroup' type='hidden' value='" + activityType.TotalGroup + "'/>");
                     td2.append(hcId);
                     td2.append(hcYear);
                     td2.append(hcActivityTypeId);
                     td2.append(hcActivityTypeComment);
+                    td2.append(hcDisplayGroupComment);
+                    td2.append(hcTotalGroupComment);
                     td2.append(activityType.Comment);
                     row.append(td2);
                 }
@@ -384,84 +658,120 @@
                 else if (i == 5) {
                     //TD6
                     var td6 = $("<td></td>");
-                    var jan = $("<input type='text' "+style+" name='" + prefixName + ".Jan'/>");
-                    td6.append(jan);
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jan'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Jan);
+                    }
+                    td6.append(input);
                     row.append(td6);
                 }
                 else if (i == 6) {
                     //TD7
                     var td7 = $("<td></td>");
-                    var feb = $("<input type='text' "+style+" name='" + prefixName + ".Feb'/>");
-                    td7.append(feb);
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Feb'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Feb);
+                    }
+                    td7.append(input);
                     row.append(td7);
                 }
                 else if (i == 7) {
                     //TD8
                     var td8 = $("<td></td>");
-                    var mar = $("<input type='text' "+style+" name='" + prefixName + ".Mar'/>");
-                    td8.append(mar);
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Mar'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Mar);
+                    }
+                    td8.append(input);
                     row.append(td8);
                 }
                 else if (i == 8) {
                     //TD9
                     var td9 = $("<td></td>");
-                    var apr = $("<input type='text' "+style+" name='" + prefixName + ".Apr'/>");
-                    td9.append(apr);
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Apr'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Apr);
+                    }
+                    td9.append(input);
                     row.append(td9);
                 }
                 else if (i == 9) {
                     //TD10
                     var td10 = $("<td></td>");
-                    var may = $("<input type='text' "+style+" name='" + prefixName + ".May'/>");
-                    td10.append(may);
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".May'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.May);
+                    }
+                    td10.append(input);
                     row.append(td10);
                 }
                 else if (i == 10) {
                     //TD11
                     var td11 = $("<td></td>");
-                    var may = $("<input type='text' "+style+" name='" + prefixName + ".Jun'/>");
-                    td11.append(may);
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jun'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Jun);
+                    }
+                    td11.append(input);
                     row.append(td11);
                 }
                 else if (i == 11) {
                     //TD12
                     var td = $("<td></td>");
-                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Jul'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jul'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Jul);
+                    }
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 12) {
                     //TD13
                     var td = $("<td></td>");
-                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Aug'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Aug'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Aug);
+                    }
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 13) {
                     //TD14
                     var td = $("<td></td>");
-                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Sep'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Sep'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Sep);
+                    }
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 14) {
                     //TD15
                     var td = $("<td></td>");
-                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Oct'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Oct'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Oct);
+                    }
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 15) {
                     //TD16
                     var td = $("<td></td>");
-                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Nov'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Nov'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Nov);
+                    }
                     td.append(input);
                     row.append(td);
                 }
                 else if (i == 16) {
                     //TD17
                     var td = $("<td></td>");
-                    var input = $("<input type='text' "+style+" name='" + prefixName + ".Dev'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Dev'/>");
+                    if (!!defaultValue) {
+                        $(input).val(defaultValue.Dev);
+                    }
                     td.append(input);
                     row.append(td);
                 }
@@ -482,53 +792,87 @@
                 });
             }
             else {
-                row.find("input[type='text']").each(function (x, xitem) {
-                    $(xitem).bind("keypress", function (event) {
-                        var val = $(this).val();
-                        var key = event.key;
-                        if ((key < "0" || key > "9") && key != ".") {
-                            event.preventDefault();
-                        }
-                        if (val.indexOf(".") >= 0 && key == ".") {
-                            event.preventDefault();
-                        }
-                        if (val.length == 0 && key == ".") {
-                            event.preventDefault();
-                        }
-                        if (val.length == 1 && val == "0" && key != ".") {
-                            event.preventDefault();
-                        }
-                    }).bind("paste", function (event) {
-                        var val = undefined;
-                        if (window.clipboardData && window.clipboardData.getData) {
-                            val = win.clipboardData.getData("Text");
-                        }
-                        else {
-                            val = event.originalEvent.clipboardData.getData("Text");
-                        }
-                        var r = /^[0-9]+.?[0-9]*$/
-                        if (!r.test(val)) {
-                            event.preventDefault();
-                            alert("\""+val+"\"@T(" is not valid value.")");
-                        }
-                    }).bind("input", function (event) {
-                        var val = $(this).val();
-                        var r = /^[0-9]+.?[0-9]*$/
-                        if (!r.test(val)) {
-                            event.preventDefault();
-                            alert("\""+val+"\"@T(" is not valid value.")");
-                        }
-                        var name = $(this).attr("name");
-                        CalcCost(tableName,name);
-                    });
-                });
+                BindCostEvent(row);
             }
-
             $(table).append(row);
+            CalcY1(row);
         }
 
-        function CalcCost(tableName,name) {
-            var tabpanel = $("div.active[role='tabpanel']");
+        function BindCostEvent(row) {
+
+            $(row).find("input[type='text']").each(function (x, xitem) {
+                $(xitem).bind("keypress", function (event) {
+                    var val = $(this).val();
+                    var key = event.key;
+                    if ((key < "0" || key > "9") && key != ".") {
+                        event.preventDefault();
+                    }
+                    if (val.indexOf(".") >= 0 && key == ".") {
+                        event.preventDefault();
+                    }
+                    if (val.length == 0 && key == ".") {
+                        event.preventDefault();
+                    }
+                }).bind("paste", function (event) {
+                    var val = undefined;
+                    if (window.clipboardData && window.clipboardData.getData) {
+                        val = win.clipboardData.getData("Text");
+                    }
+                    else {
+                        val = event.originalEvent.clipboardData.getData("Text");
+                    }
+                    var r = /^[0-9]+.?[0-9]*$/
+                    if (!r.test(val)) {
+                        event.preventDefault();
+                        alert("\""+val+"\"@T(" is not valid value.")");
+                    }
+                }).bind("input", function (event) {
+                    var val = $(this).val();
+                    var r = /^[0-9]+.?[0-9]*$/
+                    if (val!="" && !r.test(val)) {
+                        event.preventDefault();
+                        alert("\""+val+"\"@T(" is not valid value.")");
+                    }
+
+                    var table = $(row).parent();
+                    var tagName = table.prop("tagName");
+                    if (tagName == "TBODY") {
+                        table = table.parent();
+                    }
+                    var tableName = table.attr("name");
+                    var tabpanel = $("div.active[role='tabpanel']");
+                    if (tableName == "HeadCount" || tableName == "WorkingHour" || tableName == "HourRatio") {
+                        var name = $(this).attr("name");
+                        CalcY1(row);
+
+                        CalcCost(tabpanel,tableName, name);
+                    }
+                    else if (tableName == "Travel" || tableName == "DV" || tableName == "PV" || tableName == "External" || tableName == "Capitalized") {
+                        CalcY1(row);
+                        var totalRow = table.find("thead>tr:last");
+                        var cell = $(this).parent();
+                        CalcTotal(totalRow, row, cell);
+                        var totalGroup = $(row).find("input[name$='.ActivityType.TotalGroup']").val();
+                        var table = $(row).parent();
+
+                        CalcYearTotal(tabpanel, table, totalGroup);
+                        CalcYearTotalSum($(tabpanel));
+                        CalcGross($(tabpanel));
+                    }
+                });
+            });
+        }
+
+        function CalcCost(tabpanel,tableName, name) {
+            if (tableName == "WorkingHour")
+            {
+                var table = tabpanel.find("table[name='HeadCount']");
+                var rows = table.find("tr");
+                for (var i = 2; i < rows.length; i++) {
+                    var headCountInputName = name.replace("WorkingHours[0]", "HeadCounts[" + (i - 2) + "]");
+                    CalcCost(tabpanel,"HeadCount", headCountInputName);
+                }
+            }
             //HeadCount Input
             var headCountInputName = name.replace(tableName, "HeadCount");
             var headCount = $("input[name='" + headCountInputName + "']").val();
@@ -552,8 +896,221 @@
             var cost = Math.round(headCount * hourRatio * workingHour * 100) / 100;
             //Cost Input
             var costInputName = name.replace(tableName, "Cost");
-            $("input[name='" + costInputName + "']").val(cost);
+            var costInput = $("input[name='" + costInputName + "']");
+            costInput.val(cost);
+
+            var row = costInput.parent().parent();
+            CalcY1(row);
+
+            var costTable = row.parent();
+            var tagName = row.parent().prop("tagName");
+            if (tagName == "TBODY") {
+                costTable = costTable.parent();
+            }
+            var totalRow = costTable.find("tfoot>tr:last");
+            var cell = $(costInput).parent();
+            CalcTotal(totalRow, row, cell);
+
+            var totalGroup = $(row).find("input[name$='.ActivityType.TotalGroup']").val();
+            CalcYearTotal(tabpanel, costTable, totalGroup);
+            CalcYearTotalSum($(tabpanel));
+            CalcGross($(tabpanel));
         }
+
+        function CalcY1(row) {
+            var y1 = $(row).find("input[type='text'][name$='.Y1']");
+            var inputs = $(row).find("input[type='text']");
+            var sum = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                if ($(inputs[i]).attr("name") != $(y1).attr("name")) {
+                    var val = $(inputs[i]).val();
+                    if (!$.isNumeric(val)) {
+                        val = 0;
+                    }
+                    sum = sum + parseFloat(val);
+                }
+            }
+            $(y1).val(sum);
+        }
+
+        function CalcTotal(totalRow, row, cell) {
+
+            var rowCellLength = $(row).find("td,th").length;
+            var totalRowCellLength = $(totalRow).find("th").length;
+            var cellIndex = $(cell).prop("cellIndex");
+
+            var table = $(row).parent();
+            var tagName = table.prop("tagName");
+            if (tagName != "TABLE") {
+                table = table.parent();
+            }
+            var rows = $(table).find("TBODY>tr");
+            var sum = 0;
+            for (var i = 0; i < rows.length; i++) {
+                var tds = $(rows[i]).find("td");
+                if (tds.length >= cellIndex) {
+                    var input = $(tds[cellIndex]).find("input[type='text']");
+                    if (input.length > 0) {
+                        var val = $(input).val();
+                        if (!$.isNumeric(val)) {
+                            val = 0;
+                        }
+                        sum = sum + parseFloat(val);
+                    }
+                }
+            }
+            var totalRowCellIndex = (totalRowCellLength - rowCellLength) + cellIndex;
+            var totalRowCell = $(totalRow).find("th:eq(" + totalRowCellIndex + ")");
+            $(totalRowCell).text(sum);
+
+            sum = 0;
+            var totalRowCells = $(totalRow).find("th");
+            var totalRowSumCell = $(totalRow).find("th:eq(" + (totalRowCellLength-1) + ")");
+            for (var i = 1; i < totalRowCellLength; i++) {
+                var totalRowCell = $(totalRowCells[i]);
+                var totalRowCellIndex = $(totalRowCell).prop("cellIndex");
+
+                if (totalRowCellIndex != (totalRowCellLength-1)) {
+                    var val = $(totalRowCell).text();
+                    if (!$.isNumeric(val)) {
+                        val = 0;
+                    }
+                    sum = sum + parseFloat(val);
+                }
+            }
+            $(totalRowSumCell).text(sum);
+        }
+
+        function CalcGross(tabpanel) {
+            var costTableTr = $(tabpanel).find("table[name='Cost']").find("tr:last");
+            var travelTableTr = $(tabpanel).find("table[name='Travel']").find("tr:first");
+            var dvTableTr = $(tabpanel).find("table[name='DV']").find("tr:first");
+            var pvTableTr = $(tabpanel).find("table[name='PV']").find("tr:first");
+            var externalTableTr = $(tabpanel).find("table[name='External']").find("tr:first");
+            var grossTableTr = $(tabpanel).find("table[name='Gross']").find("tr:first");
+
+            for (var i = 1; i < 14; i++) {
+                var costTd = $(costTableTr).find("th:eq(" + i + ")");
+                var travelTd = $(travelTableTr).find("th:eq(" + i + ")");
+                var dvTd = $(dvTableTr).find("th:eq(" + i + ")");
+                var pvTd = $(pvTableTr).find("th:eq(" + i + ")");
+                var externalTd = $(externalTableTr).find("th:eq(" + i + ")");
+                var grossTd = $(grossTableTr).find("th:eq(" + i + ")");
+                var grossValue = 0
+
+                var val = $(costTd).text();
+                if (!$.isNumeric(val)) {
+                    val = 0;
+                }
+                grossValue = grossValue + parseFloat(val);
+
+                var val = $(travelTd).text();
+                if (!$.isNumeric(val)) {
+                    val = 0;
+                }
+                grossValue = grossValue + parseFloat(val);
+
+                var val = $(dvTd).text();
+                if (!$.isNumeric(val)) {
+                    val = 0;
+                }
+                grossValue = grossValue + parseFloat(val);
+
+                var val = $(pvTd).text();
+                if (!$.isNumeric(val)) {
+                    val = 0;
+                }
+                grossValue = grossValue + parseFloat(val);
+
+                var val = $(externalTd).text();
+                if (!$.isNumeric(val)) {
+                    val = 0;
+                }
+                grossValue = grossValue + parseFloat(val);
+
+                $(grossTd).text(grossValue);
+            }
+        }
+
+        function CalcYearTotal(tabpanel, table, totalGroup) {
+
+            var year = $(tabpanel).data("year");
+            var tagName = table.prop("tagName");
+            if (tagName == "TBODY") {
+                table = table.parent();
+            }
+            var sum = 0;
+            var inputs = $(table).find("input[name$='.ActivityType.TotalGroup'][value='" + totalGroup + "']");
+            for (var i = 0; i < inputs.length; i++) {
+                var inputRow = $(inputs[i]).parent().parent();
+                var y1 = $(inputRow).find("input[type='text'][name$='.Y1']");
+                var y1Value = $(y1).val();
+                if (!$.isNumeric(y1Value)) {
+                    y1Value = 0;
+                }
+                sum = sum + parseFloat(y1Value);
+            }
+            var totalTable = $("#totalTable");
+            var td = $(totalTable).find("td[data-year='" + year + "'][data-total-group='" + totalGroup + "']");
+            $(td).text(sum);
+            CalcTotalRowSum(td);
+            
+        }
+        function CalcYearTotalSum(tabpanel) {
+
+            var year = $(tabpanel).data("year");
+            var totalTable = $("#totalTable");
+            //分类汇总
+            var totalSumTds = $(totalTable).find("td[data-year='" + year + "'][data-sum='1']");
+            var startRowIndex = 1;
+            sum = 0;
+            totalSumTds.each(function (xi, xitem) {
+                var totalGroup = $(xitem).attr("data-total-group");
+                if (!totalGroup) {
+                    var xitemRow = $(xitem).parent();
+                    var rowIndex = $(xitemRow).prop("rowIndex");
+                    var totalSum = 0;
+                    for (var i = startRowIndex; i < rowIndex; i++) {
+                        var cell = $(totalTable).find("tr:eq(" + i + ")").find("td[data-year='" + year + "']");
+                        var cellValue = $(cell).text();
+                        if (!$.isNumeric(cellValue)) {
+                            cellValue = 0;
+                        }
+                        totalSum = totalSum + parseFloat(cellValue);
+                    }
+                    $(xitem).text(totalSum);
+                    CalcTotalRowSum(xitem);
+                }
+
+                var xitemValue = $(xitem).text();
+                if (!$.isNumeric(xitemValue)) {
+                    xitemValue = 0;
+                }
+                sum = sum + parseFloat(xitemValue);
+                startRowIndex = rowIndex + 1;
+            });
+
+            var totalTd = $(totalTable).find("td[data-year='" + year + "'][data-total='1']");
+            $(totalTd).text(sum);
+            CalcTotalRowSum(totalTd);
+        }
+
+        function CalcTotalRowSum(td) {
+            var row = $(td).parent();
+            var tds = $(row).find("td")
+            var lastTd = $(row).find("td:last");
+            var lastValue = 0;
+            for (var i = 1; i < tds.length - 1; i++) {
+                var cellValue = $(tds[i]).text();
+                if (!$.isNumeric(cellValue)) {
+                    cellValue = 0;
+                }
+                lastValue = lastValue + parseFloat(cellValue);
+            }
+            $(lastTd).text(lastValue);
+        }
+
+        
         function CompleteDeleteDetailRecord(result) {
             if (!!result.Message) {
                 alert(result.Message);
@@ -570,7 +1127,8 @@
             //Delete Cost Record Row
             var costTable = $("#detailCost_" + result.EntryIndex);
             activityTypeIds = $(costTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
-            replaceInputName(result,activityTypeIds, "Costs");
+            replaceInputName(result, activityTypeIds, "Costs");
+
         }
 
         function replaceInputName(result, activityTypeIds, tableName) {
@@ -590,7 +1148,28 @@
                         $(xitem).attr("name", xitemName);
                     });
                 });
+                var table = $(row).parent();
+                var totalGroup = $(row).find("input[name$='.ActivityType.TotalGroup']").val();
                 $(row).remove();
+
+                if (tableName == "Costs")
+                {
+                    var tagName = table.prop("tagName");
+                    if (tagName != "TABLE") {
+                        table = table.parent();
+                    }
+                    var firstRow = $(table).find("tr:first");
+                    var cells = firstRow.find("td,th");
+                    for (var c = 4; c < cells.length-1; c++) {
+                        var totalRow = table.find("tfoot>tr:last");
+                        CalcTotal(totalRow, firstRow, cells[c]);
+                    }
+
+                    var tabpanel = $("div.active[role='tabpanel']");
+                    CalcYearTotal(tabpanel, table, totalGroup);
+                    CalcYearTotalSum($(tabpanel));
+                    CalcGross($(tabpanel));
+                }
             }
         }
     </script>

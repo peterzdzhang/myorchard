@@ -25,6 +25,9 @@ namespace Faurecia.ADL.ViewModels
         public EnumPhase Phase { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
+        public EnumPhase NextPhase { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
         public EnumStatus Status { get; set; }
         [Required]
         public string ProjectNo { get; set; }
@@ -92,10 +95,14 @@ namespace Faurecia.ADL.ViewModels
         public string KEZE { get; set; }
         
         public string Quotation { get; set; }
+        [StringLength(255)]
+        public string QuotationComments { get; set; }
 
         public DateTime? QuotationTime { get; set; }
 
         public string IBP { get; set; }
+        [StringLength(255)]
+        public string IBPComments { get; set; }
 
         public DateTime? IBPTime { get; set; }
 

@@ -106,6 +106,12 @@
                                , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
                                , new { })
                             }
+                            else if (Model.ADLs[index].ADLRecord.Phase == Faurecia.ADL.Models.EnumPhase.ECR)
+                            {
+                                @Html.ActionLink(entry.ADLRecord.ProjectNo, "ECR", "Default"
+                               , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id }
+                               , new { })
+                            }
                         </td>
                         <td>
                             @entry.ADLRecord.VersionNo
@@ -155,7 +161,7 @@
                                     comments = comments.Substring(0, comments.LastIndexOf("<br/>"));
                                 }
                             }
-                            @comments
+                            @(new MvcHtmlString(comments))
                         </td>
                     </tr>
                     index++;
