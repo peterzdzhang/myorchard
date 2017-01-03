@@ -14,10 +14,10 @@
 {
     @Html.AntiForgeryToken()
     string returnUrl = Request["ReturnUrl"];
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="min-width:1138px;">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-lg-6 col-sm-8">
+                <div class="col-lg-6 col-sm-6 col-xs-6">
                 @if (Model.Action != Faurecia.ADL.ViewModels.EnumActions.View)
                 {
                     if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
@@ -41,7 +41,7 @@
                 }
                 &nbsp;
                 </div>
-                <div class="col-lg-6 col-sm-4 text-right">
+                <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
                     @if (!string.IsNullOrEmpty(returnUrl))
                     {
                         @Html.Link(T("Back").Text, returnUrl,new { @class = "btn btn-default" });
@@ -205,7 +205,7 @@
                 || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
             {
             <div class="row" style="padding:5px;">
-                @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                 <div class="col-sm-10 col-lg-10">
                     @Html.TextAreaFor(m => m.Head.QuotationComments, new { @class = "form-control", placeholder = "" })
                     @Html.ValidationMessageFor(m => m.Head.QuotationComments)
@@ -215,7 +215,7 @@
             @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
             {
             <div class="row" style="padding:5px;">
-                @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                 <div class="col-sm-10 col-lg-10">
                     @Html.TextAreaFor(m => m.Head.IBPComments, new { @class = "form-control", placeholder = "" })
                     @Html.ValidationMessageFor(m => m.Head.IBPComments)
@@ -228,22 +228,22 @@
                 <div class="form-group">
                     @if (Model.Action == Faurecia.ADL.ViewModels.EnumActions.View)
                     {
-                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2">
+                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @Model.Head.IBP
                             </label>
                         </div>
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2">
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @Model.Head.Quotation
                             </label>
                         </div>
-                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
                             @T("Creator").Text
                         </label>
-                        <div class="col-sm-2 col-lg-2">
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @Model.Head.Creator
                             </label>
@@ -251,17 +251,17 @@
                     }
                     else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
                     {
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                         <div class="col-sm-3 col-lg-3">
                             @Html.DropDownListFor(m => m.Head.Quotation, Model.Quotations, new { @class = "form-control", placeholder = "" })
                             @Html.ValidationMessageFor(m => m.Head.Quotation)
                         </div>
                         <div class="col-sm-3 col-lg-3">
                         </div>
-                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
                             @T("Creator").Text
                         </label>
-                        <div class="col-sm-2 col-lg-2">
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @WorkContext.CurrentUser.UserName
                             </label>
@@ -269,21 +269,21 @@
                     }
                     else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.ECR)
                     {
-                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2">
+                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             @Html.DropDownListFor(m => m.Head.IBP, Model.IBPs, new { @class = "form-control", placeholder = "" })
                             @Html.ValidationMessageFor(m => m.Head.IBP)
                         </div>
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2">
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @WorkContext.CurrentUser.UserName
                             </label>
                         </div>
-                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
                             @T("Creator").Text
                         </label>
-                        <div class="col-sm-2 col-lg-2">
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @Model.Head.Creator
                             </label>
@@ -291,22 +291,22 @@
                     }
                     else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
                     {
-                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2">
+                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @WorkContext.CurrentUser.UserName
                             </label>
                         </div>
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2">
+                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @Model.Head.Quotation
                             </label>
                         </div>
-                        <label class="col-sm-2 col-lg-2 control-label" style="text-align:left">
+                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
                             @T("Creator").Text
                         </label>
-                        <div class="col-sm-2 col-lg-2">
+                        <div class="col-sm-2 col-lg-2 col-xs-2">
                             <label class="control-label text-success" style="text-align:left">
                                 @Model.Head.Creator
                             </label>
@@ -627,7 +627,8 @@
                 if (i == 0) {
                     //TD1
                     var td1 = $("<td></td>");
-                    var url = "/ADL/Default/DeleteDetailRecord?ActivityTypeId=" + activityType.Id + "&Year=" + year + "&ADLRecordId=" + adlRecordId + "&EntryIndex=" + entryIndex;
+                    var url="@Url.Action("DeleteDetailRecord", "Default" , new { Area = "Faurecia.ADL"})";
+                    var url =url+"?ActivityTypeId=" + activityType.Id + "&Year=" + year + "&ADLRecordId=" + adlRecordId + "&EntryIndex=" + entryIndex;
                     var href = $("<a class='btn btn-warning btn-sm' href='#'>-</a>");
                     $(href).attr("data-ajax", "true");
                     $(href).attr("data-ajax-method", "GET");

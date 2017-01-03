@@ -286,6 +286,8 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult View(int Id = 0)
         {
+
+            ViewBag.Title = T("ADL View").Text;
             var viewModel = new ADLQuotationViewModel()
             {
                 Action = EnumActions.New,
@@ -309,10 +311,49 @@ namespace Faurecia.ADL.Controllers
             return View("Quotation", viewModel);
         }
 
+        
+
+
         public ActionResult Diff()
         {
-            return View("Diff");
+            ADLDiffViewModel viewModel = new ADLDiffViewModel();
+            string ids = Request["ids"];
+            if (!string.IsNullOrEmpty(ids))
+            {
+                foreach (string id in ids.Split(','))
+                {
+                    int nId = 0;
+                    int.TryParse(id, out nId);
+                    ADLViewModel vm = GetADLViewModel(nId);
+                    viewModel.ViewModels.Add(vm);
+                }
+            }
+            return View("Diff",viewModel);
         }
+
+        private ADLViewModel GetADLViewModel(int id)
+        {
+            var viewModel = new ADLViewModel()
+            {
+                Action = EnumActions.View,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
+            //SetIBPs(viewModel);
+            //SetActivityTypes(viewModel);
+            var record = _adlRecords.Get(id);
+            if (record == null)
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            SetHeadViewModel(viewModel, record);
+            return viewModel;
+        }
+
         private void SetQuotations(ADLViewModel viewModel)
         {
             viewModel.Quotations = new List<SelectListItem>()

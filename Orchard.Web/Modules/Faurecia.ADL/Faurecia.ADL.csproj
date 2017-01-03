@@ -114,6 +114,7 @@
     <Compile Include="ViewModels\ADLHeadViewModel.cs" />
     <Compile Include="ViewModels\ADLDetailViewModel.cs" />
     <Compile Include="ViewModels\ADLECRViewModel.cs" />
+    <Compile Include="ViewModels\ADLDiffViewModel.cs" />
     <Compile Include="ViewModels\ADLIBPViewModel.cs" />
     <Compile Include="ViewModels\AjaxPager.cs" />
     <Compile Include="ViewModels\ShowActivityTypeViewModel.cs" />
@@ -157,6 +158,8 @@
     <Content Include="Views\Default\_ActivityTypeQueryResults.cshtml" />
     <Content Include="Views\Default\_IndexQueryResult.cshtml" />
     <Content Include="Views\Default\Diff.cshtml" />
+    <Content Include="Views\Default\_DiffHead.cshtml" />
+    <Content Include="Views\Default\_DiffDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
