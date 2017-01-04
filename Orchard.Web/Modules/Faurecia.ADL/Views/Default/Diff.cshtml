@@ -7,50 +7,48 @@
     Style.Require("FaureciaADLStyle");
 
     string returnUrl = Request["ReturnUrl"];
+    var vmIndex = 0;
+    var diffWindowCount = 12;
+    if (Model.ViewModels.Count != 0)
+    {
+        diffWindowCount = 12 / Model.ViewModels.Count;
+    }
+    var diffWindowClass = string.Format("col-sm-{0} col-xs-{0} col-lg-{0}", diffWindowCount);
+
 }
-<h1 style="margin:5px 10px 10px 10px">
-    @Html.TitleForPage(T("ADL Diff").ToString())
-</h1>
-  
-<table class="table table-bordered table-condensed">
-    <tr>
+<div>
+    <div class="row">
         @foreach (var vm in Model.ViewModels)
         {
-            <td>
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-lg-6 col-sm-6 col-xs-6">
-                            &nbsp;
-                        </div>
-                        <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
-                            @if (!string.IsNullOrEmpty(returnUrl))
-                            {
-                                @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default" });
-                            }
+            var cssClass = "panel-success";
+            if (vmIndex == 1) { cssClass = "panel-warning"; }
+            vmIndex++;
+            <div class="@diffWindowClass" style="overflow:auto;" name="diffWindow" id="diffWindow_@vm.Head.Id">
+                <div class="panel @cssClass" style="min-width:1138px">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6 col-xs-6 panel-title">
+                                @T("Diff:") @(vm.Head.ProjectNo + "." + vm.Head.VersionNo)
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                                @if (!string.IsNullOrEmpty(returnUrl))
+                                {
+                                    @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default" });
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel-body" style="min-width:1138px;">
-                    @Html.Partial("_DiffHead", vm)
-                </div>
-                </div>
-            </td>
-        }
-    </tr>
-    <tr>
-        @foreach (var vm in Model.ViewModels)
-        {
-            <td>
-                <div class="panel-body">
+                    <div>
+                        @Html.Partial("_DiffHead", vm)
+                    </div>
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist" id="detailTab">
                         @for (int i = 0; i < vm.Years.Count; i++)
-                        {
-                            int year = vm.Years[i];
-                            var tabName = string.Format("YEAR{0}", year);
-                            if (i == 0)
-                            {
+                {
+                    int year = vm.Years[i];
+                    var tabName = string.Format("YEAR{1}_{0}", year, vm.Head.Id);
+                    if (i == 0)
+                    {
                                 <li role="presentation" class="active">
                                     <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
                                 </li>
@@ -67,182 +65,166 @@
                     <div class="tab-content">
                         @Html.Partial("_DiffDetail", vm)
                     </div>
-                </div>
-            </td>
-        }
-    </tr>
-    <tr>
-        @foreach (var vm in Model.ViewModels)
-        {
-            <td>
-                <div>
-                    <table class="table table-bordered table-condensed table-hover" id="totalTable"
-                           style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:10px">
-                        <thead>
-                            <tr class="active">
-                                <th style="width:auto">@T("Actual H")</th>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    var titleName = string.Format("Y{0}", year);
-                                    <th style="width:61px" data-year="@year">@titleName</th>
-                                }
-                                <th style="width:61px">@T("Total")</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="width:auto">@T("Total D&D")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total FEA")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total DV")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total PV")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="success">
-                                <td style="width:auto">@T("Total D&D (BP)")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-sum="1" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total other CT")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total ME")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="success">
-                                <td style="width:auto">@T("Total CT (BP)")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-sum="1" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="success">
-                                <td style="width:auto">@T("Total travel")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="warning">
-                                <td style="width:auto">@T("Total")</td>
-                                @for (int i = 0; i < vm.Years.Count; i++)
-                                {
-                                    int year = vm.Years[i];
-                                    <td style="width:61px" data-total="1" data-year="@year"></td>
-                                }
-                                <td style="width:61px"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row" style="padding:5px;">
-                    <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                        @T("Quotation Comments").Text
-                    </label>
-                    <div class="col-sm-10 col-lg-10">
-                        @vm.Head.QuotationComments
+                    <div>
+                        <table class="table table-bordered table-condensed table-hover" id="totalTable" data-adlid="@vm.Head.Id"
+                               style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:10px">
+                            <thead>
+                                <tr class="active">
+                                    <th style="width:auto">@T("Actual H")</th>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        var titleName = string.Format("Y{0}", year);
+                                        <th style="width:61px" data-year="@year">@titleName</th>
+                                    }
+                                    <th style="width:61px">@T("Total")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width:auto">@T("Total D&D")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total FEA")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total DV")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total PV")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="success">
+                                    <td style="width:auto">@T("Total D&D (BP)")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total other CT")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total ME")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="success">
+                                    <td style="width:auto">@T("Total CT (BP)")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="success">
+                                    <td style="width:auto">@T("Total travel")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="warning">
+                                    <td style="width:auto">@T("Total")</td>
+                                    @for (int i = 0; i < vm.Years.Count; i++)
+                                    {
+                                        int year = vm.Years[i];
+                                        <td style="width:61px" data-total="1" data-year="@year"></td>
+                                    }
+                                    <td style="width:61px"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="row" style="padding:5px;">
-                    <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                        @T("IBP Comments").Text
-                    </label>
-                    <div class="col-sm-10 col-lg-10">
-                        @vm.Head.IBPComments
+                    <div class="row" style="padding:5px;">
+                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                            @T("Quotation Comments").Text
+                        </label>
+                        <div class="col-sm-10 col-lg-10">
+                            @vm.Head.QuotationComments
+                        </div>
                     </div>
-                </div>
-            </td>
-        }
-    </tr>
-    <tr>
-        @foreach (var vm in Model.ViewModels)
-        {
-            <td>
-                <div class="panel-footer">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                                @T("IBP").Text
-                            </label>
-                            <div class="col-sm-2 col-lg-2 col-xs-2">
-                                <label class="control-label text-success" style="text-align:left">
-                                    @vm.Head.IBP
+                    <div class="row" style="padding:5px;">
+                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                            @T("IBP Comments").Text
+                        </label>
+                        <div class="col-sm-10 col-lg-10">
+                            @vm.Head.IBPComments
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                    @T("IBP").Text
                                 </label>
-                            </div>
-                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                                @T("Quotation").Text
-                            </label>
-                            <div class="col-sm-2 col-lg-2 col-xs-2">
-                                <label class="control-label text-success" style="text-align:left">
-                                    @vm.Head.Quotation
+                                <div class="col-sm-2 col-lg-2 col-xs-2">
+                                    <label class="control-label text-success" style="text-align:left">
+                                        @vm.Head.IBP
+                                    </label>
+                                </div>
+                                <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                    @T("Quotation").Text
                                 </label>
-                            </div>
-                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                                @T("Creator").Text
-                            </label>
-                            <div class="col-sm-2 col-lg-2 col-xs-2">
-                                <label class="control-label text-success" style="text-align:left">
-                                    @vm.Head.Creator
+                                <div class="col-sm-2 col-lg-2 col-xs-2">
+                                    <label class="control-label text-success" style="text-align:left">
+                                        @vm.Head.Quotation
+                                    </label>
+                                </div>
+                                <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                    @T("Creator").Text
                                 </label>
+                                <div class="col-sm-2 col-lg-2 col-xs-2">
+                                    <label class="control-label text-success" style="text-align:left">
+                                        @vm.Head.Creator
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </td>
+            </div>
         }
-    </tr>
-</table>
-
-
+    </div>
+</div>
 @using (Script.Foot())
 {
     <script type="text/javascript" language="javascript">
@@ -257,10 +239,87 @@
                 event.preventDefault();
             });
             $("textarea").attr("readonly", "readonly");
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                ResetTableHeight();
+            });
+            $(window).bind("resize", function () {
+                ResetWindowSize();
+            });
+            ResetWindowSize();
+            ResetTableHeight();
             setTimeout(function () {
                 InitailizeValue();
             }, 2000);
+
+            $("div[name='diffWindow']").bind("scroll", function () {
+                var scrollTop = $(this).scrollTop();
+                var scrollLeft = $(this).scrollLeft();
+                var diffWindowId = $(this).attr("id");
+                $("div[name='diffWindow']").each(function (i, item) {
+                    if (diffWindowId != $(item).attr("id")) {
+                        $(item).scrollTop(scrollTop);
+                        $(item).scrollLeft(scrollLeft);
+                    }
+                });
+            });
         })
+
+        function ResetWindowSize() {
+            //var width = $("#layout-wrapper").width();
+            var height = $(window).height();
+            $("#layout-main-container").css("width", "100%");
+            $("#layout-main").css("margin", "-15px");
+            $("#layout-main").css("margin-left", "-28px");
+
+            $("div[name='diffWindow']").each(function (x, item) {
+                $(item).height(height - 70);
+            });
+        }
+
+        function ResetTableHeight() {
+            var height = 0;
+            $("table[name='HeadCount']").each(function (i, item) {
+                var theight = $(item).height();
+                if (height < theight) {
+                    height = theight;
+                }
+            });
+            $("table[name='HeadCount']").each(function (i, item) {
+                $(item).parent().height(height + 25);
+            });
+            height = 0;
+            $("table[name='HourRatio']").each(function (i, item) {
+                var theight = $(item).height();
+                if (height < theight) {
+                    height = theight;
+                }
+            });
+            $("table[name='HourRatio']").each(function (i, item) {
+                $(item).parent().height(height + 25);
+            });
+            height = 0;
+            $("table[name='WorkingHour']").each(function (i, item) {
+                var theight = $(item).height();
+                if (height < theight) {
+                    height = theight;
+                }
+            });
+            $("table[name='WorkingHour']").each(function (i, item) {
+                $(item).parent().height(height + 25);
+            });
+            height = 0;
+            $("table[name='Cost']").each(function (i, item) {
+                var theight = $(item).height();
+                if (height < theight) {
+                    height = theight;
+                }
+            });
+            $("table[name='Cost']").each(function (i, item) {
+                $(item).parent().height(height + 25);
+            });
+        }
+
         function InitailizeValue() {
             var tabpanels = $("div[role='tabpanel']");
             tabpanels.each(function (xi, xitem) {
@@ -283,8 +342,9 @@
                         CalcTotal(totalRow, firstRow, cells[c]);
                     }
                 });
-
-                var totalTableRows = $("#totalTable").find("tr");
+                var adlid = $(xitem).data("adlid");
+                var totalTable = $("#totalTable[data-adlid='" + adlid + "']");
+                var totalTableRows = $(totalTable).find("tr");
                 for (var r = 1; r < totalTableRows.length - 1; r++) {
                     var totalGroup = $(totalTableRows[r]).find("td:eq(1)").attr("data-total-group");
                     if (totalGroup == "@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD"
@@ -353,12 +413,12 @@
 
             sum = 0;
             var totalRowCells = $(totalRow).find("th");
-            var totalRowSumCell = $(totalRow).find("th:eq(" + (totalRowCellLength-1) + ")");
+            var totalRowSumCell = $(totalRow).find("th:eq(" + (totalRowCellLength - 1) + ")");
             for (var i = 1; i < totalRowCellLength; i++) {
                 var totalRowCell = $(totalRowCells[i]);
                 var totalRowCellIndex = $(totalRowCell).prop("cellIndex");
 
-                if (totalRowCellIndex != (totalRowCellLength-1)) {
+                if (totalRowCellIndex != (totalRowCellLength - 1)) {
                     var val = $(totalRowCell).text();
                     if (!$.isNumeric(val)) {
                         val = 0;
@@ -438,7 +498,8 @@
                 }
                 sum = sum + parseFloat(y1Value);
             }
-            var totalTable = $("#totalTable");
+            var adlid = $(tabpanel).data("adlid");
+            var totalTable = $("#totalTable[data-adlid='" + adlid + "']");
             var td = $(totalTable).find("td[data-year='" + year + "'][data-total-group='" + totalGroup + "']");
             $(td).text(sum);
             CalcTotalRowSum(td);
@@ -447,7 +508,8 @@
         function CalcYearTotalSum(tabpanel) {
 
             var year = $(tabpanel).data("year");
-            var totalTable = $("#totalTable");
+            var adlid = $(tabpanel).data("adlid");
+            var totalTable = $("#totalTable[data-adlid='" + adlid + "']");
             //分类汇总
             var totalSumTds = $(totalTable).find("td[data-year='" + year + "'][data-sum='1']");
             var startRowIndex = 1;
@@ -482,7 +544,6 @@
             $(totalTd).text(sum);
             CalcTotalRowSum(totalTd);
         }
-
         function CalcTotalRowSum(td) {
             var row = $(td).parent();
             var tds = $(row).find("td")

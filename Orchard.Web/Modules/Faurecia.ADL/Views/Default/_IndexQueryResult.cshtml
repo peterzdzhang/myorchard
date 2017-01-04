@@ -40,7 +40,7 @@
             <tr>
                 <td>
                     <input type="hidden" value="@Model.ADLs[index].Id" name="@Html.NameOf(m => m.ADLs[index].Id)" />
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.ADLs[index].IsChecked)" />
+                    <input type="checkbox" value="@Model.ADLs[index].Id" name="@Html.NameOf(m => m.ADLs[index].IsChecked)" />
                     @(index + 1)
                 </td>
                 <td>

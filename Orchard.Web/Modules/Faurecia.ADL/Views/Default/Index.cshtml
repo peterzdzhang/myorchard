@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-lg-6 col-sm-8">
                     <button class="btn btn-info" type="submit" name="submit.Query" value="@T("Query")">@T("Query")</button>
-                    <button class="btn btn-success" type="submit" name="submit.Diff" value="@T("Diff")">@T("Diff")</button>
+                    <button class="btn btn-success" type="button" name="button.Diff" value="@T("Diff")">@T("Diff")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
                     @Html.ActionLink(T("Create New").Text, "Create","Default", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
@@ -63,6 +63,25 @@
                 autoSize:true,
                 dateFormat: "yy/mm/dd"
             });
+            $("button[name='button.Diff']").bind("click", function () {
+
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+                if ($(checkboxs).length > 3) { return; }
+
+                var ids = "";
+                $(checkboxs).each(function(i,item){
+                    if (ids != "") ids = ids + ",";
+                    ids = ids + $(item).val();
+                });
+                if (ids == "") return;
+
+                var url="@Url.Action("Diff", "Default", new { Area= "Faurecia.ADL" })";
+                setTimeout(function () {
+                    location.href = url+"?ids="+ids;
+                }, 1000);
+            });
+
         })
     </script>
 }

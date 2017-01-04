@@ -245,7 +245,7 @@
             @Html.TextBoxFor(m => m.Head.Ballfix, new { @class = "form-control", placeholder = "" })
             @Html.ValidationMessageFor(m => m.Head.Ballfix)
         </div>
-        @Html.LabelFor(m => m.Head.KEZE, T("Recliner").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        @Html.LabelFor(m => m.Head.KEZE, T("KEZE").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.KEZE)" name="@Html.NameOf(m => m.Head.KEZE)">
                 @Html.SelectOption(Model.Head.KEZE, "RD77", T("RD77").ToString())
