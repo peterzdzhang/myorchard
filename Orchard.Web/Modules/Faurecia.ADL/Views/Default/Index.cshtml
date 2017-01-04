@@ -75,11 +75,9 @@
                     ids = ids + $(item).val();
                 });
                 if (ids == "") return;
-
+                var returnurl = "@HttpContext.Current.Request.RawUrl";
                 var url="@Url.Action("Diff", "Default", new { Area= "Faurecia.ADL" })";
-                setTimeout(function () {
-                    location.href = url+"?ids="+ids;
-                }, 1000);
+                location.href = url + "?ids=" + ids + "&returnurl=" + returnurl;
             });
 
         })
