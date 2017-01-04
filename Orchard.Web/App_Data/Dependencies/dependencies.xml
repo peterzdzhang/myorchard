@@ -1858,8 +1858,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>PJS.Bootstrap</ModuleName>
-    <VirtualPath>~/Themes/PJS.Bootstrap/bin/PJS.Bootstrap.dll</VirtualPath>
-    <LoaderName>PrecompiledExtensionLoader</LoaderName>
+    <VirtualPath>~/Themes/PJS.Bootstrap/PJS.Bootstrap.csproj</VirtualPath>
+    <LoaderName>DynamicExtensionLoader</LoaderName>
     <References>
       <Reference>
         <Name>JetBrains.Annotations</Name>

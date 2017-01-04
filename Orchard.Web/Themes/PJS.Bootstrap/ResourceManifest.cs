@@ -1,4 +1,5 @@
 ﻿using Orchard.UI.Resources;
+using System;
 
 namespace PJS.Bootstrap {
     public class ResourceManifest : IResourceManifestProvider {
@@ -14,6 +15,7 @@ namespace PJS.Bootstrap {
 
             manifest.DefineStyle("Stapel").SetUrl("stapel/stapel.css");
             manifest.DefineStyle("prettyPhoto").SetUrl("prettyPhoto/prettyPhoto.css");
+
         }
     }
 }

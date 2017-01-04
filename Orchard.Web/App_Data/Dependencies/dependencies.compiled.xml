@@ -4,7 +4,7 @@
     <ExtensionId>Faurecia.ADL</ExtensionId>
     <LoaderName>DynamicExtensionLoader</LoaderName>
     <VirtualPath>~/Modules/Faurecia.ADL/Faurecia.ADL.csproj</VirtualPath>
-    <Hash>1a97473989a1dba7</Hash>
+    <Hash>1a9750a618956df4</Hash>
   </Dependency>
   <Dependency>
     <ExtensionId>Faurecia.BM</ExtensionId>
@@ -416,9 +416,9 @@
   </Dependency>
   <Dependency>
     <ExtensionId>PJS.Bootstrap</ExtensionId>
-    <LoaderName>PrecompiledExtensionLoader</LoaderName>
-    <VirtualPath>~/Themes/PJS.Bootstrap/bin/PJS.Bootstrap.dll</VirtualPath>
-    <Hash>4d927f2d088b43f6</Hash>
+    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Themes/PJS.Bootstrap/PJS.Bootstrap.csproj</VirtualPath>
+    <Hash>a58d5599ca169d3a</Hash>
   </Dependency>
   <Dependency>
     <ExtensionId>SysCache</ExtensionId>
