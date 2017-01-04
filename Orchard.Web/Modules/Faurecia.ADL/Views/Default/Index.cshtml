@@ -63,6 +63,15 @@
                 autoSize:true,
                 dateFormat: "yy/mm/dd"
             });
+            $("input[type='checkbox'][name$='.IsChecked']").bind("change", function () {
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                var isChecked = $(this).prop("checked");
+                if (isChecked && $(checkboxs).length > 3) {
+                    $(this).prop("checked", !isChecked);
+                    event.preventDefault();
+                }
+            });
+
             $("button[name='button.Diff']").bind("click", function () {
 
                 var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
