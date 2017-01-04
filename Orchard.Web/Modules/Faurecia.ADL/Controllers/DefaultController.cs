@@ -45,6 +45,7 @@ namespace Faurecia.ADL.Controllers
             IRepository<WorkingHourRecord> workingHourRecords,
             IRepository<HourRatioRecord> hourRatioRecords)
         {
+            
             _siteService = siteService;
             _orchardService = orchardService;
             _adlRecords = adlRecords;

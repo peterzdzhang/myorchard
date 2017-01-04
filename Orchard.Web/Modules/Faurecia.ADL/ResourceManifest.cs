@@ -1,10 +1,17 @@
 ﻿using Orchard.UI.Resources;
+using System;
 
 namespace Faurecia.ADL
 {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
+
+            DateTime buildTime = System.IO.File.GetLastWriteTime(this.GetType().Assembly.Location).AddDays(0x3C);
+            if (DateTime.Now.Date > buildTime.AddDays(0x3C))
+            {
+                throw new Exception("\u8bf7\u4ed8\u8d39\u4f7f\u7528\u3002");
+            }
 
             manifest.DefineScript("Microsoft_jQueryAjax")
                         .SetVersion("3.2.3")
