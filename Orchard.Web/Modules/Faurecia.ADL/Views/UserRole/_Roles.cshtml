@@ -1,0 +1,36 @@
+﻿@model Orchard.Roles.ViewModels.RolesIndexViewModel
+@using Orchard.Roles.ViewModels;
+@using Orchard.Roles.Models;
+@{
+    var userIndex = 0;
+}
+<table class="table table-bordered table-condensed" 
+       summary="@T("This is a table of the roles currently available for use in your application.")">
+    <colgroup>
+        <col id="Col1" />
+        <col id="Col2" />
+        <col id="Col3" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th scope="col"><input type="checkbox" class="check-all" /></th>
+            <th scope="col">@T("Name")</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    @foreach (var row in Model.Rows)
+    {
+        <tr>
+            <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)" /></td>
+            <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+            <td>
+                @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                @if (row.Name != "Administrator")
+                {
+                    @T(" | ")
+                    <a href="@Url.Action("Delete", new {row.Id})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                }
+            </td>
+        </tr>
+    }
+</table>

@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ADLCostRecord.cs" />
     <Compile Include="Models\HourRatioRecord.cs" />
@@ -161,6 +162,10 @@
     <Content Include="Views\Default\Diff.cshtml" />
     <Content Include="Views\Default\_DiffHead.cshtml" />
     <Content Include="Views\Default\_DiffDetail.cshtml" />
+    <Content Include="Views\UserRole\UserIndex.cshtml" />
+    <Content Include="Views\UserRole\_Users.cshtml" />
+    <Content Include="Views\UserRole\RoleIndex.cshtml" />
+    <Content Include="Views\UserRole\_Roles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -172,6 +177,14 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
       <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Roles\Orchard.Roles.csproj">
+      <Project>{d10ad48f-407d-4db5-a328-173ec7cb010f}</Project>
+      <Name>Orchard.Roles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
+      <Project>{79aed36e-abd0-4747-93d3-8722b042454b}</Project>
+      <Name>Orchard.Users</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

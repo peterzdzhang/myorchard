@@ -1,0 +1,221 @@
+﻿@model Faurecia.ADL.ViewModels.ADLViewModel
+
+@{ 
+    var projectNoVersionNo = string.Empty;
+    if (!string.IsNullOrWhiteSpace(Model.Head.ProjectNo))
+    {
+        projectNoVersionNo = string.Format("{0}.{1}", Model.Head.ProjectNo, Model.Head.VersionNo);
+    }
+}
+<div class="form-horizontal">
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Customer, T("Customer").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Customer
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.ProjectNo, T("Project No").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @projectNoVersionNo
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.Currency, T("Currency").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Currency
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Name, T("Name").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left"})
+        <div class="col-sm-10 col-lg-10">
+            <label class="form-control">
+                @Model.Head.Name
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.ProgramManager, T("Manager").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.ProgramManager
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.ProgramController, T("Controller").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.ProgramController
+            </label>
+        </div>
+        @Html.Label("Status", T("Status").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="control-label text-warning" style="text-align:left">
+                @string.Format("{0}-{1}", Model.Head.Phase, Model.Head.Status)
+            </label>
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center" style="padding:2px;margin:2px;">
+    <div class="row" style="padding:5px;">
+        <div class="col-sm-11 col-xs-11 col-lg-11">
+            @T("Request info / milestone")
+        </div>
+        <div class="col-lg-1 col-sm-1 col-xs-1 text-right">
+        </div>
+    </div>
+</div>
+<div class="form-horizontal collapse in" id="requestInfo">
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Type, T("Type").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Type
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.StartDate, T("Start Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.StartDate)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.Mockup, T("Mock up").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.Mockup)
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.OfferDate, T("Offer Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.OfferDate)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.ProtoDate, T("Proto Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.ProtoDate)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.Award, T("Award").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.Award)
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.SOPDate, T("SOP Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.SOPDate)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.PTRDate, T("PTR Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.PTRDate)
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.MileStoneComments, T("Comments").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-10 col-lg-10">
+            <label class="form-control">
+                @Model.Head.MileStoneComments
+            </label>
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center" style="padding:2px;margin:2px;">
+    <div class="row" style="padding:5px;">
+        <div class="col-sm-11 col-xs-11 col-lg-11">
+            @T("Vehicle / frame information")
+        </div>
+        <div class="col-lg-1 col-sm-1 col-xs-1 text-right">
+        </div>
+    </div>
+</div>
+<div class="form-horizontal collapse in" id="vehicleInfo">
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Variant1, T("Variant").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Variant1
+            </label>
+        </div>
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Variant2
+            </label>
+        </div>
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Variant3
+            </label>
+        </div>
+
+        @Html.LabelFor(m => m.Head.FrameMaturity, T("Frame maturity").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.FrameMaturity
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.VehicelComments, T("Comments").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-10 col-lg-10">
+            <label class="form-control">
+                @Model.Head.VehicelComments
+            </label>
+        </div>
+    </div>
+</div>
+<div class="alert alert-info text-center" style="padding:2px;margin:2px;">
+    <div class="row" style="padding:5px;">
+        <div class="col-sm-11 col-xs-11 col-lg-11">
+            @T("Products offer")
+        </div>
+        <div class="col-lg-1 col-sm-1 col-xs-1 text-right">
+        </div>
+    </div>
+</div>
+<div class="form-horizontal collapse in" id="productsOffer">
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Tracks, T("Tracks").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Tracks
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.Recliner, T("Recliner").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Recliner
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.HA, T("HA").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.HA
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Ballfix, T("Ballfix").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.Ballfix
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.KEZE, T("KEZE").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @Model.Head.KEZE
+            </label>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+﻿@model UsersIndexViewModel
+@using Orchard.Users.ViewModels;
+@{
+    Script.Require("Microsoft_jQueryAjax_Validate");
+}
+<h1>
+    @Html.TitleForPage(T("Users & Roles").ToString())
+</h1>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#Users" role="tab">Users</a>
+    </li>
+    <li role="presentation">
+        <a href="@Url.Action("RoleIndex","UserRole",new {Area = "Faurecia.ADL" })" role="tab" >Roles</a>
+    </li>
+</ul>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="Users" style="margin-top:10px">
+        @using (Ajax.BeginForm("Index", "UserRole", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="publishActions">@T("Actions:")</label>
+                            <select id="publishActions" class="form-control" name="@Html.NameOf(m => m.Options.BulkAction)">
+                                @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.None, T("Choose action...").ToString())
+                                @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Approve, T("Approve").ToString())
+                                @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Disable, T("Disable").ToString())
+                                @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.ChallengeEmail, T("Send challenge E-mail").ToString())
+                                @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Delete, T("Delete").ToString())
+                            </select>
+                            <button type="submit" name="submit.BulkEdit" class="btn btn-warning" value="@T("Apply")">@T("Apply")</button>
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.Options.Search, new { @class = "form-control" })
+                            <label for="filterResults">@T("Filter:")</label>
+                            <select id="filterResults" class="form-control" name="@Html.NameOf(m => m.Options.Filter)">
+                                @Html.SelectOption(Model.Options.Filter, UsersFilter.All, T("All Users").ToString())
+                                @Html.SelectOption(Model.Options.Filter, UsersFilter.Approved, T("Approved Users").ToString())
+                                @Html.SelectOption(Model.Options.Filter, UsersFilter.Pending, T("Pending Users").ToString())
+                                @Html.SelectOption(Model.Options.Filter, UsersFilter.EmailPending, T("Pending Emails").ToString())
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sortResults">@T("Sort by:")</label>
+                            <select id="sortResults" class="form-control" name="@Html.NameOf(m => m.Options.Order)">
+                                @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
+                                @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
+                                @Html.SelectOption(Model.Options.Order, UsersOrder.CreatedUtc, T("Creation Time").ToString())
+                                @Html.SelectOption(Model.Options.Order, UsersOrder.LastLoginUtc, T("Last Login Time").ToString())
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+
+                        @Ajax.ActionLink("Add new user", "Create", "UserRole"
+                                 , new { Area = "Faurecia.ADL" }
+                                 , new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "UserQueryResults" }
+                                 , new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+
+                <div class="panel-body" id="UserQueryResults">
+                    @Html.Partial("_Users", Model)
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@using (Script.Foot())
+{
+<script type="text/javascript">
+    $(function () { })
+</script>
+}

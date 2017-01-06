@@ -1,0 +1,56 @@
+﻿@model RolesIndexViewModel
+@using Orchard.Roles.ViewModels;
+@{
+    Script.Require("Microsoft_jQueryAjax_Validate");
+}
+<h1>
+    @Html.TitleForPage(T("Users & Roles").ToString())
+</h1>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation">
+        <a href="@Url.Action("Index","UserRole",new {Area = "Faurecia.ADL" })" role="tab">Users</a>
+    </li>
+    <li role="presentation" class="active">
+        <a href="#Roles" role="tab" data-toggle="tab">Roles</a>
+    </li>
+</ul>
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="Roles" style="margin-top:10px">
+        @using (Ajax.BeginForm("RoleIndex", "UserRole", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="publishActions">@T("Actions:")</label>
+                            <select id="publishActions" class="form-control" name="roleActions">
+                                <option value="1">@T("Delete")</option>
+                            </select>
+                            <button type="submit" class="btn btn-warning">@T("Apply")</button>
+                        </div>
+                        
+                        @Ajax.ActionLink("Add new role", "CreateRole", "UserRole"
+                                 , new { Area = "Faurecia.ADL" }
+                                 , new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults" }
+                                 , new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+
+                <div class="panel-body" id="UserQueryResults">
+                    @Html.Partial("_Roles", Model)
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@using (Script.Foot())
+{
+<script type="text/javascript">
+    $(function () { })
+</script>
+}
