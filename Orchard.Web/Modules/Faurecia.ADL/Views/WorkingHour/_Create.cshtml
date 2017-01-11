@@ -1,0 +1,83 @@
+﻿@model WorkingHourCreateViewModel
+@using Faurecia.ADL.ViewModels;
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Year, T("Year").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-10 col-xs-10 col-lg-10">
+        @Html.TextBoxFor(m => m.Year, new { autofocus = "autofocus", @class = "form-control", @style = "ime-mode:disabled", maxlength="4", placeholder = "Year" })
+        @Html.ValidationMessageFor(m => m.Year)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Jan, T("Jan").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Jan, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled",  placeholder = "Jan" })
+        @Html.ValidationMessageFor(m => m.Jan)
+    </div>
+    @Html.LabelFor(m => m.Feb, T("Feb").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Feb, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Feb" })
+        @Html.ValidationMessageFor(m => m.Feb)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Mar, T("Mar").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Mar, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Mar" })
+        @Html.ValidationMessageFor(m => m.Mar)
+    </div>
+    @Html.LabelFor(m => m.Apr, T("Apr").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Apr, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Apr" })
+        @Html.ValidationMessageFor(m => m.Apr)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.May, T("May").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.May, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "May" })
+        @Html.ValidationMessageFor(m => m.May)
+    </div>
+    @Html.LabelFor(m => m.Jun, T("Jun").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Jun, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Jun" })
+        @Html.ValidationMessageFor(m => m.Jun)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Jul, T("Jul").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Jul, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Jul" })
+        @Html.ValidationMessageFor(m => m.Jul)
+    </div>
+    @Html.LabelFor(m => m.Aug, T("Aug").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Aug, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Aug" })
+        @Html.ValidationMessageFor(m => m.Aug)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Sep, T("Sep").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Sep, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Sep" })
+        @Html.ValidationMessageFor(m => m.Sep)
+    </div>
+    @Html.LabelFor(m => m.Oct, T("Oct").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Oct, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Oct" })
+        @Html.ValidationMessageFor(m => m.Oct)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Nov, T("Nov").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Nov, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Nov" })
+        @Html.ValidationMessageFor(m => m.Nov)
+    </div>
+    @Html.LabelFor(m => m.Dev, T("Dev").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    <div class="col-sm-4 col-xs-4 col-lg-4">
+        @Html.TextBoxFor(m => m.Dev, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Dev" })
+        @Html.ValidationMessageFor(m => m.Dev)
+    </div>
+</div>
+

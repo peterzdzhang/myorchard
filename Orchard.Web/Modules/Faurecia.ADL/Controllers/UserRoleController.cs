@@ -122,6 +122,11 @@ namespace Faurecia.ADL.Controllers
 
             pagerShape.RouteData(routeData);
 
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Users", model);
+            }
+
             return View("UserIndex",model);
         }
 
@@ -132,7 +137,10 @@ namespace Faurecia.ADL.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().OrderBy(r => r.Name).ToList() };
-
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("_Roles", model);
+            }
             return View("RoleIndex",model);
         }
     }

@@ -99,6 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\DefaultController.cs" />
+    <Compile Include="Controllers\ActivityTypeController.cs" />
+    <Compile Include="Controllers\WorkingHourController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ADLCostRecord.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Models\ADLRecord.cs" />
     <Compile Include="Models\ActivityTypeRecord.cs" />
     <Compile Include="Models\WorkingHourRecord.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
@@ -117,6 +120,10 @@
     <Compile Include="ViewModels\ADLECRViewModel.cs" />
     <Compile Include="ViewModels\ADLDiffViewModel.cs" />
     <Compile Include="ViewModels\ADLIBPViewModel.cs" />
+    <Compile Include="ViewModels\ActivityTypeCreateViewModel.cs" />
+    <Compile Include="ViewModels\WorkingHourCreateViewModel.cs" />
+    <Compile Include="ViewModels\ActivityTypeIndexViewModel.cs" />
+    <Compile Include="ViewModels\WorkingHourIndexViewModel.cs" />
     <Compile Include="ViewModels\AjaxPager.cs" />
     <Compile Include="ViewModels\ShowActivityTypeViewModel.cs" />
     <Compile Include="ViewModels\ADLQuotationViewModel.cs" />
@@ -166,6 +173,13 @@
     <Content Include="Views\UserRole\_Users.cshtml" />
     <Content Include="Views\UserRole\RoleIndex.cshtml" />
     <Content Include="Views\UserRole\_Roles.cshtml" />
+    <Content Include="Views\WorkingHour\_WorkingHours.cshtml" />
+    <Content Include="Views\WorkingHour\Index.cshtml" />
+    <Content Include="Views\WorkingHour\_Create.cshtml" />
+    <Content Include="Views\ActivityType\Create.cshtml" />
+    <Content Include="Views\ActivityType\_ActivityTypes.cshtml" />
+    <Content Include="Views\ActivityType\Index.cshtml" />
+    <Content Include="Views\ActivityType\_HourRatios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

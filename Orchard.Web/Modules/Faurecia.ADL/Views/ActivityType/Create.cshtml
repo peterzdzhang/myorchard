@@ -1,0 +1,153 @@
+﻿@model ActivityTypeCreateViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    Script.Require("Microsoft_jQueryAjax_Validate");
+    string returnUrl = Request["ReturnUrl"];
+}
+<h1>
+    @Html.TitleForPage(T("Create new activity type").ToString())
+</h1>
+@using (Ajax.BeginForm("Save", "ActivityType" , new AjaxOptions { HttpMethod = "Post" }))
+{
+    @Html.AntiForgeryToken()
+   <div class="panel panel-default">
+       <div class="panel-heading">
+           <div class="row">
+               <div class="col-lg-6 col-sm-6 col-xs-6">
+                   <button type="submit" name="submit.Save" class="btn btn-primary" value="@T("Save")">@T("Save")</button>
+               </div>
+               <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                   @if (!string.IsNullOrEmpty(returnUrl))
+                   {
+                       @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default" });
+                   }
+               </div>
+           </div>
+       </div>
+        <div class="panel-body" style="margin-top:0px;margin-bottom:0px;padding-bottom:0px">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CostCenter, T("Cost Center").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.TextBoxFor(m => m.CostCenter, new { @class = "form-control", maxlength = "50", placeholder = "Cost Center" })
+                        @Html.ValidationMessageFor(m => m.CostCenter)
+                    </div>
+                    @Html.LabelFor(m => m.ActivityType, T("Activity Type").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.ActivityType, new { @class = "form-control", maxlength = "50", placeholder = "Activity Type" })
+                        @Html.ValidationMessageFor(m => m.ActivityType)
+                    </div>
+                    @Html.LabelFor(m => m.RMBHour, T("RMB Hour").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                        @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", maxlength = "50", placeholder = "RMB Hour" })
+                        @Html.ValidationMessageFor(m => m.RMBHour)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Comment, T("Comment").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-10 col-xs-10 col-lg-10">
+                        @Html.TextBoxFor(m => m.Comment, new { @class = "form-control", maxlength = "50", placeholder = "Comment" })
+                        @Html.ValidationMessageFor(m => m.Comment)
+                    </div>
+                </div>
+            </div>
+        </div>
+       <div class="panel-body" style="margin-top:0px;margin-bottom:0px">
+           @Html.Partial("_HourRatios", Model)
+       </div>
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="createModalTitle">@T("Add new working hour")</h4>
+            </div>
+            @using (Ajax.BeginForm("CreateHourRatio", "ActivityType"
+                                   , new AjaxOptions { HttpMethod = "Post", OnComplete = "onCompleteCreate" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div id="createContent" class="form-horizontal">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#createModal').on('shown.bs.modal', function (e) {
+                $("#createContent").find("input[type='text']").each(function (x, xitem) {
+                    $(xitem).val("");
+                    var isAllowDot = true;
+                    if ($(xitem).attr("name") == "Year") {
+                        isAllowDot = false;
+                        $(xitem).select();
+                    }
+                    BindInputEvent(xitem, isAllowDot);
+                });
+            });
+        })
+
+        function BindInputEvent(item,isAllowDot) {
+            $(item).bind("keypress", function (event) {
+                var val = $(this).val();
+                var key = event.key;
+                if (!isAllowDot && key == ".") {
+                    event.preventDefault();
+                }
+                if ((key < "0" || key > "9") && key != ".") {
+                    event.preventDefault();
+                }
+                if (val.indexOf(".") >= 0 && key == ".") {
+                    event.preventDefault();
+                }
+                if (val.length == 0 && key == ".") {
+                    event.preventDefault();
+                }
+            }).bind("paste", function (event) {
+                var val = undefined;
+                if (window.clipboardData && window.clipboardData.getData) {
+                    val = win.clipboardData.getData("Text");
+                }
+                else {
+                    val = event.originalEvent.clipboardData.getData("Text");
+                }
+                var r = /^[0-9]+.?[0-9]*$/
+                if (!isAllowDot) {
+                    r = /^[0-9]+$/
+                }
+                if (!r.test(val)) {
+                    event.preventDefault();
+                    //alert("\""+val+"\"@T(" is not valid value.")");
+                }
+            }).bind("input", function (event) {
+                var val = $(this).val();
+                var r = /^[0-9]+.?[0-9]*$/
+                if (!isAllowDot) {
+                    r = /^[0-9]+$/
+                }
+                if (val != "" && !r.test(val)) {
+                    event.preventDefault();
+                    //alert("\""+val+"\"@T(" is not valid value.")");
+                }
+            });
+        }
+
+        function onCompleteCreate() {
+            //$('#createModal').modal("hide");
+        }
+    </script>
+}
