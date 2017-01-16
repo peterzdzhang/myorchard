@@ -1,0 +1,47 @@
+﻿@model ActivityTypeIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    Script.Require("Microsoft_jQueryAjax_Validate");
+}
+<h1>
+    @Html.TitleForPage(T("Activity Type").ToString())
+</h1>
+@using (Ajax.BeginForm("Index", "ActivityType"
+                                                            , new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="publishActions">@T("Actions:")</label>
+                    <select id="publishActions" class="form-control" name="@Html.NameOf(m => m.Options.BulkAction)">
+                        @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.None, T("Choose action...").ToString())
+                        @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.Edit, T("Edit").ToString())
+                        @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.Delete, T("Delete").ToString())
+                    </select>
+                    <button type="submit" name="submit.BulkEdit" class="btn btn-warning" value="@T("Apply")">@T("Apply")</button>
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.Options.Search, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="sortResults">@T("Sort by:")</label>
+                    <select id="sortResults" class="form-control" name="@Html.NameOf(m => m.Options.Order)">
+                        @Html.SelectOption(Model.Options.Order, ActivityTypeOrder.CostCenter, T("Cost Center asc").ToString())
+                        @Html.SelectOption(Model.Options.Order, ActivityTypeOrder.CostCenterDesc, T("Cost CenterDesc").ToString())
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+
+                @Html.ActionLink(T("Add new activity type"), "Create", "ActivityType"
+                        , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }
+                        , new { @class = "btn btn-primary" })
+            </div>
+        </div>
+
+        <div class="panel-body" id="QueryResults">
+            @Html.Partial("_ActivityTypes", Model)
+        </div>
+    </div>
+}

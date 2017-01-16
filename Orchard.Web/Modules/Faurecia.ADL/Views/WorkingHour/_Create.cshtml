@@ -1,13 +1,20 @@
 ﻿@model WorkingHourCreateViewModel
 @using Faurecia.ADL.ViewModels;
 
+@for (int i = 0; i < Model.Ids.Count; i++)
+{
+    <input type="hidden" value="@Model.Ids[i]" name="@Html.NameOf(m => m.Ids[i])" />
+}
+@if (Model.Action != WorkingHourAction.BulkEdit)
+{
 <div class="form-group">
     @Html.LabelFor(m => m.Year, T("Year").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
     <div class="col-sm-10 col-xs-10 col-lg-10">
-        @Html.TextBoxFor(m => m.Year, new { autofocus = "autofocus", @class = "form-control", @style = "ime-mode:disabled", maxlength="4", placeholder = "Year" })
+        @Html.TextBoxFor(m => m.Year, new { autofocus = "autofocus", @class = "form-control", @style = "ime-mode:disabled", maxlength = "4", placeholder = "Year" })
         @Html.ValidationMessageFor(m => m.Year)
     </div>
 </div>
+}
 <div class="form-group">
     @Html.LabelFor(m => m.Jan, T("Jan").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
     <div class="col-sm-4 col-xs-4 col-lg-4">

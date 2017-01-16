@@ -1,0 +1,48 @@
+﻿@model ActivityTypeIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    var index = 0;
+}
+<table class="table table-bordered table-condensed" style="margin-bottom:0px">
+    <thead>
+        <tr class="active">
+            <th><input type="checkbox" class="check-all" /></th>
+            <th>@T("Cost Center")</th>
+            <th>@T("Activity Type")</th>
+            <th>@T("RMB Hour")</th>
+            <th>@T("Comment")</th>
+            <th>@T("Is Used")</th>
+            <th>@T("Action")</th>
+        </tr>
+    </thead>
+    @foreach (var entry in Model.ActivityTypes)
+    {
+        <tr>
+            <td>
+                <input type="hidden" value="@Model.ActivityTypes[index].ActivityType.Id" name="@Html.NameOf(m => m.ActivityTypes[index].ActivityType.Id)" />
+                <input type="checkbox" value="true" name="@Html.NameOf(m => m.ActivityTypes[index].IsChecked)" />
+            </td>
+            <td>
+                @Html.ActionLink(entry.ActivityType.CostCenter, "Edit",new { entry.ActivityType.Id })
+            </td>
+            <td>
+                @entry.ActivityType.ActivityType
+            </td>
+            <td>
+                @entry.ActivityType.RMBHour
+            </td>
+            <td>
+                @entry.ActivityType.Comment
+            </td>
+            <td>
+                @entry.ActivityType.IsUsed
+            </td>
+            <td>
+                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.ActivityType.Id }) |
+                @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.ActivityType.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
+            </td>
+        </tr>
+        index++;
+    }
+</table>
+@Display(Model.Pager)

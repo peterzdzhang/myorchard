@@ -1,0 +1,101 @@
+﻿@model WorkingHourIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    var index = 0;
+}
+<table class="table table-bordered table-condensed" style="margin-bottom:0px">
+    <thead>
+        <tr class="active">
+            <th><input type="checkbox" class="check-all" /></th>
+            <th>@T("Year")</th>
+            <th>@T("Jan")</th>
+            <th>@T("Feb")</th>
+            <th>@T("Mar")</th>
+            <th>@T("Apr")</th>
+            <th>@T("May")</th>
+            <th>@T("Jun")</th>
+            <th>@T("Jul")</th>
+            <th>@T("Aug")</th>
+            <th>@T("Sep")</th>
+            <th>@T("Oct")</th>
+            <th>@T("Nov")</th>
+            <th>@T("Dev")</th>
+            <th>@T("Action")</th>
+        </tr>
+    </thead>
+    @foreach (var entry in Model.WorkingHours)
+    {
+        <tr>
+            <td>
+                <input type="hidden" value="@Model.WorkingHours[index].WorkingHour.Id" name="@Html.NameOf(m => m.WorkingHours[index].WorkingHour.Id)" />
+                <input type="checkbox" value="true" name="@Html.NameOf(m => m.WorkingHours[index].IsChecked)" />
+            </td>
+            <td>
+                @Ajax.ActionLink(entry.WorkingHour.Year.ToString()
+               , "Edit"
+               , new { entry.WorkingHour.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete= "onCompleteEdit",
+                   UpdateTargetId= "createContent"
+               })
+            </td>
+            <td>
+                @entry.WorkingHour.Jan
+            </td>
+            <td>
+                @entry.WorkingHour.Feb
+            </td>
+            <td>
+                @entry.WorkingHour.Mar
+            </td>
+            <td>
+                @entry.WorkingHour.Apr
+            </td>
+            <td>
+                @entry.WorkingHour.May
+            </td>
+            <td>
+                @entry.WorkingHour.Jun
+            </td>
+            <td>
+                @entry.WorkingHour.Jul
+            </td>
+            <td>
+                @entry.WorkingHour.Aug
+            </td>
+            <td>
+                @entry.WorkingHour.Sep
+            </td>
+            <td>
+                @entry.WorkingHour.Oct
+            </td>
+            <td>
+                @entry.WorkingHour.Nov
+            </td>
+            <td>
+                @entry.WorkingHour.Dev
+            </td>
+            <td>
+                @Ajax.ActionLink(T("Edit").ToString()
+               , "Edit"
+               , new { entry.WorkingHour.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete = "onCompleteEdit",
+                   UpdateTargetId = "createContent"
+               })
+                |
+                @Ajax.ActionLink(T("Delete").ToString()
+               , "Delete"
+               , new { entry.WorkingHour.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete = "onCompleteDelete"
+               })
+            </td>
+        </tr>
+        index++;
+    }
+</table>
+@Display(Model.Pager)
