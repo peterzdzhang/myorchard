@@ -57,8 +57,13 @@ namespace Faurecia.ADL.ViewModels
     public enum ActivityTypeBulkAction
     {
         None,
+        Create,
         Edit,
-        Delete
+        Delete,
+        BulkEdit,
+        BulkDelete,
+        BulkDisabled,
+        BulkEnabled
     }
 
 }

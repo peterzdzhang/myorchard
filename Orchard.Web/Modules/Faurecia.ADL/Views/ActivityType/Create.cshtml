@@ -5,9 +5,20 @@
     string returnUrl = Request["ReturnUrl"];
 }
 <h1>
+@if (Model.Action == ActivityTypeBulkAction.Create)
+{
     @Html.TitleForPage(T("Create new activity type").ToString())
+}
+else if (Model.Action == ActivityTypeBulkAction.Edit)
+{
+    @Html.TitleForPage(T("Edit activity type").ToString())
+}
+else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
+{
+    @Html.TitleForPage(T("Bulk edit activity type").ToString())
+}
 </h1>
-@using (Ajax.BeginForm("Save", "ActivityType" , new AjaxOptions { HttpMethod = "Post" }))
+@using (Ajax.BeginForm("Save", "ActivityType" , new AjaxOptions { HttpMethod = "Post",OnComplete="onCompleteSave" }))
 {
     @Html.AntiForgeryToken()
    <div class="panel panel-default">
@@ -19,17 +30,26 @@
                <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
                    @if (!string.IsNullOrEmpty(returnUrl))
                    {
-                       @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default" });
+                       @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default",@id="btnBack" });
                    }
                </div>
            </div>
        </div>
+       @for (int i = 0; i < Model.Ids.Count; i++)
+       {
+           <input type="hidden" value="@Model.Ids[i]" name="@Html.NameOf(m => m.Ids[i])" />
+       }
+       <input type="hidden" value="@Model.Action" name="@Html.NameOf(m => m.Action)" />
+       <div class="alert alert-dismissable alert-danger" style="display:none">
+           &nbsp;&nbsp;<label id="message"></label>
+       </div>
         <div class="panel-body" style="margin-top:0px;margin-bottom:0px;padding-bottom:0px">
             <div class="form-horizontal">
+                @if (Model.Action != ActivityTypeBulkAction.BulkEdit)
+                {
                 <div class="form-group">
                     @Html.LabelFor(m => m.CostCenter, T("Cost Center").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-xs-2 col-lg-2">
-                        @Html.HiddenFor(m => m.Id)
                         @Html.TextBoxFor(m => m.CostCenter, new { @class = "form-control", maxlength = "50", placeholder = "Cost Center" })
                         @Html.ValidationMessageFor(m => m.CostCenter)
                     </div>
@@ -44,6 +64,7 @@
                         @Html.ValidationMessageFor(m => m.RMBHour)
                     </div>
                 </div>
+                }
                 <div class="form-group">
                     @Html.LabelFor(m => m.Comment, T("Comment").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-10 col-xs-10 col-lg-10">
@@ -99,6 +120,11 @@
                     BindInputEvent(xitem, isAllowDot);
                 });
             });
+
+            $(".check-all").bind("change", function () {
+                var isChecked = $(this).prop("checked");
+                $("input[type='checkbox']").prop("checked", isChecked);
+            });
         })
 
         function BindInputEvent(item,isAllowDot) {
@@ -146,8 +172,25 @@
             });
         }
 
-        function onCompleteCreate() {
-            //$('#createModal').modal("hide");
+        function onCompleteSave(result) {
+            var data = result.responseJSON;
+            if (data.Code == 0) {
+                $("#message").html(data.Message);
+                $("#message").parent().removeClass("alert-danger");
+                $("#message").parent().addClass("alert-success");
+                $("#message").parent().css("display", "block");
+
+                var returnUrl = "@Request["ReturnUrl"]";
+                setTimeout(function () {
+                    location.replace(returnUrl);
+                }, 1000);
+            }
+            else {
+                $("#message").html(data.Message);
+                $("#message").parent().addClass("alert-danger");
+                $("#message").parent().removeClass("alert-success");
+                $("#message").parent().css("display", "block");
+            }
         }
     </script>
 }

@@ -91,6 +91,7 @@
                , new { entry.WorkingHour.Id }
                , new AjaxOptions()
                {
+                   Confirm=T("Confirm delete it?").Text,
                    OnComplete = "onCompleteDelete"
                })
             </td>

@@ -119,6 +119,8 @@ namespace Faurecia.ADL.Controllers
         public ActionResult Create()
         {
             var viewModel = new ActivityTypeCreateViewModel();
+            viewModel.Action = ActivityTypeBulkAction.Create;
+            viewModel.Ids.Add(0);
             viewModel.HourRatios = new List<HourRatioCreateEntry>();
             var startYear = DateTime.Now.Year;
             var endYear = startYear + 10;
@@ -149,30 +151,34 @@ namespace Faurecia.ADL.Controllers
                 Comment= activityTypeRecord.Comment,
                 CostCenter= activityTypeRecord.CostCenter,
                 DisplayGroup=activityTypeRecord.DisplayGroup,
-                Id= activityTypeRecord.Id,
                 IsUsed= activityTypeRecord.IsUsed,
                 RMBHour= activityTypeRecord.RMBHour,
                 TotalGroup= activityTypeRecord.TotalGroup
             };
+            viewModel.Action = ActivityTypeBulkAction.Edit;
+            viewModel.Ids.Add(activityTypeRecord.Id);
+            SetViewModelHourRatios(id, viewModel);
+            return View("Create", viewModel);
+        }
 
-            var queries = _hourRatioRecords.Table.Where(w => w.ActivityTypeRecord.Id == id).OrderBy(o=>o.Year);
 
-
+        private void SetViewModelHourRatios(int id, ActivityTypeCreateViewModel viewModel)
+        {
+            var queries = _hourRatioRecords.Table.Where(w => w.ActivityTypeRecord.Id == id).OrderBy(o => o.Year);
             viewModel.HourRatios = new List<HourRatioCreateEntry>();
-            foreach(var item in queries)
+            foreach (var item in queries)
             {
                 viewModel.HourRatios.Add(new HourRatioCreateEntry()
                 {
-                    HourRatio=item,
-                    IsChecked=false
+                    HourRatio = item,
+                    IsChecked = false
                 });
             }
-
             var startYear = DateTime.Now.Year;
             var endYear = startYear + 10;
             for (int i = startYear; i < endYear; i++)
             {
-                var tempQueries= viewModel.HourRatios.Where(w => w.HourRatio.Year == i);
+                var tempQueries = viewModel.HourRatios.Where(w => w.HourRatio.Year == i);
                 if (tempQueries.Count() == 0)
                 {
                     viewModel.HourRatios.Add(new HourRatioCreateEntry()
@@ -185,30 +191,195 @@ namespace Faurecia.ADL.Controllers
                     });
                 }
             }
-            return View("Create", viewModel);
         }
+
+        public ActionResult Delete(int id)
+        {
+            ActivityTypeRecord record = null;
+            if (id != 0)
+            {
+                record = _activityTypeRecords.Get(id);
+            }
+            if (record != null)
+            {
+                _activityTypeRecords.Delete(record);
+            }
+
+            var queries = _hourRatioRecords.Table.Where(w => w.ActivityTypeRecord.Id == id);
+            foreach(var item in queries)
+            {
+                _hourRatioRecords.Delete(item);
+            }
+
+            return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Disabled(int id)
+        {
+            ActivityTypeRecord record = null;
+            if (id != 0)
+            {
+                record = _activityTypeRecords.Get(id);
+            }
+            if (record != null)
+            {
+                record.IsUsed = false;
+                _activityTypeRecords.Update(record);
+            }
+            return Json(new { Code = 0, Message = T("Disabled success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Enabled(int id)
+        {
+            ActivityTypeRecord record = null;
+            if (id != 0)
+            {
+                record = _activityTypeRecords.Get(id);
+            }
+            if (record != null)
+            {
+                record.IsUsed = true;
+                _activityTypeRecords.Update(record);
+            }
+            return Json(new { Code = 0, Message = T("Enabled success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult BulkAction(IList<int> ids, string actionName)
+        {
+            actionName = actionName == null ? string.Empty : actionName.Trim();
+            if (actionName.Equals("BulkDelete", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    Delete(id);
+                }
+                return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            else if(actionName.Equals("BulkDisabled", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    Disabled(id);
+                }
+                return Json(new { Code = 0, Message = T("Disabled success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            else if(actionName.Equals("BulkEnabled", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    Enabled(id);
+                }
+                return Json(new { Code = 0, Message = T("Enabled success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            else if (actionName.Equals("BulkEdit", StringComparison.InvariantCultureIgnoreCase))
+            {
+                ActivityTypeCreateViewModel viewModel = new ActivityTypeCreateViewModel();
+                viewModel.Action = ActivityTypeBulkAction.BulkEdit;
+                ActivityTypeRecord record = null;
+                if (ids != null)
+                {
+                    foreach (var id in ids)
+                    {
+                        viewModel.Ids.Add(id);
+                    }
+                    if (ids.Count > 0 && ids[0] != 0)
+                    {
+                        record = _activityTypeRecords.Get(ids[0]);
+                    }
+                }
+                if (record != null)
+                {
+                    viewModel.Comment = record.Comment;
+                    SetViewModelHourRatios(record.Id, viewModel);
+                }
+                return View("Create", viewModel);
+            }
+
+            return Json(new { Code = 0, Message = T("success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpPost, ActionName("Save")]
         [Orchard.Mvc.FormValueRequired("submit.Save")]
         public ActionResult SavePost()
         {
-            ActivityTypeCreateViewModel viewModel = new ActivityTypeCreateViewModel();
-            TryUpdateModel(viewModel);
-
-            var record = new ActivityTypeRecord()
+            try
             {
-                ActivityType=viewModel.ActivityType,
-                CostCenter=viewModel.CostCenter,
-                Comment=viewModel.Comment,
-                DisplayGroup= ActivityTypeDisplayGroup.DD,
-                IsUsed=viewModel.IsUsed,
-                RMBHour=viewModel.RMBHour,
-                TotalGroup=ActivityTypeTotalGroup.DD
-            };
+                ActivityTypeCreateViewModel viewModel = new ActivityTypeCreateViewModel();
+                TryUpdateModel(viewModel);
 
-            _activityTypeRecords.Create(record);
+                foreach (var id in viewModel.Ids)
+                {
+                    ActivityTypeRecord record = null;
+                    if (id != 0)
+                    {
+                        record = _activityTypeRecords.Get(id);
+                    }
+                    if (record == null)
+                    {
+                        record = new ActivityTypeRecord();
+                    }
+                    if(viewModel.Action == ActivityTypeBulkAction.Create)
+                    {
+                        record.ActivityType = viewModel.ActivityType;
+                        record.CostCenter = viewModel.CostCenter;
+                        record.Comment = viewModel.Comment;
+                        record.DisplayGroup = ActivityTypeDisplayGroup.DD;
+                        record.IsUsed = viewModel.IsUsed;
+                        record.RMBHour = viewModel.RMBHour;
+                        record.TotalGroup = ActivityTypeTotalGroup.DD;
+                    }
+                    else  if (viewModel.Action == ActivityTypeBulkAction.Edit)
+                    {
+                        record.ActivityType = viewModel.ActivityType;
+                        record.CostCenter = viewModel.CostCenter;
+                        record.Comment = viewModel.Comment;
+                        record.RMBHour = viewModel.RMBHour;
+                    }
+                    else if (viewModel.Action == ActivityTypeBulkAction.BulkEdit)
+                    {
+                        record.Comment = viewModel.Comment;
+                    }
 
-            return Json(new { Code = 0, Message = "" },JsonRequestBehavior.AllowGet);
+                    foreach(var item in viewModel.HourRatios)
+                    {
+                        HourRatioRecord hrRecord = null;
+                        if (item.HourRatio.Id != 0)
+                        {
+                            hrRecord = _hourRatioRecords.Table.Where(w=>w.Year==item.HourRatio.Year && w.ActivityTypeRecord.Id==record.Id).SingleOrDefault();
+                        }
+                        if (hrRecord == null)
+                        {
+                            hrRecord = new HourRatioRecord()
+                            {
+                                ActivityTypeRecord=record
+                            };
+                        }
+                        hrRecord.Year = item.HourRatio.Year;
+                        hrRecord.Jan = item.HourRatio.Jan;
+                        hrRecord.Feb = item.HourRatio.Feb;
+                        hrRecord.Mar = item.HourRatio.Mar;
+                        hrRecord.Apr = item.HourRatio.Apr;
+                        hrRecord.May = item.HourRatio.May;
+                        hrRecord.Jun = item.HourRatio.Jun;
+                        hrRecord.Jul = item.HourRatio.Jul;
+                        hrRecord.Aug = item.HourRatio.Aug;
+                        hrRecord.Sep = item.HourRatio.Sep;
+                        hrRecord.Oct = item.HourRatio.Oct;
+                        hrRecord.Nov = item.HourRatio.Nov;
+                        hrRecord.Dev = item.HourRatio.Dev;
+                        _hourRatioRecords.Create(hrRecord);
+                    }
+                    _activityTypeRecords.Create(record);
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { Code = 1000, Message = e.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { Code = 0, Message = T("Save success.").Text }, JsonRequestBehavior.AllowGet);
         }
     }
 }

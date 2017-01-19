@@ -23,7 +23,7 @@
                 <input type="checkbox" value="true" name="@Html.NameOf(m => m.ActivityTypes[index].IsChecked)" />
             </td>
             <td>
-                @Html.ActionLink(entry.ActivityType.CostCenter, "Edit",new { entry.ActivityType.Id })
+                @Html.ActionLink(entry.ActivityType.CostCenter, "Edit",new { entry.ActivityType.Id, returnurl = HttpContext.Current.Request.RawUrl })
             </td>
             <td>
                 @entry.ActivityType.ActivityType
@@ -35,11 +35,31 @@
                 @entry.ActivityType.Comment
             </td>
             <td>
-                @entry.ActivityType.IsUsed
+                @(entry.ActivityType.IsUsed?T("Yes"):T("No"))
             </td>
             <td>
-                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.ActivityType.Id }) |
-                @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.ActivityType.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.ActivityType.Id, returnurl = HttpContext.Current.Request.RawUrl }) 
+                |
+                @if (entry.ActivityType.IsUsed)
+                {
+                    @Ajax.ActionLink(T("Disabled").ToString()
+                       , "Disabled"
+                       , new { entry.ActivityType.Id }
+                       , new AjaxOptions()
+                       {
+                           OnComplete = "onCompleteDelete"
+                       })
+                }
+                else
+                {
+                    @Ajax.ActionLink(T("Enabled").ToString()
+                       , "Enabled"
+                       , new { entry.ActivityType.Id }
+                       , new AjaxOptions()
+                       {
+                           OnComplete = "onCompleteDelete"
+                       })
+                }
             </td>
         </tr>
         index++;

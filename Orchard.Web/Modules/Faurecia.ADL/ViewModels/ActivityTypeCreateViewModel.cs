@@ -9,7 +9,15 @@ namespace Faurecia.ADL.ViewModels
 {
     public class ActivityTypeCreateViewModel
     {
-        public int Id { get; set; }
+        public ActivityTypeCreateViewModel()
+        {
+            Ids = new List<int>();
+            HourRatios = new List<HourRatioCreateEntry>();
+            IsUsed = true;
+        }
+        public ActivityTypeBulkAction Action { get; set; }
+
+        public IList<int> Ids { get; set; }
 
         [Required]
         public string CostCenter { get; set; }
