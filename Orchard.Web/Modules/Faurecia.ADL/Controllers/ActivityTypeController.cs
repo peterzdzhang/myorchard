@@ -122,8 +122,8 @@ namespace Faurecia.ADL.Controllers
             viewModel.Action = ActivityTypeBulkAction.Create;
             viewModel.Ids.Add(0);
             viewModel.HourRatios = new List<HourRatioCreateEntry>();
-            var startYear = DateTime.Now.Year;
-            var endYear = startYear + 10;
+            var startYear = DateTime.Now.Year-3;
+            var endYear = startYear + 20;
             for(int i = startYear; i < endYear; i++)
             {
                 viewModel.HourRatios.Add(new HourRatioCreateEntry()
@@ -174,8 +174,8 @@ namespace Faurecia.ADL.Controllers
                     IsChecked = false
                 });
             }
-            var startYear = DateTime.Now.Year;
-            var endYear = startYear + 10;
+            var startYear = DateTime.Now.Year - 3;
+            var endYear = startYear + 20;
             for (int i = startYear; i < endYear; i++)
             {
                 var tempQueries = viewModel.HourRatios.Where(w => w.HourRatio.Year == i);

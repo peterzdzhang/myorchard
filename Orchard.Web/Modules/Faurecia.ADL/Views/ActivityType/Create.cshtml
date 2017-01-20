@@ -75,33 +75,33 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
             </div>
         </div>
        <div class="panel-body" style="margin-top:0px;margin-bottom:0px">
-           @Html.Partial("_HourRatios", Model)
+           <button id="btnEditHourRatio" disabled="disabled" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+               @T("Edit")
+           </button>
+           <div id="hourRatios">
+               @Html.Partial("_HourRatios", Model)
+           </div>
        </div>
     </div>
 }
 
 <!-- Modal -->
-<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalTitle" aria-hidden="true">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="createModalTitle">@T("Add new working hour")</h4>
+                <h4 class="modal-title" id="editModalTitle">@T("Edit hour ratio")</h4>
             </div>
-            @using (Ajax.BeginForm("CreateHourRatio", "ActivityType"
-                                   , new AjaxOptions { HttpMethod = "Post", OnComplete = "onCompleteCreate" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    <div id="createContent" class="form-horizontal">
-
-                    </div>
+            <div class="modal-body">
+                <div id="editContent" class="form-horizontal">
+                    @Html.Partial("_EditHourRatio",new HourRatioEditViewModel())
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveHourRatio">Save</button>
+            </div>
         </div>
     </div>
 </div>
@@ -109,21 +109,124 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
 {
     <script type="text/javascript">
         $(function () {
-            $('#createModal').on('shown.bs.modal', function (e) {
-                $("#createContent").find("input[type='text']").each(function (x, xitem) {
-                    $(xitem).val("");
-                    var isAllowDot = true;
-                    if ($(xitem).attr("name") == "Year") {
-                        isAllowDot = false;
-                        $(xitem).select();
-                    }
-                    BindInputEvent(xitem, isAllowDot);
-                });
+
+            $("#editContent").find("input[type='text']").each(function (x, xitem) {
+                $(xitem).val("");
+                BindInputEvent(xitem, true);
             });
+
+            $("#hourRatios").find("input[type='text']").each(function (x, xitem) {
+                $(xitem).val("");
+                BindInputEvent(xitem, true);
+            });
+            $('#editModal').on('show.bs.modal', function (e) {
+                var lastChecked = $("input[type='checkbox']:checked:last");
+                if (lastChecked.length == 0)
+                {
+                    e.preventDefault();
+                }
+            });
+
+            $('#editModal').on('shown.bs.modal', function (e) {
+                
+                var lastChecked = $("input[type='checkbox']:checked:last");
+                var tr = $(lastChecked).parent().parent();
+                var jan = $("#editContent").find("input[name='Jan']");
+                var feb = $("#editContent").find("input[name='Feb']");
+                var mar = $("#editContent").find("input[name='Mar']");
+                var apr = $("#editContent").find("input[name='Apr']");
+                var may = $("#editContent").find("input[name='May']");
+                var jun = $("#editContent").find("input[name='Jun']");
+                var jul = $("#editContent").find("input[name='Jul']");
+                var aug = $("#editContent").find("input[name='Aug']");
+                var sep = $("#editContent").find("input[name='Sep']");
+                var oct = $("#editContent").find("input[name='Oct']");
+                var nov = $("#editContent").find("input[name='Nov']");
+                var dev = $("#editContent").find("input[name='Dev']");
+
+                var janVal = $(tr).find("input[name$='.HourRatio.Jan']").val();
+                $(jan).val(janVal);
+                var febVal = $(tr).find("input[name$='.HourRatio.Feb']").val();
+                $(feb).val(febVal);
+                var marVal = $(tr).find("input[name$='.HourRatio.Mar']").val();
+                $(mar).val(marVal);
+                var aprVal = $(tr).find("input[name$='.HourRatio.Apr']").val();
+                $(apr).val(aprVal);
+                var mayVal = $(tr).find("input[name$='.HourRatio.May']").val();
+                $(may).val(mayVal);
+                var junVal = $(tr).find("input[name$='.HourRatio.Jun']").val();
+                $(jun).val(junVal);
+                var julVal = $(tr).find("input[name$='.HourRatio.Jul']").val();
+                $(jul).val(julVal);
+                var augVal = $(tr).find("input[name$='.HourRatio.Aug']").val();
+                $(aug).val(augVal);
+                var sepVal = $(tr).find("input[name$='.HourRatio.Sep']").val();
+                $(sep).val(sepVal);
+                var octVal = $(tr).find("input[name$='.HourRatio.Oct']").val();
+                $(oct).val(octVal);
+                var novVal = $(tr).find("input[name$='.HourRatio.Nov']").val();
+                $(nov).val(novVal);
+                var devVal = $(tr).find("input[name$='.HourRatio.Dev']").val();
+                $(dev).val(devVal);
+            });
+            $("#btnSaveHourRatio").click(function () {
+                $("input[type='checkbox']:checked").each(function (x, xitem) {
+                    var tr = $(xitem).parent().parent();
+                    var janVal = $("#editContent").find("input[name='Jan']").val();
+                    var febVal = $("#editContent").find("input[name='Feb']").val();
+                    var marVal = $("#editContent").find("input[name='Mar']").val();
+                    var aprVal = $("#editContent").find("input[name='Apr']").val();
+                    var mayVal = $("#editContent").find("input[name='May']").val();
+                    var junVal = $("#editContent").find("input[name='Jun']").val();
+                    var julVal = $("#editContent").find("input[name='Jul']").val();
+                    var augVal = $("#editContent").find("input[name='Aug']").val();
+                    var sepVal = $("#editContent").find("input[name='Sep']").val();
+                    var octVal = $("#editContent").find("input[name='Oct']").val();
+                    var novVal = $("#editContent").find("input[name='Nov']").val();
+                    var devVal = $("#editContent").find("input[name='Dev']").val();
+
+                    var jan = $(tr).find("input[name$='.HourRatio.Jan']");
+                    $(jan).val(janVal);
+                    var feb = $(tr).find("input[name$='.HourRatio.Feb']");
+                    $(feb).val(febVal);
+                    var mar = $(tr).find("input[name$='.HourRatio.Mar']");
+                    $(mar).val(marVal);
+                    var apr = $(tr).find("input[name$='.HourRatio.Apr']");
+                    $(apr).val(aprVal);
+                    var may = $(tr).find("input[name$='.HourRatio.May']");
+                    $(may).val(mayVal);
+                    var jun = $(tr).find("input[name$='.HourRatio.Jun']");
+                    $(jun).val(junVal);
+                    var jul = $(tr).find("input[name$='.HourRatio.Jul']");
+                    $(jul).val(julVal);
+                    var aug = $(tr).find("input[name$='.HourRatio.Aug']");
+                    $(aug).val(augVal);
+                    var sep = $(tr).find("input[name$='.HourRatio.Sep']");
+                    $(sep).val(sepVal);
+                    var oct = $(tr).find("input[name$='.HourRatio.Oct']");
+                    $(oct).val(octVal);
+                    var nov = $(tr).find("input[name$='.HourRatio.Nov']");
+                    $(nov).val(novVal);
+                    var dev = $(tr).find("input[name$='.HourRatio.Dev']");
+                    $(dev).val(devVal);
+                });
+                $('#editModal').modal("hide");
+            });
+
 
             $(".check-all").bind("change", function () {
                 var isChecked = $(this).prop("checked");
                 $("input[type='checkbox']").prop("checked", isChecked);
+            });
+
+            $("input[type='checkbox']").bind("change", function () {
+                var lastChecked = $("input[type='checkbox']:checked:last");
+                if (lastChecked.length == 0) {
+                    $("#btnEditHourRatio").attr("disabled", "disabled");
+                }
+                else {
+                    $("#btnEditHourRatio").removeAttr("disabled");
+                }
             });
         })
 
@@ -157,7 +260,6 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 }
                 if (!r.test(val)) {
                     event.preventDefault();
-                    //alert("\""+val+"\"@T(" is not valid value.")");
                 }
             }).bind("input", function (event) {
                 var val = $(this).val();
@@ -167,7 +269,6 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 }
                 if (val != "" && !r.test(val)) {
                     event.preventDefault();
-                    //alert("\""+val+"\"@T(" is not valid value.")");
                 }
             });
         }

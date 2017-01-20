@@ -28,29 +28,137 @@
                         <div class="form-group">
                             <label for="publishActions">@T("Actions:")</label>
                             <select id="publishActions" class="form-control" name="roleActions">
-                                <option value="1">@T("Delete")</option>
+                                <option value="Delete">@T("Delete")</option>
                             </select>
-                            <button type="submit" class="btn btn-warning">@T("Apply")</button>
+                            @Ajax.ActionLink(T("Apply").Text
+                                , "RoleBulkAction"
+                                , new { }
+                                , new AjaxOptions()
+                                {
+                                    OnBegin = "onBeginEdit",
+                                    OnComplete = "onCompleteEdit"
+                                }, new { @class = "btn btn-warning" })
                         </div>
-                        
+                        <button type="submit" class="btn btn-info" name="submit.Filter" style="display:none" value="@T("Filter")">@T("Filter")</button>
+
                         @Ajax.ActionLink("Add new role", "CreateRole", "UserRole"
                                  , new { Area = "Faurecia.ADL" }
-                                 , new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults" }
+                                 , new AjaxOptions
+                                 {
+                                     HttpMethod = "Post"
+                                    , UpdateTargetId = "createContent"
+                                    , OnComplete="onCompleteEdit"
+                                 }
                                  , new { @class = "btn btn-primary" })
                     </div>
                 </div>
 
-                <div class="panel-body" id="UserQueryResults">
+                <div class="panel-body" id="QueryResults">
                     @Html.Partial("_Roles", Model)
                 </div>
             </div>
         }
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="createModalTitle">@T("Role")</h4>
+            </div>
+            @using (Ajax.BeginForm("SaveRole", "UserRole", new AjaxOptions { HttpMethod = "Post", OnComplete = "onCompleteSave" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div id="createContent" class="form-horizontal">
+                        @Html.Partial("_EditRole", new RoleEditViewModel())
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-lg-8 col-sm-8 col-xs-8 text-left">
+                            <div class="alert alert-dismissable alert-danger" style="display:none">
+                                <i class="fa fa-times-circle"></i>&nbsp;&nbsp;<label id="message"></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-xs-4">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 @using (Script.Foot())
 {
 <script type="text/javascript">
-    $(function () { })
+    $(function () {
+        $(".check-all").bind("change", function () {
+            var isChecked = $(this).prop("checked");
+            $("input[type='checkbox']").prop("checked", isChecked);
+        });
+
+        $('#createModal').on('show.bs.modal', function (e) {
+            $("#message").html("");
+            $("#message").parent().css("display", "none");
+        });
+    })
+
+
+
+    function onBeginEdit(obj, req) {
+        var ids = "";
+        $("td>input[type='checkbox']:checked").each(function (xi, xitem) {
+            var id = $(xitem).parent().find("input[type='hidden']").val();
+            if (!!id) {
+                ids = ids + "&ids[" + xi + "]=" + id;
+            }
+        });
+        var action = $("#publishActions").val();
+        if (!!ids) {
+            req.url = req.url + ids + "&actionName=" + action;
+        }
+        else {
+            obj.abort();
+        }
+    }
+
+    function onCompleteEdit(result) {
+        var data = result.responseJSON;
+        if (!!data && data.Code == 0) {
+            $("button[name='submit.Filter']").submit();
+        }
+        else {
+            $('#createModal').modal("show");
+        }
+    }
+
+    function onCompleteDelete(result) {
+        var data = result.responseJSON;
+        if (data.Code == 0) {
+            $("button[name='submit.Filter']").submit();
+        }
+    }
+    function onCompleteSave(result) {
+        var data = result.responseJSON;
+        if (data.Code == 0) {
+            $('#createModal').modal("hide");
+            $("#message").html(data.Message);
+            $("#message").parent().removeClass("alert-danger");
+            $("#message").parent().addClass("alert-success");
+            $("#message").parent().css("display", "none");
+            $("button[name='submit.Filter']").submit();
+        }
+        else {
+            $("#message").html(data.Message);
+            $("#message").parent().addClass("alert-danger");
+            $("#message").parent().removeClass("alert-success");
+            $("#message").parent().css("display", "block");
+        }
+    }
 </script>
 }

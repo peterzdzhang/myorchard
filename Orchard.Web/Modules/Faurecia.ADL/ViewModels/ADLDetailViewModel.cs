@@ -1,6 +1,7 @@
 ﻿using Faurecia.ADL.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -85,17 +86,30 @@ namespace Faurecia.ADL.ViewModels
         public int Id { get; set; }
         public ActivityTypeEntry ActivityType { get; set; }
         public int Year { get; set; }
+
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Jan { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Feb { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Mar { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Apr { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? May { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Jun { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Jul { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Aug { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Sep { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Oct { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Nov { get; set; }
+        [RegularExpression("^[0-9]+.?[0-9]*$", ErrorMessage = "Please input numeric.")]
         public double? Dev { get; set; }
 
         public double? Y1 { get; set; }

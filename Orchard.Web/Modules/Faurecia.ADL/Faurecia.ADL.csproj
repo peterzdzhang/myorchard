@@ -121,6 +121,7 @@
     <Compile Include="ViewModels\ADLDiffViewModel.cs" />
     <Compile Include="ViewModels\ADLIBPViewModel.cs" />
     <Compile Include="ViewModels\ActivityTypeCreateViewModel.cs" />
+    <Compile Include="ViewModels\HourRatioEditViewModel.cs" />
     <Compile Include="ViewModels\WorkingHourCreateViewModel.cs" />
     <Compile Include="ViewModels\ActivityTypeIndexViewModel.cs" />
     <Compile Include="ViewModels\WorkingHourIndexViewModel.cs" />
@@ -180,6 +181,8 @@
     <Content Include="Views\ActivityType\_ActivityTypes.cshtml" />
     <Content Include="Views\ActivityType\Index.cshtml" />
     <Content Include="Views\ActivityType\_HourRatios.cshtml" />
+    <Content Include="Views\ActivityType\_EditHourRatio.cshtml" />
+    <Content Include="Views\UserRole\_EditRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

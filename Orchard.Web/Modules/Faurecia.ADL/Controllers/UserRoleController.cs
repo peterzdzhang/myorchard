@@ -18,6 +18,8 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Roles.ViewModels;
 using Orchard.Roles.Services;
+using Orchard.Data;
+using Orchard.Roles.Models;
 
 namespace Faurecia.ADL.Controllers
 {
@@ -142,6 +144,39 @@ namespace Faurecia.ADL.Controllers
                 return PartialView("_Roles", model);
             }
             return View("RoleIndex",model);
+        }
+
+        public ActionResult CreateRole()
+        {
+            RoleEditViewModel viewModel = new RoleEditViewModel();
+            return PartialView("_EditRole", viewModel);
+        }
+
+
+        public ActionResult EditRole(int id)
+        {
+            RoleEditViewModel viewModel = new RoleEditViewModel();
+            return PartialView("_EditRole", viewModel);
+        }
+
+        public ActionResult DeleteRole(int id)
+        {
+            _roleService.DeleteRole(id);
+            return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult RoleBulkAction(IList<int> ids, string actionName)
+        {
+            actionName = actionName == null ? string.Empty : actionName.Trim();
+            if (actionName.Equals("Delete", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    _roleService.DeleteRole(id);
+                }
+                return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { Code = 0, Message = T("success.").Text }, JsonRequestBehavior.AllowGet);
         }
     }
 }
