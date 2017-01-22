@@ -30,24 +30,58 @@
                 else {
                     <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
                 }
-                @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id })
+                @Ajax.ActionLink(entry.User.UserName
+               , "EditUser"
+               , new { entry.User.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete = "onCompleteEdit",
+                   UpdateTargetId = "createContent"
+               })
             </td>
             <td>
                 @entry.User.Email
             </td>
             <td>
-                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+               @Ajax.ActionLink(T("Edit").ToString()
+               , "EditUser"
+               , new { entry.User.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete = "onCompleteEdit",
+                   UpdateTargetId = "createContent"
+               })
+                |
+                @Ajax.ActionLink(T("Delete").ToString()
+                                   , "DeleteUser"
+                                   , new { entry.User.Id }
+                                   , new AjaxOptions()
+                                   {
+                                       Confirm = T("Confirm delete it?").Text,
+                                       OnComplete = "onCompleteDelete"
+                                   })
+                |
                 @if (entry.User.RegistrationStatus == UserStatus.Pending)
                 {
-                    @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                    @Ajax.ActionLink(T("Approve").ToString()
+                                   , "ApproveUser"
+                                   , new { entry.User.Id }
+                                   , new AjaxOptions()
+                                   {
+                                       Confirm = T("Confirm approve it?").Text,
+                                       OnComplete = "onCompleteDelete"
+                                   })
                 }
-                else {
-                    @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
-                }
-                @if (entry.User.EmailStatus == UserStatus.Pending)
-                { <text>|</text>
-                    @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id }, new { itemprop = "UnsafeUrl" })
+                else
+                {
+                    @Ajax.ActionLink(T("Disable").ToString()
+                                   , "ModerateUser"
+                                   , new { entry.User.Id }
+                                   , new AjaxOptions()
+                                   {
+                                       Confirm = T("Confirm disable it?").Text,
+                                       OnComplete = "onCompleteDelete"
+                                   })
                 }
             </td>
             <td>

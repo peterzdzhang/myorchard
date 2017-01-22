@@ -19,7 +19,7 @@
 <!-- Tab panes -->
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="Users" style="margin-top:10px">
-        @using (Ajax.BeginForm("Index", "UserRole", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults" }))
+        @using (Ajax.BeginForm("Index", "UserRole", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults",OnComplete="onCompleteQuery" }))
         {
             @Html.AntiForgeryToken()
             <div class="panel panel-default">
@@ -31,10 +31,16 @@
                                 @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.None, T("Choose action...").ToString())
                                 @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Approve, T("Approve").ToString())
                                 @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Disable, T("Disable").ToString())
-                                @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.ChallengeEmail, T("Send challenge E-mail").ToString())
                                 @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Delete, T("Delete").ToString())
                             </select>
-                            <button type="submit" name="submit.BulkEdit" class="btn btn-warning" value="@T("Apply")">@T("Apply")</button>
+                            @Ajax.ActionLink(T("Apply").Text
+                                , "UserBulkAction"
+                                , new { }
+                                , new AjaxOptions()
+                                {
+                                    OnBegin = "onBeginEdit",
+                                    OnComplete = "onCompleteEdit"
+                                }, new { @class = "btn btn-warning" })
                         </div>
                         <div class="form-group">
                             @Html.TextBoxFor(m => m.Options.Search, new { @class = "form-control" })
@@ -57,14 +63,19 @@
                         </div>
                         <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
 
-                        @Ajax.ActionLink("Add new user", "Create", "UserRole"
+                        @Ajax.ActionLink("Add new user", "CreateUser", "UserRole"
                                  , new { Area = "Faurecia.ADL" }
-                                 , new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "UserQueryResults" }
+                                  , new AjaxOptions
+                                  {
+                                      HttpMethod = "GET",
+                                      UpdateTargetId = "createContent",
+                                      OnComplete = "onCompleteEdit"
+                                  }
                                  , new { @class = "btn btn-primary" })
                     </div>
                 </div>
 
-                <div class="panel-body" id="UserQueryResults">
+                <div class="panel-body" id="QueryResults">
                     @Html.Partial("_Users", Model)
                 </div>
             </div>
@@ -72,9 +83,109 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="createModalTitle">@T("Role")</h4>
+            </div>
+            @using (Ajax.BeginForm("SaveUser", "UserRole", new AjaxOptions { HttpMethod = "Post", OnComplete = "onCompleteSave" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div id="createContent" class="form-horizontal">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-lg-8 col-sm-8 col-xs-8 text-left">
+                            <div class="alert alert-dismissable alert-danger">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <i class="fa fa-times-circle"></i>&nbsp;&nbsp;<label id="message">test</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-xs-4">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 @using (Script.Foot())
 {
-<script type="text/javascript">
-    $(function () { })
-</script>
+    <script type="text/javascript">
+    $(function () {
+        $('#createModal').on('show.bs.modal', function (e) {
+            $("#message").html("");
+            $("#message").parent().css("display", "none");
+        });
+        $("button[name='submit.Filter']").submit();
+    })
+
+    function onCompleteQuery() {
+
+        $(".check-all").bind("change", function () {
+            var isChecked = $(this).prop("checked");
+            $("input[type='checkbox']").prop("checked", isChecked);
+        });
+
+    }
+
+    function onBeginEdit(obj, req) {
+        var ids = "";
+        $("td>input[type='checkbox']:checked").each(function (xi, xitem) {
+            var id = $(xitem).parent().find("input[type='hidden']").val();
+            if (!!id) {
+                ids = ids + "&ids[" + xi + "]=" + id;
+            }
+        });
+        var action = $("#publishActions").val();
+        if (!!ids) {
+            req.url = req.url + ids + "&actionName=" + action;
+        }
+        else {
+            obj.abort();
+        }
+    }
+
+    function onCompleteEdit(result) {
+        var data = result.responseJSON;
+        if (!!data && data.Code == 0) {
+            $("button[name='submit.Filter']").submit();
+        }
+        else {
+            $('#createModal').modal("show");
+        }
+    }
+
+    function onCompleteDelete(result) {
+        var data = result.responseJSON;
+        if (data.Code == 0) {
+            $("button[name='submit.Filter']").submit();
+        }
+    }
+    function onCompleteSave(result) {
+        var data = result.responseJSON;
+        if (data.Code == 0) {
+            $('#createModal').modal("hide");
+            $("#message").html(data.Message);
+            $("#message").parent().removeClass("alert-danger");
+            $("#message").parent().addClass("alert-success");
+            $("#message").parent().css("display", "none");
+            $("button[name='submit.Filter']").submit();
+        }
+        else {
+            $("#message").html(data.Message);
+            $("#message").parent().addClass("alert-danger");
+            $("#message").parent().removeClass("alert-success");
+            $("#message").parent().css("display", "inline-block");
+        }
+    }
+    </script>
 }

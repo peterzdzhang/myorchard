@@ -115,6 +115,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\ADLHeadViewModel.cs" />
     <Compile Include="ViewModels\ADLDetailViewModel.cs" />
     <Compile Include="ViewModels\ADLECRViewModel.cs" />
@@ -183,6 +184,7 @@
     <Content Include="Views\ActivityType\_HourRatios.cshtml" />
     <Content Include="Views\ActivityType\_EditHourRatio.cshtml" />
     <Content Include="Views\UserRole\_EditRole.cshtml" />
+    <Content Include="Views\UserRole\_CreateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

@@ -21,15 +21,23 @@ using Orchard.Roles.Services;
 using Orchard.Data;
 using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
+using Orchard.Users.Services;
+using System.Text.RegularExpressions;
+using Orchard.Roles.Events;
+using Orchard.Users.Events;
 
 namespace Faurecia.ADL.Controllers
 {
     [HandleError, Themed]
-    public class UserRoleController : Controller
+    public class UserRoleController : Controller, IUpdateModel
     {
         private readonly ISiteService _siteService;
         private readonly IMembershipService _membershipService;
         private readonly IRoleService _roleService;
+        private readonly IUserService _userService;
+        private readonly IRepository<UserPartRecord> _userPartRecords;
+        private readonly IRepository<UserRolesPartRecord> _userRolesRepository;
+        private readonly IUserEventHandler _userEventHandlers;
         private readonly IAuthorizationService _authorizationService;
 
         public IOrchardServices Services { get; set; }
@@ -38,14 +46,21 @@ namespace Faurecia.ADL.Controllers
                         ,IShapeFactory shapeFactory
                         ,IMembershipService membershipService
                         , IRoleService roleService
+                        , IUserService userService
+                        , IRepository<UserPartRecord> userPartRecords
+                        , IRepository<UserRolesPartRecord> userRolesRepository
+                        , IUserEventHandler userEventHandlers
                         , IAuthorizationService authorizationService)
         {
             Services = orchardService;
             _siteService = siteService;
             _membershipService = membershipService;
             _roleService = roleService;
+            _userService = userService;
+            _userPartRecords = userPartRecords;
             _authorizationService = authorizationService;
-
+            _userRolesRepository = userRolesRepository;
+            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -133,6 +148,221 @@ namespace Faurecia.ADL.Controllers
             return View("UserIndex",model);
         }
 
+        public ActionResult CreateUser()
+        {
+            if (!Services.Authorizer.Authorize(Orchard.Users.Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            var roles = _roleService.GetRoles().Select(x => new UserRoleEntry
+            {
+                RoleId = x.Id,
+                Name = x.Name,
+                Granted = false
+            }).ToList();
+
+            var model = new UserViewModel()
+            {
+                Roles= roles
+            };
+
+            return PartialView("_CreateUser", model);
+        }
+
+        public ActionResult EditUser(int id)
+        {
+            if (!Services.Authorizer.Authorize(Orchard.Users.Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            var userRolesPart = Services.ContentManager.Get<UserRolesPart>(id);
+
+            var user = userRolesPart.As<IUser>();
+            var roles = _roleService.GetRoles().Select(x => new UserRoleEntry
+            {
+                RoleId = x.Id,
+                Name = x.Name,
+                Granted = userRolesPart.Roles.Contains(x.Name)
+            }).ToList();
+           
+            var model = new UserViewModel()
+            {
+                Id= user.Id,
+                Email=user.Email,
+                UserName=user.UserName,
+                Roles = roles
+            };
+
+            return PartialView("_CreateUser", model);
+        }
+
+        public ActionResult DeleteUser(int id) {
+            if (!Services.Authorizer.Authorize(Orchard.Users.Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get<IUser>(id);
+
+            if (user == null)
+                return HttpNotFound();
+
+            if (string.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.Ordinal))
+            {
+                return Json(new { Code =1, Message = T("The Super user can't be removed. Please disable this account or specify another Super user account.", user.UserName).Text }, JsonRequestBehavior.AllowGet);
+            }
+            else if (string.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal))
+            {
+                return Json(new { Code =2, Message = T("You can't remove your own account. Please log in with another account.", user.UserName).Text }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                Services.ContentManager.Remove(user.ContentItem);
+            }
+            return Json(new { Code = 0, Message = T("User {0} deleted", user.UserName).Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ApproveUser(int id)
+        {
+            if (!Services.Authorizer.Authorize(Orchard.Users.Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get<IUser>(id);
+
+            if (user == null)
+                return HttpNotFound();
+
+            user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
+            _userEventHandlers.Approved(user);
+
+            return Json(new { Code = 0, Message = T("User {0} approved", user.UserName).Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ModerateUser(int id)
+        {
+            if (!Services.Authorizer.Authorize(Orchard.Users.Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get<IUser>(id);
+
+            if (user == null)
+                return HttpNotFound();
+
+            if (string.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal))
+            {
+                return Json(new { Code = 1, Message = T("You can't disable your own account. Please log in with another account", user.UserName).Text }, JsonRequestBehavior.AllowGet);
+            }
+            user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
+
+            return Json(new { Code = 0, Message = T("User {0} disabled", user.UserName).Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UserBulkAction(IList<int> ids, string actionName)
+        {
+            actionName = actionName == null ? string.Empty : actionName.Trim();
+            if (actionName.Equals("Delete", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    DeleteUser(id);
+                }
+                return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            else if (actionName.Equals("Disable", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    ModerateUser(id);
+                }
+                return Json(new { Code = 0, Message = T("Disabled success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            else if (actionName.Equals("Approve", StringComparison.InvariantCultureIgnoreCase))
+            {
+                foreach (var id in ids)
+                {
+                    ApproveUser(id);
+                }
+                return Json(new { Code = 0, Message = T("Approve success.").Text }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { Code = 0, Message = T("Success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult SaveUser()
+        {
+            if (!Services.Authorizer.Authorize(Orchard.Users.Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+            var viewModel = new UserViewModel();
+            TryUpdateModel(viewModel);
+
+            
+            if (viewModel.Id==0)
+            {
+                if (!string.IsNullOrEmpty(viewModel.UserName))
+                {
+                    if (!_userService.VerifyUserUnicity(viewModel.UserName, viewModel.Email))
+                    {
+                        return Json(new { Code = 1, Message = T("User with that username and/or email already exists.").Text }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                if (!Regex.IsMatch(viewModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase))
+                {
+                    return Json(new { Code = 1, Message = T("You must specify a valid email address.").Text }, JsonRequestBehavior.AllowGet);
+                }
+
+                if (viewModel.Password != viewModel.ConfirmPassword)
+                {
+                    return Json(new { Code = 1, Message = T("Password confirmation must match.").Text }, JsonRequestBehavior.AllowGet);
+                }
+
+                var user = _membershipService.CreateUser(new CreateUserParams(
+                                                  viewModel.UserName,
+                                                  viewModel.Password,
+                                                  viewModel.Email,
+                                                  null, null, true));
+
+                viewModel.Id = user.Id;
+            }
+            else
+            {
+                var user = _userPartRecords.Table.Where(w => w.Email == viewModel.Email).SingleOrDefault();
+                if(user!=null)
+                {
+                    if (user.Id != viewModel.Id && !_userService.VerifyUserUnicity(viewModel.UserName, viewModel.Email))
+                    {
+                        return Json(new { Code = 1, Message = T("User with that username and/or email already exists.").Text }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                if (!Regex.IsMatch(viewModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase))
+                {
+                    return Json(new { Code = 1, Message = T("You must specify a valid email address.").Text }, JsonRequestBehavior.AllowGet);
+                }
+                var userPart = Services.ContentManager.Get<UserPart>(viewModel.Id);
+                userPart.Email = viewModel.Email;
+                Services.ContentManager.UpdateEditor(userPart,this);
+                Services.ContentManager.Publish(userPart.ContentItem);
+            }
+
+            var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == viewModel.Id).ToArray();
+            var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
+            var targetRoleRecords = viewModel.Roles.Where(x => x.Granted).Select(x => _roleService.GetRole(x.RoleId)).ToArray();
+            foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x)))
+            {
+                _userRolesRepository.Create(new UserRolesPartRecord { UserId = viewModel.Id, Role = addingRole });
+            }
+            foreach (var removingRole in currentUserRoleRecords.Where(x => !targetRoleRecords.Contains(x.Role)))
+            {
+                _userRolesRepository.Delete(removingRole);
+            }
+
+            return Json(new { Code = 0, Message = T("Save success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
+        {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        public void AddModelError(string key, LocalizedString errorMessage)
+        {
+            ModelState.AddModelError(key, errorMessage.ToString());
+        }
 
         public ActionResult RoleIndex()
         {
@@ -283,5 +513,6 @@ namespace Faurecia.ADL.Controllers
 
             return results;
         }
+        
     }
 }
