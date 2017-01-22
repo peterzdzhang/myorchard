@@ -2,7 +2,7 @@
 @using Orchard.Roles.ViewModels;
 
 <div class="form-group">
-    @Html.LabelFor(m => m.Name, T("Jan").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    @Html.LabelFor(m => m.Name, T("Name").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
     <div class="col-sm-4 col-xs-4 col-lg-4">
        @if (Model.Name == "Administrator")
        { // the one special case
@@ -14,5 +14,42 @@
         @Html.ValidationMessageFor(m => m.Name)
        }
     </div>
-    <input type="hidden" value="@Model.Id" name="Id" />
+    @Html.HiddenFor(m=>m.Id)
 </div>
+<fieldset>
+    <legend>@T("Permissions")</legend>
+    @foreach (var category in Model.RoleCategoryPermissions.Keys)
+    {
+        <fieldset>
+            <legend>@category</legend>
+            <table class="table table-bordered table-condensed">
+                <colgroup>
+                    <col id="Col1" />
+                    <col id="Col2" />
+                </colgroup>
+                <thead>
+                    <tr class="active">
+                        <th scope="col">@T("Permission")</th>
+                        <th scope="col">@T("Allow")</th>
+                    </tr>
+                </thead>
+                @foreach (var permission in Model.RoleCategoryPermissions[category])
+                {
+                    <tr>
+                        <td>@T(permission.Description)</td>
+                        <td style="width:60px;">
+                            @if (Model.CurrentPermissions.Contains(permission.Name))
+                            {
+                                <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" value="true" name="Checkbox.@permission.Name" />
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </fieldset>
+    }
+</fieldset>

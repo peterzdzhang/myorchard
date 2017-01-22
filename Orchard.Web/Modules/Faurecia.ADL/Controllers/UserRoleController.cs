@@ -20,6 +20,7 @@ using Orchard.Roles.ViewModels;
 using Orchard.Roles.Services;
 using Orchard.Data;
 using Orchard.Roles.Models;
+using Orchard.Security.Permissions;
 
 namespace Faurecia.ADL.Controllers
 {
@@ -148,14 +149,47 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult CreateRole()
         {
-            RoleEditViewModel viewModel = new RoleEditViewModel();
+            if (!Services.Authorizer.Authorize(Orchard.Roles.Permissions.ManageRoles, T("Not authorized to manage roles")))
+                return new HttpUnauthorizedResult();
+
+            var viewModel = new RoleEditViewModel
+            {
+                Name = string.Empty,
+                Id = 0,
+                RoleCategoryPermissions = GetFaureciaPermissions(),
+                CurrentPermissions = new List<string>()
+            };
             return PartialView("_EditRole", viewModel);
         }
-
-
+        
         public ActionResult EditRole(int id)
         {
-            RoleEditViewModel viewModel = new RoleEditViewModel();
+            if (!Services.Authorizer.Authorize(Orchard.Roles.Permissions.ManageRoles, T("Not authorized to manage roles")))
+                return new HttpUnauthorizedResult();
+
+
+            var role = _roleService.GetRole(id);
+            if (role == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewModel = new RoleEditViewModel
+            {
+                Name = role.Name,
+                Id = role.Id,
+                RoleCategoryPermissions = GetFaureciaPermissions(),
+                CurrentPermissions = _roleService.GetPermissionsForRole(id)
+            };
+
+            //var simulation = UserSimulation.Create(role.Name);
+            //viewModel.EffectivePermissions = viewModel.RoleCategoryPermissions
+            //    .SelectMany(group => group.Value)
+            //    .Where(permission => _authorizationService.TryCheckAccess(permission, simulation, null))
+            //    .Select(permission => permission.Name)
+            //    .Distinct()
+            //    .ToList();
+            
             return PartialView("_EditRole", viewModel);
         }
 
@@ -177,6 +211,77 @@ namespace Faurecia.ADL.Controllers
                 return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { Code = 0, Message = T("success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SaveRole()
+        {
+            if (!Services.Authorizer.Authorize(Orchard.Roles.Permissions.ManageRoles, T("Not authorized to manage roles")))
+                return new HttpUnauthorizedResult();
+
+            var viewModel = new RoleEditViewModel();
+            TryUpdateModel(viewModel);
+
+            if (String.IsNullOrEmpty(viewModel.Name))
+            {
+                return Json(new { Code = 1000, Message = T("Role name can't be empty.").Text }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (viewModel.Id != 0)
+            {
+                var role = _roleService.GetRoleByName(viewModel.Name);
+                if (role != null  && role.Id!=viewModel.Id)
+                {
+                    return Json(new { Code = 1001, Message = T("Role with same name already exists.").Text }, JsonRequestBehavior.AllowGet);
+                }
+
+                List<string> rolePermissions = new List<string>();
+                foreach (string key in Request.Form.Keys)
+                {
+                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                    {
+                        string permissionName = key.Substring("Checkbox.".Length);
+                        rolePermissions.Add(permissionName);
+                    }
+                }
+                _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
+            }
+            else
+            {
+                var role = _roleService.GetRoleByName(viewModel.Name);
+                if (role != null)
+                {
+                    return Json(new { Code = 1001, Message = T("Role with same name already exists.").Text }, JsonRequestBehavior.AllowGet);
+                }
+
+                _roleService.CreateRole(viewModel.Name);
+                foreach (string key in Request.Form.Keys)
+                {
+                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                    {
+                        string permissionName = key.Substring("Checkbox.".Length);
+                        _roleService.CreatePermissionForRole(viewModel.Name, permissionName);
+                    }
+                }
+            }
+            return Json(new { Code = 0, Message = T("Save success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        private IDictionary<string, IEnumerable<Permission>> GetFaureciaPermissions()
+        {
+            var dic = _roleService.GetInstalledPermissions();
+
+            var queries = from item in dic
+                          where item.Key.StartsWith("Faurecia.")
+                          select item;
+
+            IDictionary<string, IEnumerable<Permission>> results = new Dictionary<string, IEnumerable<Permission>>();
+            foreach(var item in queries)
+            {
+                results.Add(item.Key, item.Value);
+            }
+
+            return results;
         }
     }
 }
