@@ -615,10 +615,17 @@
             var startIndex = 1;
             var endIndex = lastRowCells.length + 1;
             var style = "style='padding:0px;width:50px;height:auto;'";
+            var readonly = "";
+
             if (tableName == "HeadCount") {
                 startIndex = 0;
                 endIndex = lastRowCells.length;
             }
+
+            if (tableName == "HourRatio") {
+                readonly = "readonly='readonly'";
+            }
+
             if (tableName != "Cost")
             {
                 style = style + "  maxlength='5'";
@@ -683,7 +690,7 @@
                 else if (i == 5) {
                     //TD6
                     var td6 = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jan'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jan' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Jan);
                     }
@@ -693,7 +700,7 @@
                 else if (i == 6) {
                     //TD7
                     var td7 = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Feb'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Feb' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Feb);
                     }
@@ -703,7 +710,7 @@
                 else if (i == 7) {
                     //TD8
                     var td8 = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Mar'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Mar' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Mar);
                     }
@@ -713,7 +720,7 @@
                 else if (i == 8) {
                     //TD9
                     var td9 = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Apr'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Apr' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Apr);
                     }
@@ -723,7 +730,7 @@
                 else if (i == 9) {
                     //TD10
                     var td10 = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".May'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".May' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.May);
                     }
@@ -733,7 +740,7 @@
                 else if (i == 10) {
                     //TD11
                     var td11 = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jun'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jun' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Jun);
                     }
@@ -743,7 +750,7 @@
                 else if (i == 11) {
                     //TD12
                     var td = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jul'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Jul' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Jul);
                     }
@@ -753,7 +760,7 @@
                 else if (i == 12) {
                     //TD13
                     var td = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Aug'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Aug' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Aug);
                     }
@@ -763,7 +770,7 @@
                 else if (i == 13) {
                     //TD14
                     var td = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Sep'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Sep' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Sep);
                     }
@@ -773,7 +780,7 @@
                 else if (i == 14) {
                     //TD15
                     var td = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Oct'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Oct' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Oct);
                     }
@@ -783,7 +790,7 @@
                 else if (i == 15) {
                     //TD16
                     var td = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Nov'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Nov' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Nov);
                     }
@@ -793,7 +800,7 @@
                 else if (i == 16) {
                     //TD17
                     var td = $("<td></td>");
-                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Dev'/>");
+                    var input = $("<input type='text' " + style + " name='" + prefixName + ".Dev' " + readonly + "/>");
                     if (!!defaultValue) {
                         $(input).val(defaultValue.Dev);
                     }

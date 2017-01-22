@@ -218,7 +218,7 @@
     </div>
     <!--HourRatios-->
     @{ index = 0; }
-    <div class="alert-info text-center" style="padding:5px;margin-top:2px">
+    <div class="alert-info text-center" style="padding:5px;margin-top:2px;">
         <div class="row">
             <div class="col-sm-11 col-xs-11 col-lg-11">
                @T("Hour Ratio bases")
@@ -228,7 +228,7 @@
             </div>
         </div>
     </div>
-    <div style="overflow:auto;font-size:12px" class="form-horizontal collapse in" id="hourRatio_@currentYear">
+    <div style="overflow:auto;font-size:12px;" class="form-horizontal collapse in" id="hourRatio_@currentYear">
         <table class="table table-bordered table-condensed table-hover" id="detailHourRatio_@entryIndex" name="HourRatio" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
@@ -278,62 +278,62 @@
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jan"
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jan" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jan)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Feb" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Feb"  readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Feb)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Mar" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Mar" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Mar)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Apr" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Apr" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Apr)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].May" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].May" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].May)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jun" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jun" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jun)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jul" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jul" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jul)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Aug" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Aug" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Aug)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Sep" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Sep" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Sep)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Oct" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Oct" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Oct)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Nov" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Nov" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Nov)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
-                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Dev" 
+                               value="@Model.Detail.Entries[entryIndex].HourRatios[index].Dev" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Dev)" />
                     </td>
                     <td style="">
@@ -387,62 +387,62 @@
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].WorkingHours[index].Year)
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jan)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Feb)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Mar)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Apr)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].May)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jun)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jul)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Aug)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Sep)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Oct)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Nov)" />
                     </td>
                     <td style="">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
-                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev"
+                               value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Dev)" />
                     </td>
                     <td style="">
