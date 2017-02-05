@@ -321,10 +321,10 @@
 <!-- Modal -->
 <div class="modal fade" id="activityTypeModal" tabindex="-1" role="dialog" aria-labelledby="activityTypeModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" id="activityTypeModalWindow">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="activityTypeModalTitle">@T("Activity Types")</h4>
+                <h4 class="modal-title" id="activityTypeModalTitle" style="cursor:move">@T("Activity Types")</h4>
             </div>
             <div class="modal-body">
                 <div id="activityTypeContent">
@@ -397,6 +397,8 @@
             setTimeout(function () {
                 InitailizeValue();
             }, 2000);
+
+            $("#activityTypeModalWindow").draggable({ scroll: false });
         })
         //隐藏状态消息
         function hideStatusMessage() {

@@ -7,15 +7,15 @@
 <h1>
 @if (Model.Action == ActivityTypeBulkAction.Create)
 {
-    @Html.TitleForPage(T("Create new activity type").ToString())
+    @Html.TitleForPage(T("Hour rate maintenance (new)").ToString())
 }
 else if (Model.Action == ActivityTypeBulkAction.Edit)
 {
-    @Html.TitleForPage(T("Edit activity type").ToString())
+    @Html.TitleForPage(T("Hour rate maintenance (edit)").ToString())
 }
 else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
 {
-    @Html.TitleForPage(T("Bulk edit activity type").ToString())
+    @Html.TitleForPage(T("Hour rate maintenance (bulk edit)").ToString())
 }
 </h1>
 @using (Ajax.BeginForm("Save", "ActivityType" , new AjaxOptions { HttpMethod = "Post",OnComplete="onCompleteSave" }))
