@@ -31,7 +31,7 @@
     <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.Name, T("Name").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left"})
         <div class="col-sm-10 col-lg-10">
-            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "", @style = "text-transform:uppercase", @maxlength = 5 })
+            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "", @style = "text-transform:uppercase", @maxlength = 8 })
             @Html.ValidationMessageFor(m => m.Head.Name)
         </div>
     </div>
@@ -72,6 +72,7 @@
         @Html.LabelFor(m => m.Head.Type, T("Type").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Type)" name="@Html.NameOf(m => m.Head.Type)">
+                @Html.SelectOption(Model.Head.Type, "Program phase", T("Program phase").ToString())
                 @Html.SelectOption(Model.Head.Type, "Adavance phase", T("Adavance phase").ToString())
                 @Html.SelectOption(Model.Head.Type, "RFI", T("RFI").ToString())
                 @Html.SelectOption(Model.Head.Type, "RFQ", T("RFQ").ToString())
@@ -141,7 +142,7 @@
         @Html.LabelFor(m => m.Head.Variant1, T("Variant").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant1)" name="@Html.NameOf(m => m.Head.Variant1)">
-                @Html.SelectOption(Model.Head.Variant1, "1st Row", T("1st Row").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "1st Row", T("1st row").ToString())
                 @Html.SelectOption(Model.Head.Variant1, "2W", T("2W").ToString())
                 @Html.SelectOption(Model.Head.Variant1, "Man", T("Man").ToString())
                 @Html.SelectOption(Model.Head.Variant1, "5D", T("5D").ToString())
@@ -150,7 +151,7 @@
         </div>
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant2)" name="@Html.NameOf(m => m.Head.Variant2)">
-                @Html.SelectOption(Model.Head.Variant2, "2nd Row", T("2nd Row").ToString())
+                @Html.SelectOption(Model.Head.Variant2, "2nd Row", T("2nd row").ToString())
                 @Html.SelectOption(Model.Head.Variant2, "4W", T("4W").ToString())
                 @Html.SelectOption(Model.Head.Variant2, "Pow", T("Pow").ToString())
                 @Html.SelectOption(Model.Head.Variant2, "3D", T("3D").ToString())
@@ -159,7 +160,7 @@
         </div>
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant3)" name="@Html.NameOf(m => m.Head.Variant3)">
-                @Html.SelectOption(Model.Head.Variant3, "3rd Row", T("3rd Row").ToString())
+                @Html.SelectOption(Model.Head.Variant3, "3rd Row", T("3rd row").ToString())
                 @Html.SelectOption(Model.Head.Variant3, "6W & More", T("6W & More").ToString())
             </select>
             @Html.ValidationMessageFor(m => m.Head.Variant3)
@@ -215,6 +216,7 @@
         @Html.LabelFor(m => m.Head.Recliner, T("Recliner").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Recliner)" name="@Html.NameOf(m => m.Head.Recliner)">
+                @Html.SelectOption(Model.Head.Recliner, "N/A", T("N/A").ToString())
                 @Html.SelectOption(Model.Head.Recliner, "RD70", T("RD70").ToString())
                 @Html.SelectOption(Model.Head.Recliner, "RD77", T("RD77").ToString())
                 @Html.SelectOption(Model.Head.Recliner, "S3U/D83", T("S3U/D83").ToString())
@@ -229,6 +231,7 @@
         @Html.LabelFor(m => m.Head.HA, T("HA").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.HA)" name="@Html.NameOf(m => m.Head.HA)">
+                @Html.SelectOption(Model.Head.HA, "N/A", T("N/A").ToString())
                 @Html.SelectOption(Model.Head.HA, "Nano 2.0", T("Nano 2.0").ToString())
                 @Html.SelectOption(Model.Head.HA, "Nan 1.0", T("Nan 1.0").ToString())
                 @Html.SelectOption(Model.Head.HA, "G3", T("G3").ToString())
@@ -248,6 +251,7 @@
         @Html.LabelFor(m => m.Head.KEZE, T("KEZE").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.KEZE)" name="@Html.NameOf(m => m.Head.KEZE)">
+                @Html.SelectOption(Model.Head.KEZE, "N/A", T("N/A").ToString())
                 @Html.SelectOption(Model.Head.KEZE, "RD77", T("RD77").ToString())
                 @Html.SelectOption(Model.Head.KEZE, "RD70", T("RD70").ToString())
                 @Html.SelectOption(Model.Head.KEZE, "RC70 Pow", T("RC70 Pow").ToString())

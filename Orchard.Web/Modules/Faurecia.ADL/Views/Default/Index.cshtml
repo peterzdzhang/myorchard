@@ -17,7 +17,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-lg-6 col-sm-8">
-                    <button class="btn btn-info" type="submit" name="submit.Query" value="@T("Query")">@T("Query")</button>
+                    <button class="btn btn-info" type="submit" name="submit.Query" value="@T("Query")">@T("Filter")</button>
                     <button class="btn btn-success" type="button" name="button.Diff" value="@T("Diff")">@T("Diff")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
@@ -26,25 +26,23 @@
             </div>
         </div>
         <div class="panel-body">
-            <div class="form-horizontal">
+            <div class="form-inline">
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Options.ProjectNo, T("Project No").ToString(), new { @class = "col-sm-2 col-lg-2 control-label",@style="text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.Options.ProjectNo, new { autofocus = "autofocus", @class = "form-control", placeholder = "Project No" })
-                        @Html.ValidationMessageFor(m => m.Options.ProjectNo)
-                    </div>
-                    @Html.LabelFor(m => m.Options.Customer, T("Customer").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.Options.Customer, new { @class = "form-control", @maxlength = 25, placeholder = "Customer Name" })
-                        @Html.ValidationMessageFor(m => m.Options.Customer)
-                    </div>
-                    @Html.LabelFor(m => m.Options.Filter, T("Filter").ToString(), new { @class = "col-sm-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-2 col-lg-2">
-                        <select id="@Html.IdFor(m=>m.Options.Filter)" name="@Html.NameOf(m => m.Options.Filter)">
-                            @Html.SelectOption(Model.Options.Filter, ADLFilter.LastestVersion, T("Lastest Version").ToString())
-                            @Html.SelectOption(Model.Options.Filter, ADLFilter.AllVersion, T("All Version").ToString())
-                        </select>
-                    </div>
+                    @Html.LabelFor(m => m.Options.ProjectNo, T("Project No").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    @Html.TextBoxFor(m => m.Options.ProjectNo, new { autofocus = "autofocus", @class = "form-control", placeholder = "Project No" })
+                    @Html.ValidationMessageFor(m => m.Options.ProjectNo)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Customer, T("Customer").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    @Html.TextBoxFor(m => m.Options.Customer, new { @class = "form-control", @maxlength = 25, placeholder = "Customer Name" })
+                    @Html.ValidationMessageFor(m => m.Options.Customer)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Filter, T("Filter").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    <select id="@Html.IdFor(m=>m.Options.Filter)" name="@Html.NameOf(m => m.Options.Filter)" class="form-control">
+                        @Html.SelectOption(Model.Options.Filter, ADLFilter.LastestVersion, T("Lastest Version").ToString())
+                        @Html.SelectOption(Model.Options.Filter, ADLFilter.AllVersion, T("All Version").ToString())
+                    </select>
                 </div>
             </div>
         </div>

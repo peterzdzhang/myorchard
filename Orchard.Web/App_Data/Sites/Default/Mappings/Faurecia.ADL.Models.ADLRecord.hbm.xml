@@ -1,5 +1,5 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLRecord, App_Web_10ykkafp, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLRecord, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />
@@ -83,10 +83,10 @@
     <property name="KEZE" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="KEZE" />
     </property>
-    <property name="Status" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumStatus, App_Web_10ykkafp, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
+    <property name="Status" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumStatus, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
       <column name="Status" />
     </property>
-    <property name="Phase" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumPhase, App_Web_10ykkafp, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
+    <property name="Phase" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumPhase, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
       <column name="Phase" />
     </property>
     <property name="QuotationComments" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
