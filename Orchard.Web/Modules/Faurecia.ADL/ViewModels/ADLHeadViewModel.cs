@@ -36,7 +36,7 @@ namespace Faurecia.ADL.ViewModels
         public int VersionNo { get; set; }
 
         [Required]
-        [StringLength(5)]
+        [StringLength(8)]
         public string Name { get; set; }
 
         [Required]
