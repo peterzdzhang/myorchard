@@ -196,7 +196,7 @@
     </div>
     <!--HourRatios-->
     @{ index = 0; }
-    <div class="alert-info text-center" style="padding:5px;margin-top:2px;">
+    <div class="alert-info text-center" style="padding:5px;margin-top:2px;display:none">
         <div class="row">
             <div class="col-sm-11 col-xs-11 col-lg-11">
                @T("Hour Ratio bases")
@@ -206,7 +206,7 @@
             </div>
         </div>
     </div>
-    <div style="overflow:auto;font-size:12px;" class="form-horizontal collapse in" id="hourRatio_@currentYear">
+    <div style="overflow:auto;font-size:12px;display:none" class="form-horizontal collapse in" id="hourRatio_@currentYear">
         <table class="table table-bordered table-condensed table-hover" id="detailHourRatio_@entryIndex" name="HourRatio" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
@@ -326,7 +326,7 @@
     </div>
     <!--WorkingHours-->
     @{ index = 0; }
-    <div class="alert-info text-center" style="padding:5px;margin-top:2px">
+    <div class="alert-info text-center" style="padding:5px;margin-top:2px;display:none">
         <div class="row">
             <div class="col-sm-11 col-xs-11 col-lg-11">
                 @T("Working  Hours")
@@ -336,7 +336,7 @@
             </div>
         </div>
     </div>
-    <div style="overflow:auto;font-size:12px;"  class="form-horizontal collapse in" id="workingHour_@currentYear">
+    <div style="overflow:auto;font-size:12px;display:none"  class="form-horizontal collapse in" id="workingHour_@currentYear">
         <table class="table table-bordered table-condensed table-hover"
                id="detailWorkingHour_@entryIndex" name="WorkingHour"
                style="width:auto;margin-right:0px;margin-left:auto;" data-entryIndex="@entryIndex">
