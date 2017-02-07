@@ -104,6 +104,7 @@
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ADLCostRecord.cs" />
+    <Compile Include="Models\ADLKickOffRecord.cs" />
     <Compile Include="Models\HourRatioRecord.cs" />
     <Compile Include="Models\ADLWorkingHourRecord.cs" />
     <Compile Include="Models\ADLHourRatioRecord.cs" />

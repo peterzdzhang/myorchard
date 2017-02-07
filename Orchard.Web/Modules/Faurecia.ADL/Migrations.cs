@@ -138,8 +138,19 @@ namespace Faurecia.ADL {
                 .Column<int>("ADLRecord_Id")
             );
 
-			// Creating table ADLRecord
-			SchemaBuilder.CreateTable("ADLRecord", table => table
+            // Creating table ADLKickOffRecord
+            SchemaBuilder.CreateTable("ADLKickOffRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("Year", DbType.Int32)
+                .Column("Month", DbType.Int32)
+                .Column("Content", DbType.String)
+                .Column("CreateTime", DbType.DateTime)
+                .Column("Creator", DbType.String)
+                .Column<int>("ADLRecord_Id")
+            );
+
+            // Creating table ADLRecord
+            SchemaBuilder.CreateTable("ADLRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
                 .Column("ProjectNo", DbType.String)
 				.Column("VersionNo", DbType.Int32)
@@ -181,10 +192,24 @@ namespace Faurecia.ADL {
                 .Column("Editor", DbType.String)
 				.Column("EditTime", DbType.DateTime)
 			);
+            
+            return 2;
+        }
 
 
-
-            return 1;
+        public int UpdateFrom1()
+        {
+            // Creating table ADLKickOffRecord
+            SchemaBuilder.CreateTable("ADLKickOffRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("Year", DbType.Int32)
+                .Column("Month", DbType.Int32)
+                .Column("Content", DbType.String)
+                .Column("CreateTime", DbType.DateTime)
+                .Column("Creator", DbType.String)
+                .Column<int>("ADLRecord_Id")
+            );
+            return 2;
         }
     }
 }

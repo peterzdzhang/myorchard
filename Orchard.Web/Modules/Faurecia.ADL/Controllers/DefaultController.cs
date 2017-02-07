@@ -32,6 +32,7 @@ namespace Faurecia.ADL.Controllers
         private readonly IRepository<ActivityTypeRecord> _activityTypeRecords;
         private readonly IRepository<WorkingHourRecord> _workingHourRecords;
         private readonly IRepository<HourRatioRecord> _hourRatioRecords;
+        private readonly IRepository<ADLKickOffRecord> _adlKickOffRecords;
 
         public DefaultController(IOrchardServices orchardService,
             ISiteService siteService,
@@ -43,7 +44,8 @@ namespace Faurecia.ADL.Controllers
             IRepository<ADLCostRecord> adlCostRecords,
             IRepository<ActivityTypeRecord> activityTypeRecords,
             IRepository<WorkingHourRecord> workingHourRecords,
-            IRepository<HourRatioRecord> hourRatioRecords)
+            IRepository<HourRatioRecord> hourRatioRecords,
+            IRepository<ADLKickOffRecord> adlKickOffRecords)
         {
             
             _siteService = siteService;
@@ -57,6 +59,7 @@ namespace Faurecia.ADL.Controllers
             _activityTypeRecords = activityTypeRecords;
             _workingHourRecords = workingHourRecords;
             _hourRatioRecords=hourRatioRecords;
+            _adlKickOffRecords = adlKickOffRecords;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             New = shapeFactory;
