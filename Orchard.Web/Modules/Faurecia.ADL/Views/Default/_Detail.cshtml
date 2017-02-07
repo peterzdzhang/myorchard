@@ -67,36 +67,14 @@
                 @for (int k = 1; k <= 12; k++)
                 {
                     <td style="">
-                    @if (Model.Head.StartDate != null && Model.Head.StartDate.Value.Year == currentYear && Model.Head.StartDate.Value.Month == k)
-                    {
-                        <div class="label label-success" style="display:block;line-height:2;padding:0px;cursor:pointer;"  title="@T("Start Date")">
-                            @T("Start")
-                        </div>
-                    }
-                    @if (Model.Head.SOPDate != null && Model.Head.SOPDate.Value.Year == currentYear && Model.Head.SOPDate.Value.Month == k)
-                    {
-                        <div class="label label-primary"  style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("SOP Date")">
-                            @T("SOP")
-                        </div>
-                    }
-                    @if (Model.Head.ProtoDate != null && Model.Head.ProtoDate.Value.Year == currentYear && Model.Head.ProtoDate.Value.Month == k)
-                    {
-                        <div class="label label-success"  style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("Proto Date")">
-                            @T("Proto")
-                        </div>
-                    }
-                    @if (Model.Head.OfferDate != null && Model.Head.OfferDate.Value.Year == currentYear && Model.Head.OfferDate.Value.Month == k)
-                    {
-                        <div class="label label-success"  style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("Offer Date")">
-                            @T("Offer")
-                        </div>
-                    }
-                    @if (Model.Head.PTRDate != null && Model.Head.PTRDate.Value.Year == currentYear && Model.Head.PTRDate.Value.Month == k)
-                    {
-                        <div class="label label-success" style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("PTR Date")">
-                            @T("PTR")
-                        </div>
-                    }
+                        <button type="button" class="btn btn-lg btn-danger" 
+                                data-container="body" 
+                                data-trigger="focus" 
+                                data-placement="top"
+                                data-html="true"
+                                data-toggle="popover" 
+                                data-year="@currentYear"
+                                data-month="@k"></button>
                     </td>
                 }
                 <td style=""></td>

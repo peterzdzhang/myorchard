@@ -341,7 +341,26 @@
 @using (Script.Foot())
 {
     <script type="text/javascript">
+
+
+        function popoverTitle() {
+            var year = $(this).data("year");
+            var month = $(this).data("month");
+            return "<button type='button' class='btn btn-lg btn-danger'>"+month+"</button>"
+        }
+
+        function popoverContent() {
+            var year = $(this).data("year");
+            var month = $(this).data("month");
+            return "<button type='button' class='btn btn-lg btn-danger'>" + month + "</button>"
+        }
+
         $(function () {
+            $("[data-toggle='popover']").popover({
+                title: popoverTitle,
+                content:popoverContent
+            });
+
             if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.View") {
                 $("input").attr("readonly", "readonly");
                 $("select").bind("focus", function () {
@@ -545,57 +564,66 @@
 
         function AddActivityTypeRow() {
 
-            var tabpanel = $("div.active[role='tabpanel']");
-            var activityTypeQueryResults = $("#activityTypeQueryResults");
-            var activityTypes = $(activityTypeQueryResults).find("input:checked");
+            var tabpanels = $("div[role='tabpanel']");
+            tabpanels.each(function () {
+                //var tabpanel = $("div.active[role='tabpanel']");
+                var tabpanel = $(this);
+                var activityTypeQueryResults = $("#activityTypeQueryResults");
+                var activityTypes = $(activityTypeQueryResults).find("input:checked");
+                for (var i = 0; i < activityTypes.length; i++) {
+                    var activityTypeId = $(activityTypes[i]).val();
+                    var row = $(activityTypes[i]).parent().parent();
+                    var activityTypeValue = $(row).find("td:eq(1)").text();
+                    var costCenter = $(row).find("td:eq(2)").text();
+                    var RMBHour = $(row).find("td:eq(3)").text();
+                    var comment = $(row).find("td:eq(4)").text();
+                    var displayGroup = $(row).find("input[name$='.DisplayGroup']").val();
+                    var totalGroup = $(row).find("input[name$='.TotalGroup']").val();
 
-            for (var i = 0; i < activityTypes.length; i++) {
+                    var activityType = { Id: activityTypeId, Comment: comment, RMBHour: RMBHour, CostCenter: costCenter, ActivityType: activityTypeValue, DisplayGroup: displayGroup, TotalGroup: totalGroup };
+                    //Add Head Count Record Row
+                    if (!HasDetailRecordRow(tabpanel,activityType, "HeadCount"))
+                    {
+                        AddDetailRecordRow(tabpanel,activityType, "HeadCount", null)
+                    }
+                    //Add Hour Ratio Record Row
+                    if (!HasDetailRecordRow(tabpanel,activityType, "HourRatio")) {
+                        var year = $(tabpanel).data("year");
+                        var url = "@Url.Action("GetHourRatioRecord", new { area = "Faurecia.ADL" })";
+                        var timestamp = Math.round(new Date().getTime() / 1000);
+                        var reqdata = { Year: year, ActivityTypeId: activityType.Id, key: timestamp };
 
-                var activityTypeId = $(activityTypes[i]).val();
-                var row = $(activityTypes[i]).parent().parent();
-                var activityTypeValue = $(row).find("td:eq(1)").text();
-                var costCenter = $(row).find("td:eq(2)").text();
-                var RMBHour = $(row).find("td:eq(3)").text();
-                var comment = $(row).find("td:eq(4)").text();
-                var displayGroup = $(row).find("input[name$='.DisplayGroup']").val();
-                var totalGroup = $(row).find("input[name$='.TotalGroup']").val();
+                        $.ajax({
+                            type: "get",
+                            url: url,
+                            data: reqdata,
+                            async: false,
+                            success: function (data) {
+                                AddDetailRecordRow(tabpanel,activityType, "HourRatio", data);
+                            }
+                        });
+                    }
+                    //Add Cost Record Row
+                    if (!HasDetailRecordRow(tabpanel,activityType, "Cost")) {
+                        AddDetailRecordRow(tabpanel,activityType, "Cost", null);
 
-                var activityType = { Id: activityTypeId, Comment: comment, RMBHour: RMBHour, CostCenter: costCenter, ActivityType: activityTypeValue, DisplayGroup: displayGroup, TotalGroup: totalGroup };
-                //Add Head Count Record Row
-                if (!HasDetailRecordRow(activityType, "HeadCount"))
-                {
-                    AddDetailRecordRow(activityType, "HeadCount", null)
+                    }
                 }
-                //Add Hour Ratio Record Row
-                if (!HasDetailRecordRow(activityType, "HourRatio")) {
-                    var tabpanel = $("div.active[role='tabpanel']");
-                    var year = $(tabpanel).data("year");
-                    var url = "@Url.Action("GetHourRatioRecord", new { area = "Faurecia.ADL" })";
-                    var timestamp = Math.round(new Date().getTime() / 1000);
-                    var reqdata = { Year: year, ActivityTypeId: activityType.Id, key: timestamp };
-                    $.get(url, reqdata, function (data) {
-                        AddDetailRecordRow(activityType, "HourRatio",data);
-                    });
-                }
-                //Add Cost Record Row
-                if (!HasDetailRecordRow(activityType, "Cost")) {
-                    AddDetailRecordRow(activityType, "Cost", null);
+            });
 
-                }
-            }
             $("#activityTypeModal").modal("hide");
         }
 
-        function HasDetailRecordRow(activityType, tableName)
+        function HasDetailRecordRow(tabpanel,activityType, tableName)
         {
-            var tabpanel = $("div.active[role='tabpanel']");
+            //var tabpanel = $("div.active[role='tabpanel']");
             var table = $(tabpanel).find("table[id^='detail" + tableName + "_']");
             var activityTypeIds = $(table).find("input[name$='.ActivityType.Id'][value='" + activityType.Id + "']");
             return activityTypeIds.length > 0;
         }
 
-        function AddDetailRecordRow(activityType,tableName,defaultValue) {
-            var tabpanel = $("div.active[role='tabpanel']");
+        function AddDetailRecordRow(tabpanel,activityType, tableName, defaultValue) {
+            //var tabpanel = $("div.active[role='tabpanel']");
             var table = $(tabpanel).find("table[id^='detail" + tableName + "_']");
 
             var adlRecordId = $("#Head_Id").val();
