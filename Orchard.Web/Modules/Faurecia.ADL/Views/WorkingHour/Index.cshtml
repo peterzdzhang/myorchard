@@ -40,6 +40,13 @@
                         @Html.SelectOption(Model.Options.Order, WorkingHourOrder.YearDesc, T("Year desc").ToString())
                     </select>
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Filter, T("Filter").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    <select id="@Html.IdFor(m=>m.Options.Filter)" name="@Html.NameOf(m => m.Options.Filter)" class="form-control">
+                        @Html.SelectOption(Model.Options.Filter, WorkingHourFilter.LastestVersion, T("Lastest Version").ToString())
+                        @Html.SelectOption(Model.Options.Filter, WorkingHourFilter.AllVersion, T("All Version").ToString())
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
 
                 <!-- trigger create modal -->

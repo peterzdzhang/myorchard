@@ -46,7 +46,8 @@ namespace Faurecia.ADL.ViewModels
 
     public enum WorkingHourFilter
     {
-        None
+        LastestVersion,
+        AllVersion
     }
     
 

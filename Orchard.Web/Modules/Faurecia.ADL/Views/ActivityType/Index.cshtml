@@ -18,8 +18,7 @@
                     <select id="publishActions" class="form-control" name="@Html.NameOf(m => m.Options.BulkAction)">
                         @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.None, T("Choose action...").ToString())
                         @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.BulkEdit, T("Edit").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.BulkDisabled, T("Disabled").ToString())
-                        @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.BulkEnabled, T("Enabled").ToString())
+                        @Html.SelectOption(Model.Options.BulkAction, ActivityTypeBulkAction.BulkDelete, T("Delete").ToString())
                     </select>
                     @Ajax.ActionLink(T("Apply").Text
                                 , "BulkAction"
@@ -38,6 +37,13 @@
                     <select id="sortResults" class="form-control" name="@Html.NameOf(m => m.Options.Order)">
                         @Html.SelectOption(Model.Options.Order, ActivityTypeOrder.CostCenter, T("Cost Center asc").ToString())
                         @Html.SelectOption(Model.Options.Order, ActivityTypeOrder.CostCenterDesc, T("Cost Center desc").ToString())
+                    </select>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.VersionFilter, T("Filter").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    <select id="@Html.IdFor(m=>m.Options.VersionFilter)" name="@Html.NameOf(m => m.Options.VersionFilter)" class="form-control">
+                        @Html.SelectOption(Model.Options.VersionFilter, ActivityTypeVersionFilter.LastestVersion, T("Lastest Version").ToString())
+                        @Html.SelectOption(Model.Options.VersionFilter, ActivityTypeVersionFilter.AllVersion, T("All Version").ToString())
                     </select>
                 </div>
                 <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>

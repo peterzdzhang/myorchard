@@ -74,18 +74,26 @@ namespace Faurecia.ADL.Controllers
             {
                 queries = queries.Where(w => w.Year.ToString().Contains(options.Search));
             }
+            switch (options.Filter)
+            {
+                case WorkingHourFilter.LastestVersion:
+                    queries = queries.Where(o => o.IsUsed==true);
+                    break;
+            }
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(queries.Count());
 
             switch (options.Order)
             {
                 case WorkingHourOrder.Year:
-                    queries = queries.OrderBy(o =>o.Year);
+                    queries = queries.OrderBy(o =>o.Year).OrderBy(o=>o.EditTime);
                     break;
                 case WorkingHourOrder.YearDesc:
-                    queries = queries.OrderByDescending(o => o.Year);
+                    queries = queries.OrderByDescending(o => o.Year).OrderBy(o => o.EditTime);
                     break;
             }
+           
+
             if (pager.GetStartIndex() > 0)
             {
                 queries = queries.Skip(pager.GetStartIndex());
@@ -137,7 +145,12 @@ namespace Faurecia.ADL.Controllers
                     Sep = 21 * 8,
                     Oct = 22 * 8,
                     Nov = 21 * 8,
-                    Dev = 22 * 8
+                    Dev = 22 * 8,
+                    IsUsed=true,
+                    CreateTime=DateTime.Now,
+                    Creator=User.Identity.Name,
+                    Editor=User.Identity.Name,
+                    EditTime=DateTime.Now
                 };
             }
 
@@ -157,7 +170,6 @@ namespace Faurecia.ADL.Controllers
             viewModel.Oct = record.Oct ?? 0;
             viewModel.Nov = record.Nov ?? 0;
             viewModel.Dev = record.Dev ?? 0;
-
             return PartialView("_Create", viewModel);
         }
         public ActionResult Edit(int id)
@@ -200,7 +212,10 @@ namespace Faurecia.ADL.Controllers
             }
             if (record != null)
             {
-                _workingHourRecords.Delete(record);
+                record.Editor = User.Identity.Name;
+                record.EditTime = DateTime.Now;
+                record.IsUsed = false;
+                _workingHourRecords.Update(record);
             }
             return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
         }
@@ -219,7 +234,10 @@ namespace Faurecia.ADL.Controllers
                     }
                     if (record != null)
                     {
-                        _workingHourRecords.Delete(record);
+                        record.Editor = User.Identity.Name;
+                        record.EditTime = DateTime.Now;
+                        record.IsUsed = false;
+                        _workingHourRecords.Update(record);
                     }
                 }
                 return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
@@ -272,24 +290,27 @@ namespace Faurecia.ADL.Controllers
                 foreach (var id in viewModel.Ids)
                 {
                     WorkingHourRecord record = null;
+                    int year = DateTime.Now.Year;
                     if (id != 0)
                     {
                         record = _workingHourRecords.Get(id);
+                        record.IsUsed = false;
+                        record.EditTime = DateTime.Now;
+                        record.Editor = User.Identity.Name;
+                        year = record.Year;
+                        _workingHourRecords.Update(record);
                     }
-                    if (record == null)
-                    {
-                        record = new WorkingHourRecord();
-                    }
-
-                    if (viewModel.Year!=0)
+                    else if (id==0 && viewModel.Year!=0)
                     {
                         int recordCount = _workingHourRecords.Table.Where(w => w.Year == viewModel.Year && w.Id != id).Count();
                         if (recordCount > 0)
                         {
                             throw new Exception(T("Year({0})'s record have been existed.", viewModel.Year).Text);
                         }
-                        record.Year = viewModel.Year;
+                        year = viewModel.Year;
                     }
+                    record = new WorkingHourRecord();
+                    record.Year = year;
                     record.Jan = viewModel.Jan;
                     record.Feb = viewModel.Feb;
                     record.Mar = viewModel.Mar;
@@ -302,6 +323,11 @@ namespace Faurecia.ADL.Controllers
                     record.Oct = viewModel.Oct;
                     record.Nov = viewModel.Nov;
                     record.Dev = viewModel.Dev;
+                    record.IsUsed = true;
+                    record.Editor = User.Identity.Name;
+                    record.EditTime = DateTime.Now;
+                    record.CreateTime = DateTime.Now;
+                    record.Creator = User.Identity.Name;
                     _workingHourRecords.Create(record);
                 }
             }

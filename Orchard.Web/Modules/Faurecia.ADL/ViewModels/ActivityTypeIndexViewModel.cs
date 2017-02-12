@@ -35,6 +35,8 @@ namespace Faurecia.ADL.ViewModels
 
         public ActivityTypeFilter Filter { get; set; }
 
+        public ActivityTypeVersionFilter VersionFilter { get; set; }
+
         public ActivityTypeBulkAction BulkAction { get; set; }
     }
 
@@ -52,6 +54,12 @@ namespace Faurecia.ADL.ViewModels
         PV,
         ExternalSupport,
         Capitalized
+    }
+
+    public enum ActivityTypeVersionFilter
+    {
+        LastestVersion,
+        AllVersion
     }
 
     public enum ActivityTypeBulkAction

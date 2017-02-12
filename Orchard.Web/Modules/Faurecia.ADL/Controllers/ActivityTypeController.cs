@@ -73,16 +73,22 @@ namespace Faurecia.ADL.Controllers
                                             || w.RMBHour.Contains(options.Search)
                                             || w.Comment.Contains(options.Search));
             }
+            switch (options.VersionFilter)
+            {
+                case ActivityTypeVersionFilter.LastestVersion:
+                    queries = queries.Where(o => o.IsUsed == true);
+                    break;
+            }
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(queries.Count());
 
             switch (options.Order)
             {
                 case ActivityTypeOrder.CostCenter:
-                    queries = queries.OrderBy(o =>o.CostCenter);
+                    queries = queries.OrderBy(o =>o.CostCenter).OrderBy(o=>o.EditTime);
                     break;
                 case ActivityTypeOrder.CostCenterDesc:
-                    queries = queries.OrderByDescending(o => o.CostCenter);
+                    queries = queries.OrderByDescending(o => o.CostCenter).OrderBy(o => o.EditTime);
                     break;
             }
             if (pager.GetStartIndex() > 0)
@@ -202,14 +208,17 @@ namespace Faurecia.ADL.Controllers
             }
             if (record != null)
             {
-                _activityTypeRecords.Delete(record);
+                record.EditTime = DateTime.Now;
+                record.Editor = User.Identity.Name;
+                record.IsUsed = false;
+                _activityTypeRecords.Update(record);
             }
 
-            var queries = _hourRatioRecords.Table.Where(w => w.ActivityTypeRecord.Id == id);
-            foreach(var item in queries)
-            {
-                _hourRatioRecords.Delete(item);
-            }
+            //var queries = _hourRatioRecords.Table.Where(w => w.ActivityTypeRecord.Id == id);
+            //foreach(var item in queries)
+            //{
+            //    _hourRatioRecords.Delete(item);
+            //}
 
             return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
         }
@@ -223,6 +232,8 @@ namespace Faurecia.ADL.Controllers
             }
             if (record != null)
             {
+                record.EditTime = DateTime.Now;
+                record.Editor = User.Identity.Name;
                 record.IsUsed = false;
                 _activityTypeRecords.Update(record);
             }
@@ -238,6 +249,8 @@ namespace Faurecia.ADL.Controllers
             }
             if (record != null)
             {
+                record.EditTime = DateTime.Now;
+                record.Editor = User.Identity.Name;
                 record.IsUsed = true;
                 _activityTypeRecords.Update(record);
             }
@@ -309,16 +322,30 @@ namespace Faurecia.ADL.Controllers
 
                 foreach (var id in viewModel.Ids)
                 {
-                    ActivityTypeRecord record = null;
+                    var record = new ActivityTypeRecord()
+                    {
+                        CreateTime = DateTime.Now,
+                        Creator = User.Identity.Name,
+                        IsUsed=true,
+                        Editor=User.Identity.Name,
+                        EditTime=DateTime.Now
+                    };
                     if (id != 0)
                     {
-                        record = _activityTypeRecords.Get(id);
+                        var oldRecord = _activityTypeRecords.Get(id);
+                        oldRecord.EditTime = DateTime.Now;
+                        oldRecord.Editor = User.Identity.Name;
+                        oldRecord.IsUsed = false;
+                        _activityTypeRecords.Update(oldRecord);
+
+                        record.ActivityType = oldRecord.ActivityType;
+                        record.CostCenter = oldRecord.CostCenter;
+                        record.Comment = oldRecord.Comment;
+                        record.DisplayGroup = oldRecord.DisplayGroup;
+                        record.RMBHour = oldRecord.RMBHour;
+                        record.TotalGroup = oldRecord.TotalGroup;
                     }
-                    if (record == null)
-                    {
-                        record = new ActivityTypeRecord();
-                    }
-                    if(viewModel.Action == ActivityTypeBulkAction.Create)
+                    if (viewModel.Action == ActivityTypeBulkAction.Create)
                     {
                         record.ActivityType = viewModel.ActivityType;
                         record.CostCenter = viewModel.CostCenter;

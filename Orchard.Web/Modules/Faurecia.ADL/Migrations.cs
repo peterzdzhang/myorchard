@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using Orchard.ContentManagement.Drivers;
@@ -22,6 +22,10 @@ namespace Faurecia.ADL {
                 .Column("DisplayGroup", DbType.String)
                 .Column("TotalGroup", DbType.String)
                 .Column("IsUsed", DbType.Boolean)
+                .Column("CreateTime", DbType.DateTime)
+                .Column("Creator", DbType.String)
+                .Column("EditTime", DbType.DateTime)
+                .Column("Editor", DbType.String)
             );
 
             // Creating table HourRatioRecord
@@ -58,6 +62,11 @@ namespace Faurecia.ADL {
                 .Column("Oct", DbType.Double)
                 .Column("Nov", DbType.Double)
                 .Column("Dev", DbType.Double)
+                .Column("IsUsed", DbType.Boolean)
+                .Column("CreateTime", DbType.DateTime)
+                .Column("Creator", DbType.String)
+                .Column("EditTime", DbType.DateTime)
+                .Column("Editor", DbType.String)
             );
             // Creating table ADLCostRecord
             SchemaBuilder.CreateTable("ADLCostRecord", table => table
@@ -192,8 +201,19 @@ namespace Faurecia.ADL {
                 .Column("Editor", DbType.String)
 				.Column("EditTime", DbType.DateTime)
 			);
-            
-            return 2;
+
+            string tableDbName = SchemaBuilder.TableDbName("ActivityTypeRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET CreateTime='{1:yyyy-MM-dd}',EditTime='{1:yyyy-MM-dd}',Editor='',CREATOR=''"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+
+
+            tableDbName = SchemaBuilder.TableDbName("WorkingHourRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET IsUsed=1,CreateTime='{1:yyyy-MM-dd}',EditTime='{1:yyyy-MM-dd}',Editor='',CREATOR=''"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+
+            return 3;
         }
 
 
@@ -210,6 +230,41 @@ namespace Faurecia.ADL {
                 .Column<int>("ADLRecord_Id")
             );
             return 2;
+        }
+
+        public int UpdateFrom2()
+        {
+            // alert table ActivityTypeRecord
+            SchemaBuilder.AlterTable("ActivityTypeRecord", table =>
+            {
+                table.AddColumn("CreateTime", DbType.DateTime);
+                table.AddColumn("Creator", DbType.String);
+                table.AddColumn("EditTime", DbType.DateTime);
+                table.AddColumn("Editor", DbType.String);
+            });
+
+
+            //// alert table ActivityTypeRecord
+            SchemaBuilder.AlterTable("WorkingHourRecord", table =>
+            {
+                table.AddColumn("IsUsed", DbType.Boolean);
+                table.AddColumn("CreateTime", DbType.DateTime);
+                table.AddColumn("Creator", DbType.String);
+                table.AddColumn("EditTime", DbType.DateTime);
+                table.AddColumn("Editor", DbType.String);
+            });
+
+            string tableDbName = SchemaBuilder.TableDbName("ActivityTypeRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET CreateTime='{1:yyyy-MM-dd}',EditTime='{1:yyyy-MM-dd}',Editor='',CREATOR=''"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+
+
+            tableDbName = SchemaBuilder.TableDbName("WorkingHourRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET IsUsed=1,CreateTime='{1:yyyy-MM-dd}',EditTime='{1:yyyy-MM-dd}',Editor='',CREATOR=''"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+            return 3;
         }
     }
 }

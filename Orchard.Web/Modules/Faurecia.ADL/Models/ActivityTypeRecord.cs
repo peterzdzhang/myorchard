@@ -12,12 +12,13 @@ namespace Faurecia.ADL.Models
         public virtual string RMBHour { get; set; }
         public virtual string CostCenter { get; set; }
         public virtual string ActivityType { get; set; }
-
-
         public virtual ActivityTypeDisplayGroup DisplayGroup { get; set; }
-
         public virtual ActivityTypeTotalGroup TotalGroup { get; set; }
         public virtual bool IsUsed { get; set; }
+        public virtual DateTime CreateTime { get; set; }
+        public virtual string Creator { get; set; }
+        public virtual DateTime EditTime { get; set; }
+        public virtual string Editor { get; set; }
     }
 
 

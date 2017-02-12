@@ -20,6 +20,9 @@
             <th>@T("Oct")</th>
             <th>@T("Nov")</th>
             <th>@T("Dev")</th>
+            <th>@T("Is Used")</th>
+            <th>@T("Editor")</th>
+            <th>@T("Edit time")</th>
             <th>@T("Action")</th>
         </tr>
     </thead>
@@ -75,6 +78,15 @@
             </td>
             <td>
                 @entry.WorkingHour.Dev
+            </td>
+            <td>
+                @(entry.WorkingHour.IsUsed?T("Y"):T("N"))
+            </td>
+            <td>
+                @entry.WorkingHour.Editor
+            </td>
+            <td>
+                @string.Format("{0:yyyy-MM-dd HH:mm:ss}",entry.WorkingHour.EditTime)
             </td>
             <td>
                 @Ajax.ActionLink(T("Edit").ToString()
