@@ -18,7 +18,7 @@
         <tr>
             <td>
                 <input type="checkbox" value="@row.Id" name="@("Checkbox." + row.Id)" style="cursor:pointer"/>
-                <input type="hidden" value="@Model.ActivityTypes[i].Id" name="@Html.NameOf(m => m.ActivityTypes[i].Id)" />
+                <input type="hidden" value="@Model.ActivityTypes[i].Id" name="@Html.NameOf(m => m.ActivityTypes[i].Id)" data-activitytype="Id"/>
                 <input type="hidden" value="@Model.ActivityTypes[i].DisplayGroup" name="@Html.NameOf(m => m.ActivityTypes[i].DisplayGroup)" />
                 <input type="hidden" value="@Model.ActivityTypes[i].TotalGroup" name="@Html.NameOf(m => m.ActivityTypes[i].TotalGroup)" />
             </td>

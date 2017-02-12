@@ -1,7 +1,7 @@
 ﻿@model Faurecia.ADL.ViewModels.ShowActivityTypeViewModel
 @using Faurecia.ADL.ViewModels;
 @using (Ajax.BeginForm("QueryActivityTypeResult", "Default", new AjaxOptions { HttpMethod = "Post"
-                                , UpdateTargetId="activityTypeQueryResults"  }))
+                                , UpdateTargetId="activityTypeQueryResults" ,OnSuccess= "onCompleteQueryActivityTypeResult"}))
 {
     @Html.AntiForgeryToken()
     <div class="form-inline form-group alert alert-info">

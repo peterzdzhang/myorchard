@@ -691,7 +691,24 @@
         }
 
         function showActivityTypeModal(result) {
-            $('#activityTypeModal').modal('show')
+            $('#activityTypeModal').modal('show');
+            onCompleteQueryActivityTypeResult();
+        }
+        
+        function onCompleteQueryActivityTypeResult(){
+            var activitytypeids=$("#activityTypeQueryResults").find("input[data-activitytype='Id']");
+            activitytypeids.each(function(x,xitem){
+                var acvitityTypeId=$(xitem).val();
+                var tabpanel = $("div.active[role='tabpanel']");
+                var headCountTable=$(tabpanel).find("table[name='HeadCount']");
+                var activityTypeIds = $(headCountTable).find("input[name$='.ActivityType.Id'][value='" + acvitityTypeId + "']");
+
+                if(activityTypeIds.length>0){
+                    var chk= $(xitem).parent().find("input[type='checkbox']");
+                    $(chk).attr("checked","true");
+                    $(chk).attr("disabled","disabled");
+                }
+            });
         }
 
         function beginSaveModify() {
