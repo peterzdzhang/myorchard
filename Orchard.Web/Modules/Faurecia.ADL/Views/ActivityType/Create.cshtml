@@ -53,12 +53,12 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                         @Html.TextBoxFor(m => m.CostCenter, new { @class = "form-control", maxlength = "50", placeholder = "Cost Center" })
                         @Html.ValidationMessageFor(m => m.CostCenter)
                     </div>
-                    @Html.LabelFor(m => m.ActivityType, T("Activity Type").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    @Html.LabelFor(m => m.ActivityType, T("SAP Activity Type").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-xs-2 col-lg-2">
                         @Html.TextBoxFor(m => m.ActivityType, new { @class = "form-control", maxlength = "50", placeholder = "Activity Type" })
                         @Html.ValidationMessageFor(m => m.ActivityType)
                     </div>
-                    @Html.LabelFor(m => m.RMBHour, T("RMB Hour").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    @Html.LabelFor(m => m.RMBHour, T("Description").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-xs-2 col-lg-2">
                         @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", maxlength = "50", placeholder = "RMB Hour" })
                         @Html.ValidationMessageFor(m => m.RMBHour)

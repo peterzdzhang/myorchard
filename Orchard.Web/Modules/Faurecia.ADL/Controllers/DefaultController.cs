@@ -151,7 +151,7 @@ namespace Faurecia.ADL.Controllers
         // GET: Create
         public ActionResult Create(int Id = 0)
         {
-            ViewBag.Title = T("ADL Create New").Text;
+            ViewBag.Title = T("Create New Budget").Text;
             var viewModel = new ADLCreateViewModel()
             {
                 Action = EnumActions.New,
@@ -166,12 +166,12 @@ namespace Faurecia.ADL.Controllers
                 if (record.IsLastest)
                 {
                     viewModel.Action = EnumActions.Modify;
-                    ViewBag.Title = T("ADL Create Modify").Text;
+                    ViewBag.Title = T("Budget Create Modify").Text;
                 }
                 else
                 {
                     viewModel.Action = EnumActions.View;
-                    ViewBag.Title = T("ADL View").Text;
+                    ViewBag.Title = T("Budget View").Text;
                 }
             }
             else
@@ -185,7 +185,7 @@ namespace Faurecia.ADL.Controllers
         }
         public ActionResult Quotation(int Id=0)
         {
-            ViewBag.Title = T("ADL Quotation").Text;
+            ViewBag.Title = T("Budget Quotation").Text;
             var viewModel = new ADLQuotationViewModel()
             {
                 Action = EnumActions.New,
@@ -203,7 +203,7 @@ namespace Faurecia.ADL.Controllers
                 else
                 {
                     viewModel.Action = EnumActions.View;
-                    ViewBag.Title = T("ADL View").Text;
+                    ViewBag.Title = T("Budget View").Text;
                 }
             }
             else
@@ -219,7 +219,7 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult IBP(int Id = 0)
         {
-            ViewBag.Title = T("ADL IBP").Text;
+            ViewBag.Title = T("Budget IBP").Text;
             var viewModel = new ADLIBPViewModel()
             {
                 Action = EnumActions.New,
@@ -239,7 +239,7 @@ namespace Faurecia.ADL.Controllers
                 else
                 {
                     viewModel.Action = EnumActions.View;
-                    ViewBag.Title = T("ADL View").Text;
+                    ViewBag.Title = T("Budget View").Text;
                 }
             }
             else
@@ -254,7 +254,7 @@ namespace Faurecia.ADL.Controllers
         }
         public ActionResult ECR(int Id = 0)
         {
-            ViewBag.Title = T("ADL ECR").Text;
+            ViewBag.Title = T("Budget ECR").Text;
             var viewModel = new ADLECRViewModel()
             {
                 Action = EnumActions.New,
@@ -274,7 +274,7 @@ namespace Faurecia.ADL.Controllers
                 else
                 {
                     viewModel.Action = EnumActions.View;
-                    ViewBag.Title = T("ADL View").Text;
+                    ViewBag.Title = T("Budget View").Text;
                 }
             }
             else
@@ -291,7 +291,7 @@ namespace Faurecia.ADL.Controllers
         public ActionResult View(int Id = 0)
         {
 
-            ViewBag.Title = T("ADL View").Text;
+            ViewBag.Title = T("Budget View").Text;
             var viewModel = new ADLQuotationViewModel()
             {
                 Action = EnumActions.New,
@@ -859,7 +859,7 @@ namespace Faurecia.ADL.Controllers
                     Common_Modify(viewModel);
                 }
                 viewModel.Action = EnumActions.Modify;
-                viewModel.Message = T("Save ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                viewModel.Message = T("Save budget({0}) success.", viewModel.Head.ProjectNo).Text;
                 SetRedirectUrl(viewModel);
             }
             else
@@ -895,7 +895,7 @@ namespace Faurecia.ADL.Controllers
                     Common_Modify(viewModel);
                 }
                 viewModel.Action = EnumActions.Modify;
-                viewModel.Message = T("Confirm ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                viewModel.Message = T("Confirm budget({0}) success.", viewModel.Head.ProjectNo).Text;
                 SetRedirectUrl(viewModel);
             }
             else
@@ -943,7 +943,7 @@ namespace Faurecia.ADL.Controllers
                     Common_Modify(viewModel);
                 }
                 viewModel.Action = EnumActions.Modify;
-                viewModel.Message = T("Submit ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                viewModel.Message = T("Submit budget({0}) success.", viewModel.Head.ProjectNo).Text;
                 SetRedirectUrl(viewModel);
             }
             else
@@ -986,7 +986,7 @@ namespace Faurecia.ADL.Controllers
                     Common_Modify(viewModel);
                 }
                 viewModel.Action = EnumActions.Modify;
-                viewModel.Message = T("Reject ADL({0}) success.", viewModel.Head.ProjectNo).Text;
+                viewModel.Message = T("Reject budget({0}) success.", viewModel.Head.ProjectNo).Text;
                 SetRedirectUrl(viewModel);
             }
             else
@@ -1022,7 +1022,7 @@ namespace Faurecia.ADL.Controllers
                     Common_Modify(viewModel);
                 }
                 viewModel.Action = EnumActions.Modify;
-                viewModel.Message = T("Start ADL({0}) ECR success.", viewModel.Head.ProjectNo).Text;
+                viewModel.Message = T("Start budget({0}) ECR success.", viewModel.Head.ProjectNo).Text;
                 SetRedirectUrl(viewModel);
             }
             else

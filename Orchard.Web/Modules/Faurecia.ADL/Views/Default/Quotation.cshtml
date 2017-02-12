@@ -357,37 +357,47 @@
             var popoverObject=$(this);
 
             var popover=$("<div></div>");
-            //Header
-            var header = $("<div class=\"input-group\"></div>");
-            var text=$("<input type=\"text\" class=\"form-control\" placeholder=\"\">");
-            var buttonContent = $("<span class=\"input-group-btn\"></span>");
-            var button = $("<button class=\"btn btn-default\" type=\"button\">Add!</button>");
-            $(buttonContent).append(button);
-            $(header).append(text);
-            $(header).append(buttonContent);
+            var action="@Model.Action";
+            var phase="@Model.Head.Phase";
+            var status="@Model.Head.Status";
+
+
             //Content
             var content = $("<div style=\"padding-top:5px\"></div>");
-            //add kick off
-            $(button).bind("click", function () {
-                var textVal=$(text).val().trim();
-                if(textVal==""){ return;}
-                var addUrl = "@Url.Action("AddKickOff", new { area = "Faurecia.ADL" })";
-                var addTimestamp = Math.round(new Date().getTime() / 1000);
-                var reqdata ={ ADLRecordId:adlRecordId,Year: year, Month:month,Content:textVal, key: addTimestamp };
+            if (action != "@Faurecia.ADL.ViewModels.EnumActions.View"
+                && phase != "@Faurecia.ADL.Models.EnumPhase.IBP"
+                && status!="@Faurecia.ADL.Models.EnumStatus.Frozen")
+            {
+                //Header
+                var header = $("<div class=\"input-group\"></div>");
+                var text=$("<input type=\"text\" class=\"form-control\" placeholder=\"\">");
+                var buttonContent = $("<span class=\"input-group-btn\"></span>");
+                var button = $("<button class=\"btn btn-default\" type=\"button\">Add!</button>");
+                $(buttonContent).append(button);
+                $(header).append(text);
+                $(header).append(buttonContent);
+                //add kick off
+                $(button).bind("click", function () {
+                    var textVal=$(text).val().trim();
+                    if(textVal==""){ return;}
+                    var addUrl = "@Url.Action("AddKickOff", new { area = "Faurecia.ADL" })";
+                    var addTimestamp = Math.round(new Date().getTime() / 1000);
+                    var reqdata ={ ADLRecordId:adlRecordId,Year: year, Month:month,Content:textVal, key: addTimestamp };
 
-                $.ajax({
-                    type: "get",
-                    url: addUrl,
-                    data: reqdata,
-                    async: false,
-                    success: function (data) {
-                        addKickOff($(popoverObject),$(content),data);
-                    }
+                    $.ajax({
+                        type: "get",
+                        url: addUrl,
+                        data: reqdata,
+                        async: false,
+                        success: function (data) {
+                            addKickOff($(popoverObject),$(content),data);
+                        }
+                    });
+                    $(text).val("");
+                    $(popoverObject).popover("show");
+                    setPopoverUI($(popoverObject));
                 });
-                $(text).val("");
-                $(popoverObject).popover("show");
-                setPopoverUI($(popoverObject));
-            });
+            }
             //init kick off content
             var initUrl = "@Url.Action("GetKickOffs", new { area = "Faurecia.ADL" })";
             var initTimestamp = Math.round(new Date().getTime() / 1000);
@@ -413,31 +423,45 @@
         }
 
         function addKickOff(popoverObject,content,data){
+
+            var action="@Model.Action";
+            var phase="@Model.Head.Phase";
+            var status="@Model.Head.Status";
+
             var alert = $("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\" style=\"padding-top:2px;padding-bottom:2px;margin-top:2px;margin-bottom:2px;\"></div>");
-            var alertCloseButton = $("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"></button>");
-            $(alertCloseButton).append("<span aria-hidden=\"true\">&times;</span>");
+          
             var alertContent = $("<span></span>");
             $(alertContent).html(data.Content);
-            $(alertCloseButton).prop("recordId",data.Id);
-            $(alert).append(alertCloseButton);
             $(alert).append(alertContent);
-            $(content).append(alert);
-            //delete kick off
-            $(alertCloseButton).bind("click", function (event) {
-                var deleteUrl = "@Url.Action("DeleteKickOff", new { area = "Faurecia.ADL" })";
-                var deleteTimestamp = Math.round(new Date().getTime() / 1000);
-                var recordId=$(alertCloseButton).prop("recordId");
-                var reqdata ={ RecordId:recordId, key: deleteTimestamp };
-                $.ajax({
-                    type: "get",
-                    url: deleteUrl,
-                    data: reqdata,
-                    async: false,
-                    success: function (data) {}
+
+            if (action != "@Faurecia.ADL.ViewModels.EnumActions.View"
+                && phase != "@Faurecia.ADL.Models.EnumPhase.IBP"
+                && status!="@Faurecia.ADL.Models.EnumStatus.Frozen")
+            {
+                var alertCloseButton = $("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"></button>");
+                $(alertCloseButton).append("<span aria-hidden=\"true\">&times;</span>");
+                $(alertCloseButton).prop("recordId",data.Id);
+
+                //delete kick off
+                $(alertCloseButton).bind("click", function (event) {
+                    var deleteUrl = "@Url.Action("DeleteKickOff", new { area = "Faurecia.ADL" })";
+                    var deleteTimestamp = Math.round(new Date().getTime() / 1000);
+                    var recordId=$(alertCloseButton).prop("recordId");
+                    var reqdata ={ RecordId:recordId, key: deleteTimestamp };
+                    $.ajax({
+                        type: "get",
+                        url: deleteUrl,
+                        data: reqdata,
+                        async: false,
+                        success: function (data) {}
+                    });
+                    $(popoverObject).popover("show");
+                    setPopoverUI($(popoverObject));
                 });
-                $(popoverObject).popover("show");
-                setPopoverUI($(popoverObject));
-            });
+                
+                $(alert).append(alertCloseButton);
+            }
+            $(content).append(alert);
         }
 
         function setPopoverUI(popover) {
@@ -1290,21 +1314,32 @@
                 return;
             }
             //Delete Head Record Row
-            var headCountTable = $("#detailHeadCount_" + result.EntryIndex);
-            var activityTypeIds = $(headCountTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
-            replaceInputName(result, activityTypeIds, "HeadCounts");
+            $("table[id^='detailHeadCount_']").each(function(){
+                var headCountTable = $(this);
+                var entryIndex=$(headCountTable).data("entryIndex");
+                var tabpanel=$(headCountTable).parent().parent();
+                var activityTypeIds = $(headCountTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
+                replaceInputName(tabpanel,entryIndex, activityTypeIds, "HeadCounts");
+            });
             //Delete Hour Ratio Record Row
-            var hourRatioTable = $("#detailHourRatio_" + result.EntryIndex);
-            activityTypeIds = $(hourRatioTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
-            replaceInputName(result, activityTypeIds, "HourRatios");
+            $("table[id^='detailHourRatio_']").each(function(){
+                var hourRatioTable = $(this);
+                var entryIndex=$(hourRatioTable).data("entryIndex");
+                var tabpanel=$(hourRatioTable).parent().parent();
+                activityTypeIds = $(hourRatioTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
+                replaceInputName(tabpanel,entryIndex, activityTypeIds, "HourRatios");
+            });
             //Delete Cost Record Row
-            var costTable = $("#detailCost_" + result.EntryIndex);
-            activityTypeIds = $(costTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
-            replaceInputName(result, activityTypeIds, "Costs");
-
+            $("table[id^='detailCost_']").each(function(){
+                var costTable = $(this);
+                var entryIndex=$(costTable).data("entryIndex");
+                var tabpanel=$(costTable).parent().parent().parent();
+                activityTypeIds = $(costTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
+                replaceInputName(tabpanel,result, activityTypeIds, "Costs");
+            });
         }
 
-        function replaceInputName(result, activityTypeIds, tableName) {
+        function replaceInputName(tabpanel,entryIndex, activityTypeIds, tableName) {
             for (var i = 0; i < activityTypeIds.length; i++) {
                 var index = $(activityTypeIds[i]).data("index");
                 var row = $(activityTypeIds[i]).parent().parent();
@@ -1312,8 +1347,8 @@
                     var activityTypeId = $(item).find("input[name$='.ActivityType.Id']");
                     var oldindex = $(activityTypeId).data("index");
                     var newindex = index + k;
-                    var name = "Detail.Entries[" + result.EntryIndex + "]." + tableName + "[" + oldindex + "]";
-                    var newname = "Detail.Entries[" + result.EntryIndex + "]." + tableName + "[" + newindex + "]";
+                    var name = "Detail.Entries[" + entryIndex + "]." + tableName + "[" + oldindex + "]";
+                    var newname = "Detail.Entries[" + entryIndex + "]." + tableName + "[" + newindex + "]";
 
                     $(activityTypeId).attr("data-index", newindex);
                     $(item).find("input[name^='" + name + "']").each(function (xi, xitem) {
@@ -1337,8 +1372,6 @@
                         var totalRow = table.find("tfoot>tr:last");
                         CalcTotal(totalRow, firstRow, cells[c]);
                     }
-
-                    var tabpanel = $("div.active[role='tabpanel']");
                     CalcYearTotal(tabpanel, table, totalGroup);
                     CalcYearTotalSum($(tabpanel));
                     CalcGross($(tabpanel));
