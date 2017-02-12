@@ -1591,5 +1591,54 @@ namespace Faurecia.ADL.Controllers
             string currentProjectNo = string.Format("{0}{1}", name, currentSeqenceNo.ToString("0000"));
             return currentProjectNo;
         }
+        /// <summary>
+        /// Add kick off
+        /// </summary>
+        /// <param name="adlRecordId"></param>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="content"></param>
+        public ActionResult AddKickOff(int adlRecordId,int year,int month,string content)
+        {
+            ADLRecord adl = _adlRecords.Get(adlRecordId);
+            if(adl!=null)
+            {
+                ADLKickOffRecord record = new ADLKickOffRecord()
+                {
+                    ADLRecord=adl,
+                    Content=content,
+                    Year=year,
+                    Month=month,
+                    CreateTime=DateTime.Now,
+                    Creator=User.Identity.Name
+                };
+                _adlKickOffRecords.Create(record);
+                return  Json(record, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new ADLKickOffRecord(),JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DeleteKickOff(int recordId)
+        {
+            ADLKickOffRecord record = _adlKickOffRecords.Get(recordId);
+            if (record != null)
+            {
+                _adlKickOffRecords.Delete(record);
+                return Json(new { Id = recordId }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new {Id= recordId }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetKickOffs(int adlRecordId, int year, int month)
+        {
+            var queries = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Year == year && w.Month == month);
+            return Json(queries.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public int GetKickOffCount(int adlRecordId, int year, int month)
+        {
+            int count = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Year == year && w.Month == month).Count();
+            return count;
+        }
     }
 }
