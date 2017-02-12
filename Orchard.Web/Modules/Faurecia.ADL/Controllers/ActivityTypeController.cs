@@ -197,6 +197,7 @@ namespace Faurecia.ADL.Controllers
                     });
                 }
             }
+            viewModel.HourRatios = viewModel.HourRatios.OrderBy(o => o.HourRatio.Year).ToList();
         }
 
         public ActionResult Delete(int id)
@@ -367,7 +368,8 @@ namespace Faurecia.ADL.Controllers
                         record.Comment = viewModel.Comment;
                     }
 
-                    foreach(var item in viewModel.HourRatios)
+                    _activityTypeRecords.Create(record);
+                    foreach (var item in viewModel.HourRatios)
                     {
                         HourRatioRecord hrRecord = null;
                         if (item.HourRatio.Id != 0)
@@ -396,7 +398,6 @@ namespace Faurecia.ADL.Controllers
                         hrRecord.Dev = item.HourRatio.Dev;
                         _hourRatioRecords.Create(hrRecord);
                     }
-                    _activityTypeRecords.Create(record);
                 }
 
 

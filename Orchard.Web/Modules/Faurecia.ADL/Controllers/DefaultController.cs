@@ -688,9 +688,9 @@ namespace Faurecia.ADL.Controllers
                 DisplayGroup = activityType.DisplayGroup,
                 TotalGroup = activityType.TotalGroup
             };
-            ADLHourRatioRecord record=_adlHourRatioRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id
-                                        && w.ActivityTypeRecord.Id == activityType.Id
-                                        && w.Year == year);
+            ADLHourRatioRecord record = _adlHourRatioRecords.Table.FirstOrDefault(w => w.ADLRecord.Id == adl.Id
+                                         && w.ActivityTypeRecord.Id == activityType.Id
+                                         && w.Year == year);
             if (record != null)
             {
                 entry.Id = record.Id;
@@ -720,6 +720,38 @@ namespace Faurecia.ADL.Controllers
                             + (record.Dev ?? 0)
                             + (record.Feb ?? 0);
             }
+
+            var queries = _hourRatioRecords.Table.Where(w => w.Year == year && w.ActivityTypeRecord.Id == activityType.Id && w.ActivityTypeRecord.IsUsed == true);
+            var hrrecord = queries.FirstOrDefault();
+            if (hrrecord != null && adl.Status == EnumStatus.Inwork) //处于工作中的就更新工作时间。
+            {
+                entry.Jan = hrrecord.Jan;
+                entry.Jul = hrrecord.Jul;
+                entry.Jun = hrrecord.Jun;
+                entry.Mar = hrrecord.Mar;
+                entry.May = hrrecord.May;
+                entry.Nov = hrrecord.Nov;
+                entry.Oct = hrrecord.Oct;
+                entry.Sep = hrrecord.Sep;
+                entry.Apr = hrrecord.Apr;
+                entry.Aug = hrrecord.Aug;
+                entry.Dev = hrrecord.Dev;
+                entry.Feb = hrrecord.Feb;
+                entry.Year = hrrecord.Year;
+                entry.Y1 = (hrrecord.Jan ?? 0)
+                            + (hrrecord.Jul ?? 0)
+                            + (hrrecord.Jun ?? 0)
+                            + (hrrecord.Mar ?? 0)
+                            + (hrrecord.May ?? 0)
+                            + (hrrecord.Nov ?? 0)
+                            + (hrrecord.Oct ?? 0)
+                            + (hrrecord.Sep ?? 0)
+                            + (hrrecord.Apr ?? 0)
+                            + (hrrecord.Aug ?? 0)
+                            + (hrrecord.Dev ?? 0)
+                            + (hrrecord.Feb ?? 0);
+            }
+            
             return entry;
         }
         private CostEntry GetCostEntry(ADLRecord adl, ActivityTypeEntry activityType, int year)
@@ -775,67 +807,67 @@ namespace Faurecia.ADL.Controllers
             {
                 Year=year
             };
-            ADLWorkingHourRecord whrecord = _adlWorkingHourRecords.Table
-                                                                .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
-            if (whrecord != null)
+            WorkingHourRecord record = _workingHourRecords.Table.SingleOrDefault(w => w.Year == year && w.IsUsed == true);
+            if (record != null && adl.Status == EnumStatus.Inwork) //处于工作中的就更新工作时间。
             {
-                entry.Id = whrecord.Id;
-                entry.Jan = whrecord.Jan;
-                entry.Jul = whrecord.Jul;
-                entry.Jun = whrecord.Jun;
-                entry.Mar = whrecord.Mar;
-                entry.May = whrecord.May;
-                entry.Nov = whrecord.Nov;
-                entry.Oct = whrecord.Oct;
-                entry.Sep = whrecord.Sep;
-                entry.Apr = whrecord.Apr;
-                entry.Aug = whrecord.Aug;
-                entry.Dev = whrecord.Dev;
-                entry.Feb = whrecord.Feb;
-                entry.Year = whrecord.Year;
-                entry.Y1 = (whrecord.Jan ?? 0)
-                            + (whrecord.Jul ?? 0)
-                            + (whrecord.Jun ?? 0)
-                            + (whrecord.Mar ?? 0)
-                            + (whrecord.May ?? 0)
-                            + (whrecord.Nov ?? 0)
-                            + (whrecord.Oct ?? 0)
-                            + (whrecord.Sep ?? 0)
-                            + (whrecord.Apr ?? 0)
-                            + (whrecord.Aug ?? 0)
-                            + (whrecord.Dev ?? 0)
-                            + (whrecord.Feb ?? 0);
+                entry.Jan = record.Jan;
+                entry.Jul = record.Jul;
+                entry.Jun = record.Jun;
+                entry.Mar = record.Mar;
+                entry.May = record.May;
+                entry.Nov = record.Nov;
+                entry.Oct = record.Oct;
+                entry.Sep = record.Sep;
+                entry.Apr = record.Apr;
+                entry.Aug = record.Aug;
+                entry.Dev = record.Dev;
+                entry.Feb = record.Feb;
+                entry.Year = record.Year;
+                entry.Y1 = (record.Jan ?? 0)
+                        + (record.Jul ?? 0)
+                        + (record.Jun ?? 0)
+                        + (record.Mar ?? 0)
+                        + (record.May ?? 0)
+                        + (record.Nov ?? 0)
+                        + (record.Oct ?? 0)
+                        + (record.Sep ?? 0)
+                        + (record.Apr ?? 0)
+                        + (record.Aug ?? 0)
+                        + (record.Dev ?? 0)
+                        + (record.Feb ?? 0);
             }
             else
             {
-                WorkingHourRecord record=_workingHourRecords.Table.SingleOrDefault(w => w.Year == year);
-                if (record != null)
+                ADLWorkingHourRecord whrecord = _adlWorkingHourRecords.Table
+                                                                .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
+                if (whrecord != null)
                 {
-                    entry.Jan = record.Jan;
-                    entry.Jul = record.Jul;
-                    entry.Jun = record.Jun;
-                    entry.Mar = record.Mar;
-                    entry.May = record.May;
-                    entry.Nov = record.Nov;
-                    entry.Oct = record.Oct;
-                    entry.Sep = record.Sep;
-                    entry.Apr = record.Apr;
-                    entry.Aug = record.Aug;
-                    entry.Dev = record.Dev;
-                    entry.Feb = record.Feb;
-                    entry.Year = record.Year;
-                    entry.Y1 = (record.Jan ?? 0)
-                            + (record.Jul ?? 0)
-                            + (record.Jun ?? 0)
-                            + (record.Mar ?? 0)
-                            + (record.May ?? 0)
-                            + (record.Nov ?? 0)
-                            + (record.Oct ?? 0)
-                            + (record.Sep ?? 0)
-                            + (record.Apr ?? 0)
-                            + (record.Aug ?? 0)
-                            + (record.Dev ?? 0)
-                            + (record.Feb ?? 0);
+                    entry.Id = whrecord.Id;
+                    entry.Jan = whrecord.Jan;
+                    entry.Jul = whrecord.Jul;
+                    entry.Jun = whrecord.Jun;
+                    entry.Mar = whrecord.Mar;
+                    entry.May = whrecord.May;
+                    entry.Nov = whrecord.Nov;
+                    entry.Oct = whrecord.Oct;
+                    entry.Sep = whrecord.Sep;
+                    entry.Apr = whrecord.Apr;
+                    entry.Aug = whrecord.Aug;
+                    entry.Dev = whrecord.Dev;
+                    entry.Feb = whrecord.Feb;
+                    entry.Year = whrecord.Year;
+                    entry.Y1 = (whrecord.Jan ?? 0)
+                                + (whrecord.Jul ?? 0)
+                                + (whrecord.Jun ?? 0)
+                                + (whrecord.Mar ?? 0)
+                                + (whrecord.May ?? 0)
+                                + (whrecord.Nov ?? 0)
+                                + (whrecord.Oct ?? 0)
+                                + (whrecord.Sep ?? 0)
+                                + (whrecord.Apr ?? 0)
+                                + (whrecord.Aug ?? 0)
+                                + (whrecord.Dev ?? 0)
+                                + (whrecord.Feb ?? 0);
                 }
             }
             return entry;
@@ -1317,7 +1349,8 @@ namespace Faurecia.ADL.Controllers
             ADLWorkingHourRecord record =null;
             if (!isCreateNew)
             {
-                record = _adlWorkingHourRecords.Get(entry.Id);
+                record= _adlWorkingHourRecords.Table.Where(w => w.Year == entry.Year && w.ADLRecord.Id == adl.Id).FirstOrDefault();
+                //record = _adlWorkingHourRecords.Get(entry.Id);
             }
 
             if (record == null)
@@ -1533,19 +1566,19 @@ namespace Faurecia.ADL.Controllers
             try
             {
                 //删除Head Count Record
-                var queriesHC = _adlHeadCountRecords.Table.Where(w =>w.ADLRecord.Id==ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId && w.Year==year);
+                var queriesHC = _adlHeadCountRecords.Table.Where(w =>w.ADLRecord.Id==ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId);
                 foreach (var item in queriesHC)
                 {
                     _adlHeadCountRecords.Delete(item);
                 }
                 //删除Hour Ratio Record
-                var queriesHR = _adlHourRatioRecords.Table.Where(w => w.ADLRecord.Id == ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId && w.Year == year);
+                var queriesHR = _adlHourRatioRecords.Table.Where(w => w.ADLRecord.Id == ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId);
                 foreach (var item in queriesHR)
                 {
                     _adlHourRatioRecords.Delete(item);
                 }
                 //删除Cost Record
-                var queriesCT = _adlCostRecords.Table.Where(w => w.ADLRecord.Id == ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId && w.Year == year);
+                var queriesCT = _adlCostRecords.Table.Where(w => w.ADLRecord.Id == ADLRecordId && w.ActivityTypeRecord.Id == activityTypeId);
                 foreach (var item in queriesCT)
                 {
                     _adlCostRecords.Delete(item);
@@ -1564,7 +1597,7 @@ namespace Faurecia.ADL.Controllers
             int nActivityTypeId = 0;
             int.TryParse(year, out nYear);
             int.TryParse(activityTypeId, out nActivityTypeId);
-            var queries = _hourRatioRecords.Table.Where(w => w.Year == nYear && w.ActivityTypeRecord.Id == nActivityTypeId);
+            var queries = _hourRatioRecords.Table.Where(w => w.Year == nYear && w.ActivityTypeRecord.Id == nActivityTypeId && w.ActivityTypeRecord.IsUsed==true);
             var item = queries.FirstOrDefault();
             if (item == null)
             {

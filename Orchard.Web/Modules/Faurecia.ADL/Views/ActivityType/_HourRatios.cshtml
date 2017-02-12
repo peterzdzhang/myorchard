@@ -22,7 +22,7 @@
             <th>@T("Dev")</th>
         </tr>
     </thead>
-    @foreach (var entry in Model.HourRatios.OrderBy(o=>o.HourRatio.Year))
+    @foreach (var entry in Model.HourRatios)
     {
         <tr>
             <td>
@@ -34,62 +34,60 @@
                 <input type="hidden" value="@Model.HourRatios[index].HourRatio.Year" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Year)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
-                       value="@Model.HourRatios[index].HourRatio.Jan"
-                       name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jan)" />
+                <input type="text" value="@Model.HourRatios[index].HourRatio.Jan" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jan)" id="@Html.IdFor(m=>m.HourRatios[index].HourRatio.Jan)"/>
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Feb"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Feb)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Mar"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Mar)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Apr"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Apr)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.May"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.May)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Jun"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jun)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Jul"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jul)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Aug"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Aug)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Sep"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Sep)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Oct"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Oct)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Nov"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Nov)" />
             </td>
             <td style="padding:0px">
-                <input type="text" style="padding:0px;margin:0px;border-radius:0px;"
+                <input type="text" 
                        value="@Model.HourRatios[index].HourRatio.Dev"
                        name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Dev)" />
             </td>

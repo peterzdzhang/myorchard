@@ -111,12 +111,12 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
         $(function () {
 
             $("#editContent").find("input[type='text']").each(function (x, xitem) {
-                $(xitem).val("");
+                //$(xitem).val("");
                 BindInputEvent(xitem, true);
             });
 
             $("#hourRatios").find("input[type='text']").each(function (x, xitem) {
-                $(xitem).val("");
+                //$(xitem).val("");
                 BindInputEvent(xitem, true);
             });
             $('#editModal').on('show.bs.modal', function (e) {
