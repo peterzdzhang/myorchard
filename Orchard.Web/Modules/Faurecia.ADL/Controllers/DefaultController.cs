@@ -553,6 +553,7 @@ namespace Faurecia.ADL.Controllers
             viewModel.Head.QuotationTime = adl.QuotationTime;
             viewModel.Head.IBP = adl.IBP;
             viewModel.Head.IBPTime = adl.IBPTime;
+            viewModel.Head.WBSID = adl.WBSID;
         }
         private void SetDetailViewModel(ADLViewModel viewModel,ADLRecord adl)
         {
@@ -1348,7 +1349,7 @@ namespace Faurecia.ADL.Controllers
             adl.Variant3 = viewModel.Head.Variant3;
             adl.VehicelComments = viewModel.Head.VehicelComments;
             adl.Name = viewModel.Head.Name;
-
+            adl.WBSID = viewModel.Head.WBSID;
             if (viewModel.Head.Phase == EnumPhase.IBP)
             {
                 adl.IBPTime = DateTime.Now;

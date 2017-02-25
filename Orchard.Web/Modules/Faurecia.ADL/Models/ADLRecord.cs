@@ -52,7 +52,7 @@ namespace Faurecia.ADL.Models
         public virtual string HA { get; set; }
         public virtual string Ballfix { get; set; }
         public virtual string KEZE { get; set; }
-
+        public virtual string WBSID { get; set; }
         public virtual EnumStatus Status { get; set; }
         public virtual EnumPhase Phase { get; set; }
         public virtual string QuotationComments { get; set; }

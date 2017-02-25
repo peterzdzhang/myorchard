@@ -92,114 +92,121 @@
             <div class="tab-content">
                 @Html.Partial("_Detail", Model)
             </div>
-            <div>
-               <table class="table table-bordered table-condensed table-hover" id="totalTable"
-                      style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:10px">
-                    <thead>
-                        <tr class="active">
-                            <th style="width:auto">@T("Actual H")</th>
-                            @for (int i = 0; i < Model.Years.Count; i++)
-                            {
-                                int year = Model.Years[i];
-                                var titleName = string.Format("Y{0}", year);
-                                <th style="width:61px" data-year="@year">@titleName</th>
-                            }
-                            <th style="width:61px">@T("Total")</th>
-                        </tr>
-                    </thead>
-                   <tbody>
-                       <tr>
-                           <td style="width:auto">@T("Total D&D")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr>
-                           <td style="width:auto">@T("Total FEA")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr>
-                           <td style="width:auto">@T("Total DV")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr>
-                           <td style="width:auto">@T("Total PV")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr class="success">
-                           <td style="width:auto">@T("Total D&D (BP)")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-sum="1" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr>
-                           <td style="width:auto">@T("Total other CT")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr>
-                           <td style="width:auto">@T("Total ME")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr class="success">
-                           <td style="width:auto">@T("Total CT (BP)")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-sum="1" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr class="success">
-                           <td style="width:auto">@T("Total travel")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                               <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                       <tr class="warning">
-                           <td style="width:auto">@T("Total")</td>
-                           @for (int i = 0; i < Model.Years.Count; i++)
-                           {
-                               int year = Model.Years[i];
-                            <td style="width:61px" data-total="1" data-year="@year"></td>
-                           }
-                           <td style="width:61px"></td>
-                       </tr>
-                   </tbody>
-                </table>
+            <div class="row" style="margin-top:10px">
+                @Html.LabelFor(m => m.Head.QuotationComments, T("WBS ID").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                <div class="col-sm-4 col-lg-4">
+                    @Html.TextBoxFor(m => m.Head.WBSID, new { @class = "form-control", placeholder = "" })
+                    @Html.ValidationMessageFor(m => m.Head.WBSID)
+                </div>
+                <div class="col-sm-6 col-lg-6">
+                    <table class="table table-bordered table-condensed table-hover" id="totalTable"
+                           style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:0px">
+                        <thead>
+                            <tr class="active">
+                                <th style="width:auto">@T("Actual H")</th>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    var titleName = string.Format("Y{0}", year);
+                                    <th style="width:61px" data-year="@year">@titleName</th>
+                                }
+                                <th style="width:61px">@T("Total")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width:auto">@T("Total D&D")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:auto">@T("Total FEA")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:auto">@T("Total DV")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:auto">@T("Total PV")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr class="success">
+                                <td style="width:auto">@T("Total D&D (BP)")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:auto">@T("Total other CT")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr>
+                                <td style="width:auto">@T("Total ME")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr class="success">
+                                <td style="width:auto">@T("Total CT (BP)")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr class="success">
+                                <td style="width:auto">@T("Total travel")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                            <tr class="warning">
+                                <td style="width:auto">@T("Total")</td>
+                                @for (int i = 0; i < Model.Years.Count; i++)
+                                {
+                                    int year = Model.Years[i];
+                                    <td style="width:61px" data-total="1" data-year="@year"></td>
+                                }
+                                <td style="width:61px"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation
@@ -479,10 +486,32 @@
             });
         }
 
+        function banBackSpace(e) 
+        {  
+            var ev = e || window.event;
+            var obj = ev.target || ev.srcElement;
+            var t = obj.type || obj.getAttribute('type');
+            //获取作为判断条件的事件类型  
+            var vReadOnly = obj.readOnly;  
+            var vDisabled = obj.disabled;  
+            //处理undefined值情况  
+            vReadOnly = (vReadOnly == undefined) ? false : vReadOnly;  
+            vDisabled = (vDisabled == undefined) ? true : vDisabled;  
+            //当敲Backspace键时，事件源类型为密码或单行、多行文本的，  
+            //并且readOnly属性为true或disabled属性为true的，则退格键失效  
+            var flag1 = ev.keyCode == 8 && (t == "password" || t == "text" || t == "textarea") && (vReadOnly == true || vDisabled == true);  
+            //当敲Backspace键时，事件源类型非密码或单行、多行文本的，则退格键失效  
+            var flag2 = ev.keyCode == 8 && t != "password" && t != "text" && t != "textarea";  
+            //判断  
+            if (flag2 || flag1) return false  
+        }  
+        //禁止退格键 作用于Firefox、Opera  
+        document.onkeypress = banBackSpace;  
+        //禁止退格键 作用于IE、Chrome  
+        document.onkeydown = banBackSpace;  
+
         $(function () {
-            $(window).bind("onkeydown", function () {
-                return (event.keyCode != 8)
-            });
+
             $("[data-toggle='popover']").popover({
                 title: popoverTitle,
                 content:popoverContent

@@ -93,7 +93,10 @@ namespace Faurecia.ADL.ViewModels
         public string Ballfix { get; set; }
 
         public string KEZE { get; set; }
-        
+
+        [StringLength(100)]
+        public string WBSID { get; set; }
+
         public string Quotation { get; set; }
         [StringLength(255)]
         public string QuotationComments { get; set; }

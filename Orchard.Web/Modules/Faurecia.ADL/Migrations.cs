@@ -189,7 +189,8 @@ namespace Faurecia.ADL {
 				.Column("HA", DbType.String)
 				.Column("Ballfix", DbType.String)
 				.Column("KEZE", DbType.String)
-				.Column("QuotationComments", DbType.String)
+                .Column("WBSID", DbType.String)
+                .Column("QuotationComments", DbType.String)
 				.Column("Quotation", DbType.String)
 				.Column("QuotationTime", DbType.DateTime)
 				.Column("IBPComments", DbType.String)
@@ -213,7 +214,7 @@ namespace Faurecia.ADL {
                                                     , tableDbName
                                                     , DateTime.Now));
 
-            return 3;
+            return 4;
         }
 
 
@@ -265,6 +266,16 @@ namespace Faurecia.ADL {
                                                     , tableDbName
                                                     , DateTime.Now));
             return 3;
+        }
+
+        public int UpdateFrom3()
+        {
+            // alert table ActivityTypeRecord
+            SchemaBuilder.AlterTable("ADLRecord", table =>
+            {
+                table.AddColumn("WBSID", DbType.String);
+            });
+            return 4;
         }
     }
 }
