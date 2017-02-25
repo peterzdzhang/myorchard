@@ -48,7 +48,7 @@
                 </tr>
             </thead>
             <tr class="success">
-                <td style="">
+                <td style="word-break:break-all">
                     @Ajax.ActionLink("+", actionName: null
                                         , routeValues: null
                                         , ajaxOptions: new AjaxOptions()
@@ -60,13 +60,13 @@
                                         }
                                         , htmlAttributes: new { @class= "btn btn-primary btn-sm" })
                 </td>
-                <td style=""></td>
-                <td style=""></td>
-                <td style=""></td>
-                <td style=""></td>
+                <td style="word-break:break-all"></td>
+                <td style="word-break:break-all"></td>
+                <td style="word-break:break-all"></td>
+                <td style="word-break:break-all"></td>
                 @for (int k = 1; k <= 12; k++)
                 {
-                    <td style="">
+                    <td style="word-break:break-all">
                         <button type="button" class="btn btn-sm btn-success" 
                                 data-container="body" 
                                 data-placement="top"
@@ -77,12 +77,12 @@
                                 data-month="@k"></button>
                     </td>
                 }
-                <td style=""></td>
+                <td style="word-break:break-all"></td>
             </tr>
             @foreach (var item in Model.Detail.Entries[entryIndex].HeadCounts)
             {
                 <tr class="data">
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Ajax.ActionLink("-", actionName: null
                                         , routeValues: null
                                         , ajaxOptions: new AjaxOptions()
@@ -98,7 +98,7 @@
                                         }
                                         , htmlAttributes: new { @class = "btn btn-warning btn-sm" })
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].Year)
@@ -108,29 +108,29 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.TotalGroup)
                         @Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.Comment
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jan" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jan)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Feb" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Feb)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                data-valid="true"
                                data-val-length="The field Currency must be a string with a maximum length of 5."
@@ -139,52 +139,52 @@
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Mar)" />
                         <span class="field-validation-valid" data-valmsg-for="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Mar)" data-valmsg-replace="true"></span>
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Apr" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Apr)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].May" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].May)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jun" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jun)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Jul" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Jul)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Aug" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Aug)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Sep" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Sep)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Oct" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Oct)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Nov" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Nov)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Dev" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Dev)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Y1" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Y1)" />
@@ -232,7 +232,7 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].HourRatios)
             {
                 <tr  class="data">
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].Year)
@@ -242,79 +242,79 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.TotalGroup)
                         @Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Comment
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jan" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jan)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Feb"  readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Feb)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Mar" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Mar)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Apr" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Apr)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].May" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].May)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jun" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jun)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Jul" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Jul)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Aug" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Aug)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Sep" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Sep)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Oct" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Oct)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Nov" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Nov)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" 
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Dev" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Dev)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                value="@Model.Detail.Entries[entryIndex].HourRatios[index].Y1" 
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Y1)" />
@@ -360,7 +360,7 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].WorkingHours)
             {
                 <tr>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Id"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].WorkingHours[index].Year)
@@ -368,62 +368,62 @@
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jan" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jan)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Feb" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Feb)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Mar" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Mar)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Apr" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Apr)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].May" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].May)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jun" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jun)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Jul" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Jul)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Aug" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Aug)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Sep" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Sep)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Oct" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Oct)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Nov" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Nov)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Dev" readonly="readonly"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Dev)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                value="@Model.Detail.Entries[entryIndex].WorkingHours[index].Y1"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].WorkingHours[index].Y1)" />
@@ -474,7 +474,7 @@
                 @foreach (var item in Model.Detail.Entries[entryIndex].Costs)
                 {
                     <tr class="data">
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="hidden" value="@Model.Detail.Entries[entryIndex].Costs[index].Id"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Id)" />
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].Year)
@@ -484,79 +484,79 @@
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.TotalGroup)
                             @Model.Detail.Entries[entryIndex].Costs[index].ActivityType.Comment
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Jan"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jan)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Feb"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Feb)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Mar"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Mar)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Apr"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Apr)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].May"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].May)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Jun"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jun)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Jul"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Jul)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Aug"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Aug)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Sep"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Sep)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Oct"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Oct)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Nov"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Nov)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Dev"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Dev)" />
                         </td>
-                        <td style="">
+                        <td style="word-break:break-all">
                             <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                    value="@Model.Detail.Entries[entryIndex].Costs[index].Y1"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Y1)" />
@@ -625,7 +625,7 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].Travels)
             {
                 <tr>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @{ 
                             var activityType = Model.Detail.Entries[entryIndex].Travels[index].ActivityType;
                             string title = activityType.RMBHour;
@@ -642,67 +642,67 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Travels[index].ActivityType.CostCenter)
                         @title
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Jan"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Jan)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Feb"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Feb)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Mar"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Mar)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Apr"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Apr)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].May"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].May)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Jun"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Jun)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Jul"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Jul)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Aug"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Aug)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Sep"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Sep)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Oct"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Oct)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Nov"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Nov)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Dev"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Dev)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                value="@Model.Detail.Entries[entryIndex].Travels[index].Y1"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Travels[index].Y1)" />
@@ -752,7 +752,7 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].DVs)
             {
                 <tr>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @{
                             var activityType = Model.Detail.Entries[entryIndex].DVs[index].ActivityType;
                             string title = activityType.RMBHour;
@@ -769,67 +769,67 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].DVs[index].ActivityType.CostCenter)
                         @title
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Jan"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Jan)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Feb"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Feb)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Mar"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Mar)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Apr"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Apr)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].May"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].May)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Jun"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Jun)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Jul"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Jul)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Aug"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Aug)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Sep"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Sep)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Oct"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Oct)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Nov"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Nov)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Dev"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Dev)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                value="@Model.Detail.Entries[entryIndex].DVs[index].Y1"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].DVs[index].Y1)" />
@@ -879,7 +879,7 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].PVs)
             {
                 <tr>
-                    <td style="">
+                    <td style="word-break:break-all">
                         @{
                             var activityType = Model.Detail.Entries[entryIndex].PVs[index].ActivityType;
                             string title = activityType.RMBHour;
@@ -896,67 +896,67 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].PVs[index].ActivityType.CostCenter)
                         @title
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Jan"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Jan)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Feb"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Feb)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Mar"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Mar)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Apr"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Apr)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].May"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].May)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Jun"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Jun)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Jul"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Jul)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Aug"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Aug)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Sep"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Sep)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Oct"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Oct)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Nov"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Nov)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Dev"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Dev)" />
                     </td>
-                    <td style="">
+                    <td style="word-break:break-all">
                         <input type="text" style="padding:0px;width:50px;height:auto;" readonly="readonly"
                                value="@Model.Detail.Entries[entryIndex].PVs[index].Y1"
                                name="@Html.NameOf(m => m.Detail.Entries[entryIndex].PVs[index].Y1)" />

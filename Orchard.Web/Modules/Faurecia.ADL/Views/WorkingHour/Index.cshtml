@@ -50,7 +50,7 @@
                 <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
 
                 <!-- trigger create modal -->
-                @Ajax.ActionLink(T("Add new working hour").Text
+                @Ajax.ActionLink(T("New").Text
                                 , "Create"
                                 , new { }
                                 , new AjaxOptions()
@@ -138,9 +138,6 @@
                 if (val.indexOf(".") >= 0 && key == ".") {
                     event.preventDefault();
                 }
-                if (val.length == 0 && key == ".") {
-                    event.preventDefault();
-                }
             }).bind("paste", function (event) {
                 var val = undefined;
                 if (window.clipboardData && window.clipboardData.getData) {
@@ -149,7 +146,7 @@
                 else {
                     val = event.originalEvent.clipboardData.getData("Text");
                 }
-                var r = /^[0-9]+.?[0-9]*$/
+                var r = /^[0-9.]+.?[0-9]*$/
                 if (!isAllowDot) {
                     r = /^[0-9]+$/
                 }
@@ -159,7 +156,7 @@
                 }
             }).bind("input", function (event) {
                 var val = $(this).val();
-                var r = /^[0-9]+.?[0-9]*$/
+                var r = /^[0-9.]+.?[0-9]*$/
                 if (!isAllowDot) {
                     r = /^[0-9]+$/
                 }
@@ -167,6 +164,10 @@
                     event.preventDefault();
                     //alert("\""+val+"\"@T(" is not valid value.")");
                 }
+            }).bind("change", function (event) {
+                var val = $(this).val();
+                val = val.replace(/[^0-9.]/g, '');
+                $(this).val(val);
             });
         }
 

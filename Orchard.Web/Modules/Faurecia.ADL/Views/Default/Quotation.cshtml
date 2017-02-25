@@ -4,6 +4,7 @@
     Script.Require("Microsoft_jQueryAjax_Validate");
     Style.Require("jQueryUI");
     Style.Require("FaureciaADLStyle");
+    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
 }
 <h1 style="margin:5px 10px 10px 10px">
     @ViewBag.Title
@@ -207,7 +208,7 @@
             <div class="row" style="padding:5px;">
                 @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                 <div class="col-sm-10 col-lg-10">
-                    @Html.TextAreaFor(m => m.Head.QuotationComments, new { @class = "form-control", placeholder = "" })
+                    @Html.TextAreaFor(m => m.Head.QuotationComments, new { @class = "form-control", placeholder = "", rows = "10" })
                     @Html.ValidationMessageFor(m => m.Head.QuotationComments)
                 </div>
             </div>
@@ -217,7 +218,7 @@
             <div class="row" style="padding:5px;">
                 @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                 <div class="col-sm-10 col-lg-10">
-                    @Html.TextAreaFor(m => m.Head.IBPComments, new { @class = "form-control", placeholder = "" })
+                    @Html.TextAreaFor(m => m.Head.IBPComments, new { @class = "form-control", placeholder = "", rows = "10" })
                     @Html.ValidationMessageFor(m => m.Head.IBPComments)
                 </div>
             </div>
@@ -479,6 +480,9 @@
         }
 
         $(function () {
+            $(window).bind("onkeydown", function () {
+                return (event.keyCode != 8)
+            });
             $("[data-toggle='popover']").popover({
                 title: popoverTitle,
                 content:popoverContent
@@ -1024,9 +1028,9 @@
                     if (val.indexOf(".") >= 0 && key == ".") {
                         event.preventDefault();
                     }
-                    if (val.length == 0 && key == ".") {
-                        event.preventDefault();
-                    }
+                    //if (val.length == 0 && key == ".") {
+                    //    event.preventDefault();
+                    //}
                 }).bind("paste", function (event) {
                     var val = undefined;
                     if (window.clipboardData && window.clipboardData.getData) {
@@ -1035,18 +1039,21 @@
                     else {
                         val = event.originalEvent.clipboardData.getData("Text");
                     }
-                    var r = /^[0-9]+.?[0-9]*$/
+                    var r = /^[0-9.]+.?[0-9]*$/
                     if (!r.test(val)) {
                         event.preventDefault();
                         alert("\""+val+"\"@T(" is not valid value.")");
                     }
                 }).bind("input", function (event) {
                     var val = $(this).val();
-                    var r = /^[0-9]+.?[0-9]*$/
+                    @*var r = /^[0-9.]+.?[0-9]*$/
                     if (val!="" && !r.test(val)) {
                         event.preventDefault();
                         alert("\""+val+"\"@T(" is not valid value.")");
-                    }
+                    }*@
+                    var val = $(this).val();
+                    val = val.replace(/[^0-9.]/g, '');
+                    $(this).val(val);
 
                     var table = $(row).parent();
                     var tagName = table.prop("tagName");
@@ -1073,6 +1080,10 @@
                         CalcYearTotalSum($(tabpanel));
                         CalcGross($(tabpanel));
                     }
+                }).bind("change", function (event) {
+                    var val = $(this).val();
+                    val = val.replace(/[^0-9.]/g, '');
+                    $(this).val(val);
                 });
             });
         }

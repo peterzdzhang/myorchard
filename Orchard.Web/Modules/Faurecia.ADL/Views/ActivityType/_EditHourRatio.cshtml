@@ -2,18 +2,18 @@
 @using Faurecia.ADL.ViewModels;
 
 <div class="form-group">
-    @Html.LabelFor(m => m.Jan, T("Jan").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    @Html.LabelFor(m => m.Jan, T("Hour rate").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
     <div class="col-sm-4 col-xs-4 col-lg-4">
-        @Html.TextBoxFor(m => m.Jan, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled",  placeholder = "Jan" })
+        @Html.TextBoxFor(m => m.Jan, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled"})
         @Html.ValidationMessageFor(m => m.Jan)
     </div>
-    @Html.LabelFor(m => m.Feb, T("Feb").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+    @*@Html.LabelFor(m => m.Feb, T("Feb").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
     <div class="col-sm-4 col-xs-4 col-lg-4">
         @Html.TextBoxFor(m => m.Feb, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Feb" })
         @Html.ValidationMessageFor(m => m.Feb)
-    </div>
+    </div>*@
 </div>
-<div class="form-group">
+@*<div class="form-group">
     @Html.LabelFor(m => m.Mar, T("Mar").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
     <div class="col-sm-4 col-xs-4 col-lg-4">
         @Html.TextBoxFor(m => m.Mar, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Mar" })
@@ -72,5 +72,5 @@
         @Html.TextBoxFor(m => m.Dev, new { @class = "form-control", maxlength = "6", @style = "ime-mode:disabled", placeholder = "Dev" })
         @Html.ValidationMessageFor(m => m.Dev)
     </div>
-</div>
+</div>*@
 

@@ -48,7 +48,7 @@
                 </div>
                 <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
 
-                @Html.ActionLink(T("Add new activity type"), "Create", "ActivityType"
+                @Html.ActionLink(T("New"), "Create", "ActivityType"
                         , new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }
                         , new { @class = "btn btn-primary" })
             </div>

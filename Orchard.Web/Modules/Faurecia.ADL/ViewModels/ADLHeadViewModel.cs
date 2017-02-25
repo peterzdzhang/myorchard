@@ -70,7 +70,7 @@ namespace Faurecia.ADL.ViewModels
         public DateTime? Mockup { get; set; }
 
         public DateTime? Award { get; set; }
-        [StringLength(255)]
+        [StringLength(500)]
         public string MileStoneComments { get; set; }
 
         public string Variant1 { get; set; }
@@ -81,7 +81,7 @@ namespace Faurecia.ADL.ViewModels
 
         public string FrameMaturity { get; set; }
 
-        [StringLength(255)]
+        [StringLength(500)]
         public string VehicelComments { get; set; }
 
         public string Tracks { get; set; }
@@ -101,7 +101,7 @@ namespace Faurecia.ADL.ViewModels
         public DateTime? QuotationTime { get; set; }
 
         public string IBP { get; set; }
-        [StringLength(255)]
+        [StringLength(500)]
         public string IBPComments { get; set; }
 
         public DateTime? IBPTime { get; set; }

@@ -5,6 +5,7 @@
     Script.Require("Microsoft_jQueryAjax_Validate");
     Style.Require("jQueryUI");
     Style.Require("FaureciaADLStyle");
+    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
 }
 <h1 style="margin:5px 10px 10px 10px">
     @Html.TitleForPage(T("Budget Home").ToString())
@@ -17,8 +18,9 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-lg-6 col-sm-8">
-                    <button class="btn btn-info" type="submit" name="submit.Query" value="@T("Query")">@T("Filter")</button>
-                    <button class="btn btn-success" type="button" name="button.Diff" value="@T("Diff")">@T("Compare")</button>
+                    <button class="btn btn-info" type="submit" name="submit.Query" value="Query">@T("Filter")</button>
+                    <button class="btn btn-success" type="button" name="button.Diff" value="Diff">@T("Compare")</button>
+                    <button class="btn btn-success" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
                     @Html.ActionLink(T("Create New").Text, "Create","Default", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
@@ -55,6 +57,9 @@
 {
     <script type="text/javascript">
         $(function () {
+            $(window).bind("onkeydown", function () {
+                return (event.keyCode != 8)
+            });
             $(".datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -86,7 +91,30 @@
                 var url="@Url.Action("Diff", "Default", new { Area= "Faurecia.ADL" })";
                 location.href = url + "?ids=" + ids + "&returnurl=" + returnurl;
             });
+            $("button[name='button.Delete']").bind("click", function () {
 
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+
+                var ids = "";
+                $(checkboxs).each(function(i,item){
+                    if (ids != "") ids = ids + ",";
+                    ids = ids + $(item).val();
+                });
+                if (ids == "") return;
+                var returnurl = "@HttpContext.Current.Request.RawUrl";
+                var url="@Url.Action("Delete", "Default", new { Area= "Faurecia.ADL" })";
+                url = url + "?ids=" + ids;
+                $.get(url, null, function (data) {
+                    if (data.Code > 0)
+                    {
+                        alert(data.Message);
+                    }
+                    else {
+                        $("button[name='submit.Query']").click();
+                    }
+                });
+            });
         })
     </script>
 }

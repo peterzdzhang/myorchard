@@ -132,83 +132,84 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 var lastChecked = $("input[type='checkbox']:checked:last");
                 var tr = $(lastChecked).parent().parent();
                 var jan = $("#editContent").find("input[name='Jan']");
-                var feb = $("#editContent").find("input[name='Feb']");
-                var mar = $("#editContent").find("input[name='Mar']");
-                var apr = $("#editContent").find("input[name='Apr']");
-                var may = $("#editContent").find("input[name='May']");
-                var jun = $("#editContent").find("input[name='Jun']");
-                var jul = $("#editContent").find("input[name='Jul']");
-                var aug = $("#editContent").find("input[name='Aug']");
-                var sep = $("#editContent").find("input[name='Sep']");
-                var oct = $("#editContent").find("input[name='Oct']");
-                var nov = $("#editContent").find("input[name='Nov']");
-                var dev = $("#editContent").find("input[name='Dev']");
+                jan.focus();
+                //var feb = $("#editContent").find("input[name='Feb']");
+                //var mar = $("#editContent").find("input[name='Mar']");
+                //var apr = $("#editContent").find("input[name='Apr']");
+                //var may = $("#editContent").find("input[name='May']");
+                //var jun = $("#editContent").find("input[name='Jun']");
+                //var jul = $("#editContent").find("input[name='Jul']");
+                //var aug = $("#editContent").find("input[name='Aug']");
+                //var sep = $("#editContent").find("input[name='Sep']");
+                //var oct = $("#editContent").find("input[name='Oct']");
+                //var nov = $("#editContent").find("input[name='Nov']");
+                //var dev = $("#editContent").find("input[name='Dev']");
 
                 var janVal = $(tr).find("input[name$='.HourRatio.Jan']").val();
                 $(jan).val(janVal);
-                var febVal = $(tr).find("input[name$='.HourRatio.Feb']").val();
-                $(feb).val(febVal);
-                var marVal = $(tr).find("input[name$='.HourRatio.Mar']").val();
-                $(mar).val(marVal);
-                var aprVal = $(tr).find("input[name$='.HourRatio.Apr']").val();
-                $(apr).val(aprVal);
-                var mayVal = $(tr).find("input[name$='.HourRatio.May']").val();
-                $(may).val(mayVal);
-                var junVal = $(tr).find("input[name$='.HourRatio.Jun']").val();
-                $(jun).val(junVal);
-                var julVal = $(tr).find("input[name$='.HourRatio.Jul']").val();
-                $(jul).val(julVal);
-                var augVal = $(tr).find("input[name$='.HourRatio.Aug']").val();
-                $(aug).val(augVal);
-                var sepVal = $(tr).find("input[name$='.HourRatio.Sep']").val();
-                $(sep).val(sepVal);
-                var octVal = $(tr).find("input[name$='.HourRatio.Oct']").val();
-                $(oct).val(octVal);
-                var novVal = $(tr).find("input[name$='.HourRatio.Nov']").val();
-                $(nov).val(novVal);
-                var devVal = $(tr).find("input[name$='.HourRatio.Dev']").val();
-                $(dev).val(devVal);
+                //var febVal = $(tr).find("input[name$='.HourRatio.Feb']").val();
+                //$(feb).val(febVal);
+                //var marVal = $(tr).find("input[name$='.HourRatio.Mar']").val();
+                //$(mar).val(marVal);
+                //var aprVal = $(tr).find("input[name$='.HourRatio.Apr']").val();
+                //$(apr).val(aprVal);
+                //var mayVal = $(tr).find("input[name$='.HourRatio.May']").val();
+                //$(may).val(mayVal);
+                //var junVal = $(tr).find("input[name$='.HourRatio.Jun']").val();
+                //$(jun).val(junVal);
+                //var julVal = $(tr).find("input[name$='.HourRatio.Jul']").val();
+                //$(jul).val(julVal);
+                //var augVal = $(tr).find("input[name$='.HourRatio.Aug']").val();
+                //$(aug).val(augVal);
+                //var sepVal = $(tr).find("input[name$='.HourRatio.Sep']").val();
+                //$(sep).val(sepVal);
+                //var octVal = $(tr).find("input[name$='.HourRatio.Oct']").val();
+                //$(oct).val(octVal);
+                //var novVal = $(tr).find("input[name$='.HourRatio.Nov']").val();
+                //$(nov).val(novVal);
+                //var devVal = $(tr).find("input[name$='.HourRatio.Dev']").val();
+                //$(dev).val(devVal);
             });
             $("#btnSaveHourRatio").click(function () {
                 $("input[type='checkbox']:checked").each(function (x, xitem) {
                     var tr = $(xitem).parent().parent();
                     var janVal = $("#editContent").find("input[name='Jan']").val();
-                    var febVal = $("#editContent").find("input[name='Feb']").val();
-                    var marVal = $("#editContent").find("input[name='Mar']").val();
-                    var aprVal = $("#editContent").find("input[name='Apr']").val();
-                    var mayVal = $("#editContent").find("input[name='May']").val();
-                    var junVal = $("#editContent").find("input[name='Jun']").val();
-                    var julVal = $("#editContent").find("input[name='Jul']").val();
-                    var augVal = $("#editContent").find("input[name='Aug']").val();
-                    var sepVal = $("#editContent").find("input[name='Sep']").val();
-                    var octVal = $("#editContent").find("input[name='Oct']").val();
-                    var novVal = $("#editContent").find("input[name='Nov']").val();
-                    var devVal = $("#editContent").find("input[name='Dev']").val();
+                    //var febVal = $("#editContent").find("input[name='Feb']").val();
+                    //var marVal = $("#editContent").find("input[name='Mar']").val();
+                    //var aprVal = $("#editContent").find("input[name='Apr']").val();
+                    //var mayVal = $("#editContent").find("input[name='May']").val();
+                    //var junVal = $("#editContent").find("input[name='Jun']").val();
+                    //var julVal = $("#editContent").find("input[name='Jul']").val();
+                    //var augVal = $("#editContent").find("input[name='Aug']").val();
+                    //var sepVal = $("#editContent").find("input[name='Sep']").val();
+                    //var octVal = $("#editContent").find("input[name='Oct']").val();
+                    //var novVal = $("#editContent").find("input[name='Nov']").val();
+                    //var devVal = $("#editContent").find("input[name='Dev']").val();
 
                     var jan = $(tr).find("input[name$='.HourRatio.Jan']");
                     $(jan).val(janVal);
-                    var feb = $(tr).find("input[name$='.HourRatio.Feb']");
-                    $(feb).val(febVal);
-                    var mar = $(tr).find("input[name$='.HourRatio.Mar']");
-                    $(mar).val(marVal);
-                    var apr = $(tr).find("input[name$='.HourRatio.Apr']");
-                    $(apr).val(aprVal);
-                    var may = $(tr).find("input[name$='.HourRatio.May']");
-                    $(may).val(mayVal);
-                    var jun = $(tr).find("input[name$='.HourRatio.Jun']");
-                    $(jun).val(junVal);
-                    var jul = $(tr).find("input[name$='.HourRatio.Jul']");
-                    $(jul).val(julVal);
-                    var aug = $(tr).find("input[name$='.HourRatio.Aug']");
-                    $(aug).val(augVal);
-                    var sep = $(tr).find("input[name$='.HourRatio.Sep']");
-                    $(sep).val(sepVal);
-                    var oct = $(tr).find("input[name$='.HourRatio.Oct']");
-                    $(oct).val(octVal);
-                    var nov = $(tr).find("input[name$='.HourRatio.Nov']");
-                    $(nov).val(novVal);
-                    var dev = $(tr).find("input[name$='.HourRatio.Dev']");
-                    $(dev).val(devVal);
+                    //var feb = $(tr).find("input[name$='.HourRatio.Feb']");
+                    //$(feb).val(febVal);
+                    //var mar = $(tr).find("input[name$='.HourRatio.Mar']");
+                    //$(mar).val(marVal);
+                    //var apr = $(tr).find("input[name$='.HourRatio.Apr']");
+                    //$(apr).val(aprVal);
+                    //var may = $(tr).find("input[name$='.HourRatio.May']");
+                    //$(may).val(mayVal);
+                    //var jun = $(tr).find("input[name$='.HourRatio.Jun']");
+                    //$(jun).val(junVal);
+                    //var jul = $(tr).find("input[name$='.HourRatio.Jul']");
+                    //$(jul).val(julVal);
+                    //var aug = $(tr).find("input[name$='.HourRatio.Aug']");
+                    //$(aug).val(augVal);
+                    //var sep = $(tr).find("input[name$='.HourRatio.Sep']");
+                    //$(sep).val(sepVal);
+                    //var oct = $(tr).find("input[name$='.HourRatio.Oct']");
+                    //$(oct).val(octVal);
+                    //var nov = $(tr).find("input[name$='.HourRatio.Nov']");
+                    //$(nov).val(novVal);
+                    //var dev = $(tr).find("input[name$='.HourRatio.Dev']");
+                    //$(dev).val(devVal);
                 });
                 $('#editModal').modal("hide");
             });
@@ -243,9 +244,6 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 if (val.indexOf(".") >= 0 && key == ".") {
                     event.preventDefault();
                 }
-                if (val.length == 0 && key == ".") {
-                    event.preventDefault();
-                }
             }).bind("paste", function (event) {
                 var val = undefined;
                 if (window.clipboardData && window.clipboardData.getData) {
@@ -254,7 +252,7 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 else {
                     val = event.originalEvent.clipboardData.getData("Text");
                 }
-                var r = /^[0-9]+.?[0-9]*$/
+                var r = /^[0-9.]+.?[0-9]*$/
                 if (!isAllowDot) {
                     r = /^[0-9]+$/
                 }
@@ -263,13 +261,19 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 }
             }).bind("input", function (event) {
                 var val = $(this).val();
-                var r = /^[0-9]+.?[0-9]*$/
+                var r = /^[0-9.]+.?[0-9]*$/
                 if (!isAllowDot) {
                     r = /^[0-9]+$/
                 }
                 if (val != "" && !r.test(val)) {
+                    val = val.replace(/[^0-9.]/g, '');
+                    $(this).val(val);
                     event.preventDefault();
                 }
+            }).bind("change", function (event) {
+                var val = $(this).val();
+                val = val.replace(/[^0-9.]/g, '');
+                $(this).val(val);
             });
         }
 

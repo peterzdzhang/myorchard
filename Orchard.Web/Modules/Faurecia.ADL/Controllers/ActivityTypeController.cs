@@ -385,17 +385,17 @@ namespace Faurecia.ADL.Controllers
                         }
                         hrRecord.Year = item.HourRatio.Year;
                         hrRecord.Jan = item.HourRatio.Jan;
-                        hrRecord.Feb = item.HourRatio.Feb;
-                        hrRecord.Mar = item.HourRatio.Mar;
-                        hrRecord.Apr = item.HourRatio.Apr;
-                        hrRecord.May = item.HourRatio.May;
-                        hrRecord.Jun = item.HourRatio.Jun;
-                        hrRecord.Jul = item.HourRatio.Jul;
-                        hrRecord.Aug = item.HourRatio.Aug;
-                        hrRecord.Sep = item.HourRatio.Sep;
-                        hrRecord.Oct = item.HourRatio.Oct;
-                        hrRecord.Nov = item.HourRatio.Nov;
-                        hrRecord.Dev = item.HourRatio.Dev;
+                        hrRecord.Feb = item.HourRatio.Jan;
+                        hrRecord.Mar = item.HourRatio.Jan;
+                        hrRecord.Apr = item.HourRatio.Jan;
+                        hrRecord.May = item.HourRatio.Jan;
+                        hrRecord.Jun = item.HourRatio.Jan;
+                        hrRecord.Jul = item.HourRatio.Jan;
+                        hrRecord.Aug = item.HourRatio.Jan;
+                        hrRecord.Sep = item.HourRatio.Jan;
+                        hrRecord.Oct = item.HourRatio.Jan;
+                        hrRecord.Nov = item.HourRatio.Jan;
+                        hrRecord.Dev = item.HourRatio.Jan;
                         _hourRatioRecords.Create(hrRecord);
                     }
                 }

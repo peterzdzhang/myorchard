@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Faurecia.ADL.Controllers
 {
@@ -73,7 +74,6 @@ namespace Faurecia.ADL.Controllers
         {
             var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
             pager.UpdateTargetId = "indexQueryResults";
-
             if (options == null)
             {
                 options = new ADLIndexOptions();
@@ -142,7 +142,16 @@ namespace Faurecia.ADL.Controllers
                 Options = options,
                 Pager = pagerShape
             };
-            if(Request.IsAjaxRequest())
+            // maintain previous route data when generating page links
+            var routeData = new RouteData();
+            routeData.Values.Add("Options.Filter", options.Filter);
+            routeData.Values.Add("Options.ProjectNo", options.ProjectNo);
+            routeData.Values.Add("Options.Customer", options.Customer);
+            routeData.Values.Add("Options.Order", options.Order);
+            routeData.Values.Add("Page", pager.Page);
+            pagerShape.RouteData(routeData);
+
+            if (Request.IsAjaxRequest())
             {
                 return PartialView("_IndexQueryResult", model);
             }
@@ -314,9 +323,51 @@ namespace Faurecia.ADL.Controllers
             SetHeadViewModel(viewModel, record);
             return View("Quotation", viewModel);
         }
-
         
+        public ActionResult Delete()
+        {
+            string ids = Request["ids"];
+            if (!string.IsNullOrEmpty(ids))
+            {
+                try
+                {
+                    foreach (string id in ids.Split(','))
+                    {
+                        int nId = 0;
+                        if (int.TryParse(id, out nId))
+                        {
+                            _adlRecords.Delete(new ADLRecord() { Id = nId });
+                            foreach(ADLCostRecord item in  _adlCostRecords.Table.Where(w => w.ADLRecord.Id == nId))
+                            {
+                                _adlCostRecords.Delete(item);
+                            }
+                            foreach (ADLHeadCountRecord item in _adlHeadCountRecords.Table.Where(w => w.ADLRecord.Id == nId))
+                            {
+                                _adlHeadCountRecords.Delete(item);
+                            }
+                            foreach (ADLHourRatioRecord item in _adlHourRatioRecords.Table.Where(w => w.ADLRecord.Id == nId))
+                            {
+                                _adlHourRatioRecords.Delete(item);
+                            }
+                            foreach (ADLKickOffRecord item in _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == nId))
+                            {
+                                _adlKickOffRecords.Delete(item);
+                            }
+                            foreach (ADLWorkingHourRecord item in _adlWorkingHourRecords.Table.Where(w => w.ADLRecord.Id == nId))
+                            {
+                                _adlWorkingHourRecords.Delete(item);
+                            }
+                        }
 
+                    }
+                }
+                catch(Exception ex)
+                {
+                    return Json(new { Code = 1, Message = T("Delete Failed: ")+ex.Message }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new {Code=0, Message=T("Delete Success.") },JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult Diff()
         {
