@@ -202,6 +202,7 @@ namespace Faurecia.ADL.Controllers
                 Detail = new ADLDetailViewModel(),
                 Message = string.Empty
             };
+            SetQuotations(viewModel);
             var record = _adlRecords.Get(Id);
             if (record != null)
             {
@@ -1121,7 +1122,7 @@ namespace Faurecia.ADL.Controllers
             }
             return Json(JsonConvert.SerializeObject(viewModel));
         }
-        private ADLRecord Common_CreateNew(ADLViewModel viewModel)
+        private ADLRecord Common_CreateNew(ADLViewModel viewModel,int previousId=0)
         {
             var adl = _adlRecords.Get(viewModel.Head.Id);
             if (adl != null)
@@ -1138,6 +1139,74 @@ namespace Faurecia.ADL.Controllers
 
             SetADLRecord(adl, viewModel);
             _adlRecords.Create(adl);
+
+            if (previousId > 0)
+            {
+                var adlKickOffQuery = from item in _adlKickOffRecords.Table
+                                      where item.ADLRecord.Id == previousId
+                                      select item;
+                foreach (var ko in adlKickOffQuery)
+                {
+                    ADLKickOffRecord item = new ADLKickOffRecord()
+                    {
+                        Id = 0,
+                        ADLRecord = adl,
+                        Content = ko.Content,
+                        CreateTime = DateTime.Now,
+                        Creator = adl.Creator,
+                        Month = ko.Month,
+                        Name = ko.Name,
+                        Year = ko.Year
+                    };
+                    if (item.Name == null)
+                    {
+                        item.Name = string.Empty;
+                    }
+                    item.Id = 0;
+                    item.ADLRecord.Id = adl.Id;
+                    if (item.Name.EndsWith("_StartDate") && adl.StartDate != null)
+                    {
+                        item.Year = adl.StartDate.Value.Year;
+                        item.Month = adl.StartDate.Value.Month;
+                    }
+                    else if (item.Name.EndsWith("_Mockup") && adl.MockUp != null)
+                    {
+                        item.Year = adl.MockUp.Value.Year;
+                        item.Month = adl.MockUp.Value.Month;
+                    }
+                    else if (item.Name.EndsWith("_OfferDate") && adl.OfferDate != null)
+                    {
+                        item.Year = adl.OfferDate.Value.Year;
+                        item.Month = adl.OfferDate.Value.Month;
+                    }
+                    else if (item.Name.EndsWith("_ProtoDate") && adl.ProtoDate != null)
+                    {
+                        item.Year = adl.ProtoDate.Value.Year;
+                        item.Month = adl.ProtoDate.Value.Month;
+                    }
+                    else if (item.Name.EndsWith("_Award") && adl.Award != null)
+                    {
+                        item.Year = adl.Award.Value.Year;
+                        item.Month = adl.Award.Value.Month;
+                    }
+                    else if (item.Name.EndsWith("_SOPDate") && adl.SOPDate != null)
+                    {
+                        item.Year = adl.SOPDate.Value.Year;
+                        item.Month = adl.SOPDate.Value.Month;
+                    }
+                    else if (item.Name.EndsWith("_PTRDate") && adl.PTRDate != null)
+                    {
+                        item.Year = adl.PTRDate.Value.Year;
+                        item.Month = adl.PTRDate.Value.Month;
+                    }
+                    if (item.Year < 0)
+                    {
+                        item.Year = 0;
+                        item.Month = 0;
+                    }
+                    _adlKickOffRecords.Create(item);
+                }
+            }
 
             if (viewModel.Detail!=null)
             {
@@ -1242,7 +1311,7 @@ namespace Faurecia.ADL.Controllers
                 var maxVersionNo = queries.Max(item => item.VersionNo);
                 viewModel.Head.VersionNo = maxVersionNo + 1;
                 viewModel.Head.Id = 0;
-                return Common_CreateNew(viewModel);
+                return Common_CreateNew(viewModel,adl.Id);
             }
             if (adl != null)
             {
@@ -1262,7 +1331,7 @@ namespace Faurecia.ADL.Controllers
             };
             _adlRecords.Update(adl);
             var adlKickOffQuery = from item in _adlKickOffRecords.Table
-                          where item.ADLRecord.Id == adl.Id
+                          where item.ADLRecord.Id == viewModel.Head.Id
                           select item;
             foreach(var item in adlKickOffQuery)
             {
@@ -1270,13 +1339,13 @@ namespace Faurecia.ADL.Controllers
                 {
                     item.Name = string.Empty;
                 }
-
+                item.ADLRecord.Id = adl.Id;
                 if (item.Name.EndsWith("_StartDate") && adl.StartDate!=null)
                 {
                     item.Year = adl.StartDate.Value.Year;
                     item.Month = adl.StartDate.Value.Month;
                 }
-                else if (item.Name.EndsWith("_MockUp") && adl.MockUp != null)
+                else if (item.Name.EndsWith("_Mockup") && adl.MockUp != null)
                 {
                     item.Year = adl.MockUp.Value.Year;
                     item.Month = adl.MockUp.Value.Month;
