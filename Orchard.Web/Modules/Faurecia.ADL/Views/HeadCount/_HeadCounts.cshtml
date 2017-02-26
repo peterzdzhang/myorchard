@@ -1,0 +1,114 @@
+﻿@model HeadCountIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    var index = 0;
+}
+<table class="table table-bordered table-condensed" style="margin-bottom:0px">
+    <thead>
+        <tr class="active">
+            <th><input type="checkbox" class="check-all" /></th>
+            <th>@T("Year")</th>
+            <th>@T("Jan")</th>
+            <th>@T("Feb")</th>
+            <th>@T("Mar")</th>
+            <th>@T("Apr")</th>
+            <th>@T("May")</th>
+            <th>@T("Jun")</th>
+            <th>@T("Jul")</th>
+            <th>@T("Aug")</th>
+            <th>@T("Sep")</th>
+            <th>@T("Oct")</th>
+            <th>@T("Nov")</th>
+            <th>@T("Dev")</th>
+            <th>@T("Is Used")</th>
+            <th>@T("Editor")</th>
+            <th>@T("Edit time")</th>
+            <th>@T("Action")</th>
+        </tr>
+    </thead>
+    @foreach (var entry in Model.HeadCounts)
+    {
+        <tr>
+            <td>
+                <input type="hidden" value="@Model.HeadCounts[index].HeadCount.Id" name="@Html.NameOf(m => m.HeadCounts[index].HeadCount.Id)" />
+                <input type="checkbox" value="true" name="@Html.NameOf(m => m.HeadCounts[index].IsChecked)" />
+            </td>
+            <td>
+                @Ajax.ActionLink(entry.HeadCount.Year.ToString()
+               , "Edit"
+               , new { entry.HeadCount.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete= "onCompleteEdit",
+                   UpdateTargetId= "createContent"
+               })
+            </td>
+            <td>
+                @entry.HeadCount.Jan
+            </td>
+            <td>
+                @entry.HeadCount.Feb
+            </td>
+            <td>
+                @entry.HeadCount.Mar
+            </td>
+            <td>
+                @entry.HeadCount.Apr
+            </td>
+            <td>
+                @entry.HeadCount.May
+            </td>
+            <td>
+                @entry.HeadCount.Jun
+            </td>
+            <td>
+                @entry.HeadCount.Jul
+            </td>
+            <td>
+                @entry.HeadCount.Aug
+            </td>
+            <td>
+                @entry.HeadCount.Sep
+            </td>
+            <td>
+                @entry.HeadCount.Oct
+            </td>
+            <td>
+                @entry.HeadCount.Nov
+            </td>
+            <td>
+                @entry.HeadCount.Dev
+            </td>
+            <td>
+                @(entry.HeadCount.IsUsed?T("Y"):T("N"))
+            </td>
+            <td>
+                @entry.HeadCount.Editor
+            </td>
+            <td>
+                @string.Format("{0:yyyy-MM-dd HH:mm:ss}",entry.HeadCount.EditTime)
+            </td>
+            <td>
+                @Ajax.ActionLink(T("Edit").ToString()
+               , "Edit"
+               , new { entry.HeadCount.Id }
+               , new AjaxOptions()
+               {
+                   OnComplete = "onCompleteEdit",
+                   UpdateTargetId = "createContent"
+               })
+                |
+                @Ajax.ActionLink(T("Delete").ToString()
+               , "Delete"
+               , new { entry.HeadCount.Id }
+               , new AjaxOptions()
+               {
+                   Confirm=T("Confirm delete it?").Text,
+                   OnComplete = "onCompleteDelete"
+               })
+            </td>
+        </tr>
+        index++;
+    }
+</table>
+@Display(Model.Pager)

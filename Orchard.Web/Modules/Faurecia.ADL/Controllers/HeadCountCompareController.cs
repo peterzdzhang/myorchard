@@ -29,7 +29,7 @@ namespace Faurecia.ADL.Controllers
     {
         private readonly ISiteService _siteService;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IRepository<WorkingHourRecord> _workingHourRecords;
+        private readonly IRepository<HeadCountRecord> _headCountRecords;
         private readonly IRepository<ADLHeadCountRecord> _adlHeadCountRecords;
 
         public IOrchardServices Services { get; set; }
@@ -37,13 +37,13 @@ namespace Faurecia.ADL.Controllers
                         ,ISiteService siteService
                         ,IShapeFactory shapeFactory
                         ,IAuthorizationService authorizationService
-                        ,IRepository<WorkingHourRecord> workingHourRecords
+                        ,IRepository<HeadCountRecord> headCountRecords
                         , IRepository<ADLHeadCountRecord> adlHeadCountRecords)
         {
             Services = orchardService;
             _siteService = siteService;
             _authorizationService = authorizationService;
-            _workingHourRecords = workingHourRecords;
+            _headCountRecords = headCountRecords;
             _adlHeadCountRecords = adlHeadCountRecords;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -80,6 +80,7 @@ namespace Faurecia.ADL.Controllers
                     }
                 }
             }
+
             var lnq = from item in _adlHeadCountRecords.Table
                       where lstIds.Contains(item.ADLRecord.Id)
                       select new HeadCountQueryData
@@ -102,9 +103,9 @@ namespace Faurecia.ADL.Controllers
             IList<HeadCountQueryData> lst = lnq.ToList();
             data.Categories = lst.Select(item => item.Year).Distinct().OrderBy(o=>o).ToList();
             IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
-            data.Legend = names;
             foreach (var name in names)
             {
+                data.Legend.Add(name);
                 ChartSeriesData seriesData = new ChartSeriesData();
                 seriesData.name = name;
                 foreach (var category in data.Categories)
@@ -114,6 +115,38 @@ namespace Faurecia.ADL.Controllers
                 }
                 data.Series.Add(seriesData);
             }
+
+            var lnqHeadCount = _headCountRecords.Table.Where(w => w.IsUsed == true);
+            ChartSeriesData seriesDataHeadCount = new ChartSeriesData();
+            data.Legend.Add(T("Base").Text);
+            seriesDataHeadCount.name = T("Base").Text;
+            foreach (var category in data.Categories)
+            {
+                var year = 0;
+                int.TryParse(category, out year);
+                if (year == 0) continue;
+                var item = lnqHeadCount.Where(w => w.Year == year).FirstOrDefault();
+                var sum = 0.0;
+                if(item!=null)
+                {
+                    sum = (item.Jan ?? 0)
+                                     + (item.Feb ?? 0)
+                                     + (item.May ?? 0)
+                                     + (item.Apr ?? 0)
+                                     + (item.Mar ?? 0)
+                                     + (item.Jun ?? 0)
+                                     + (item.Jul ?? 0)
+                                     + (item.Aug ?? 0)
+                                     + (item.Sep ?? 0)
+                                     + (item.Oct ?? 0)
+                                     + (item.Nov ?? 0)
+                                     + (item.Dev ?? 0);
+                }
+                seriesDataHeadCount.data.Add(sum);
+            }
+            data.Series.Add(seriesDataHeadCount);
+
+
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         

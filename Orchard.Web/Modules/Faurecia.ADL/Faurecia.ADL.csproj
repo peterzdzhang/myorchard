@@ -102,6 +102,7 @@
     <Compile Include="Controllers\ActivityTypeController.cs" />
     <Compile Include="Controllers\CostCompareController.cs" />
     <Compile Include="Controllers\HeadCountCompareController.cs" />
+    <Compile Include="Controllers\HeadCountController.cs" />
     <Compile Include="Controllers\WorkingHourController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Migrations.cs" />
@@ -129,8 +130,10 @@
     <Compile Include="ViewModels\ADLIBPViewModel.cs" />
     <Compile Include="ViewModels\ActivityTypeCreateViewModel.cs" />
     <Compile Include="ViewModels\HourRatioEditViewModel.cs" />
+    <Compile Include="ViewModels\HeadCountCreateViewModel.cs" />
     <Compile Include="ViewModels\WorkingHourCreateViewModel.cs" />
     <Compile Include="ViewModels\ActivityTypeIndexViewModel.cs" />
+    <Compile Include="ViewModels\HeadCountIndexViewModel.cs" />
     <Compile Include="ViewModels\WorkingHourIndexViewModel.cs" />
     <Compile Include="ViewModels\AjaxPager.cs" />
     <Compile Include="ViewModels\ShowActivityTypeViewModel.cs" />
@@ -197,6 +200,9 @@
     <Content Include="Views\UserRole\_CreateUser.cshtml" />
     <Content Include="Views\HeadCountCompare\Index.cshtml" />
     <Content Include="Views\CostCompare\Index.cshtml" />
+    <Content Include="Views\HeadCount\_Create.cshtml" />
+    <Content Include="Views\HeadCount\_HeadCounts.cshtml" />
+    <Content Include="Views\HeadCount\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

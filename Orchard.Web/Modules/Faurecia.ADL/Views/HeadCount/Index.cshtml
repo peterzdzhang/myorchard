@@ -1,0 +1,231 @@
+﻿@model HeadCountIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    Script.Require("Microsoft_jQueryAjax_Validate");
+}
+<h1>
+    @Html.TitleForPage(T("Head Count").ToString())
+</h1>
+@using (Ajax.BeginForm("Index", "HeadCount"
+                       , new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "QueryResults",OnComplete= "onCompleteQuery" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="publishActions">@T("Actions:")</label>
+                    <select id="publishActions" class="form-control" name="@Html.NameOf(m => m.Options.BulkAction)">
+                        @Html.SelectOption(Model.Options.BulkAction, HeadCountAction.None, T("Choose action...").ToString())
+                        @Html.SelectOption(Model.Options.BulkAction, HeadCountAction.BulkEdit, T("Edit").ToString())
+                        @Html.SelectOption(Model.Options.BulkAction, HeadCountAction.BulkDelete, T("Delete").ToString())
+                    </select>
+                    @Ajax.ActionLink(T("Apply").Text
+                                , "BulkAction"
+                                , new { }
+                                , new AjaxOptions()
+                                {
+                                    OnBegin="onBeginEdit",
+                                    OnComplete = "onCompleteEdit",
+                                    UpdateTargetId = "createContent"
+                                }, new { @class = "btn btn-warning" })
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m.Options.Search, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="sortResults">@T("Sort by:")</label>
+                    <select id="sortResults" class="form-control" name="@Html.NameOf(m => m.Options.Order)">
+                        @Html.SelectOption(Model.Options.Order, HeadCountOrder.Year, T("Year asc").ToString())
+                        @Html.SelectOption(Model.Options.Order, HeadCountOrder.YearDesc, T("Year desc").ToString())
+                    </select>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Filter, T("Filter").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    <select id="@Html.IdFor(m=>m.Options.Filter)" name="@Html.NameOf(m => m.Options.Filter)" class="form-control">
+                        @Html.SelectOption(Model.Options.Filter, HeadCountFilter.LastestVersion, T("Lastest Version").ToString())
+                        @Html.SelectOption(Model.Options.Filter, HeadCountFilter.AllVersion, T("All Version").ToString())
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-info" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
+
+                <!-- trigger create modal -->
+                @Ajax.ActionLink(T("New").Text
+                                , "Create"
+                                , new { }
+                                , new AjaxOptions()
+                                {
+                                    OnComplete = "onCompleteEdit",
+                                    UpdateTargetId = "createContent"
+                                }, new { @class="btn btn-primary"})
+            </div>
+        </div>
+
+        <div class="panel-body" id="QueryResults">
+            @Html.Partial("_HeadCounts", Model)
+        </div>
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="createModalTitle">@T("Head count")</h4>
+            </div>
+            @using (Ajax.BeginForm("Save", "HeadCount", new AjaxOptions { HttpMethod = "Post", OnComplete = "onCompleteSave" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div id="createContent" class="form-horizontal">
+                        @Html.Partial("_Create", new HeadCountCreateViewModel())
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-lg-8 col-sm-8 col-xs-8 text-left">
+                            <div class="alert alert-dismissable alert-danger" style="display:none">
+                                <i class="fa fa-times-circle"></i>&nbsp;&nbsp;<label id="message"></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-xs-4">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+            
+            $("button[name='submit.Filter']").submit();
+            $('#createModal').on('show.bs.modal', function (e) {
+                $("#message").html("");
+                $("#message").parent().css("display", "none");
+            });
+            $('#createModal').on('shown.bs.modal', function (e) {
+                $("#message").html("");
+                $("#message").parent().css("display", "none");
+                $("#createContent").find("input[type='text']").each(function (x, xitem) {
+                    var isAllowDot = true;
+                    if ($(xitem).attr("name") == "Year") {
+                        isAllowDot = false;
+                        $(xitem).select();
+                    }
+                    BindInputEvent(xitem, isAllowDot);
+                });
+            });
+        })
+
+        function BindInputEvent(item,isAllowDot) {
+            $(item).bind("keypress", function (event) {
+                var val = $(this).val();
+                var key = event.key;
+                if (!isAllowDot && key == ".") {
+                    event.preventDefault();
+                }
+                if ((key < "0" || key > "9") && key != ".") {
+                    event.preventDefault();
+                }
+                if (val.indexOf(".") >= 0 && key == ".") {
+                    event.preventDefault();
+                }
+            }).bind("paste", function (event) {
+                var val = undefined;
+                if (window.clipboardData && window.clipboardData.getData) {
+                    val = win.clipboardData.getData("Text");
+                }
+                else {
+                    val = event.originalEvent.clipboardData.getData("Text");
+                }
+                var r = /^[0-9.]+.?[0-9]*$/
+                if (!isAllowDot) {
+                    r = /^[0-9]+$/
+                }
+                if (!r.test(val)) {
+                    event.preventDefault();
+                    //alert("\""+val+"\"@T(" is not valid value.")");
+                }
+            }).bind("input", function (event) {
+                var val = $(this).val();
+                var r = /^[0-9.]+.?[0-9]*$/
+                if (!isAllowDot) {
+                    r = /^[0-9]+$/
+                }
+                if (val != "" && !r.test(val)) {
+                    event.preventDefault();
+                    //alert("\""+val+"\"@T(" is not valid value.")");
+                }
+            }).bind("change", function (event) {
+                var val = $(this).val();
+                val = val.replace(/[^0-9.]/g, '');
+                $(this).val(val);
+            });
+        }
+
+        function onCompleteQuery(result) {
+            $(".check-all").bind("change", function () {
+                var isChecked = $(this).prop("checked");
+                $("input[type='checkbox']").prop("checked", isChecked);
+            });
+        }
+
+        function onBeginEdit(obj, req) {
+            var ids = "";
+            $("td>input[type='checkbox']:checked").each(function (xi, xitem) {
+                var id = $(xitem).parent().find("input[type='hidden']").val();
+                if (!!id){
+                    ids = ids + "&ids[" + xi + "]=" + id;
+                }
+            });
+            var action = $("#publishActions").val();
+            if (!!ids) {
+                req.url = req.url + ids + "&actionName=" + action;
+            }
+            else {
+                obj.abort();
+            }
+        }
+        function onCompleteEdit(result) {
+            var data = result.responseJSON;
+            if (!!data && data.Code == 0) {
+                $("button[name='submit.Filter']").submit();
+            }
+            else {
+                $('#createModal').modal("show");
+            }
+        }
+
+        function onCompleteDelete(result) {
+            var data = result.responseJSON;
+            if (data.Code == 0) {
+                $("button[name='submit.Filter']").submit();
+            }
+        }
+        function onCompleteSave(result) {
+            var data = result.responseJSON;
+            if (data.Code == 0) {
+                $('#createModal').modal("hide");
+                $("#message").html(data.Message);
+                $("#message").parent().removeClass("alert-danger");
+                $("#message").parent().addClass("alert-success");
+                $("button[name='submit.Filter']").submit();
+                $("#message").parent().css("display", "none");
+            }
+            else {
+                $("#message").html(data.Message);
+                $("#message").parent().addClass("alert-danger");
+                $("#message").parent().removeClass("alert-success");
+                $("#message").parent().css("display", "block");
+            }
+        }
+    </script>
+}

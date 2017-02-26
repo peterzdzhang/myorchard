@@ -24,23 +24,23 @@ using Faurecia.ADL.Models;
 namespace Faurecia.ADL.Controllers
 {
     [HandleError, Themed]
-    public class WorkingHourController : Controller
+    public class HeadCountController : Controller
     {
         private readonly ISiteService _siteService;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IRepository<WorkingHourRecord> _workingHourRecords;
+        private readonly IRepository<HeadCountRecord> _headCountRecords;
 
         public IOrchardServices Services { get; set; }
-        public WorkingHourController(IOrchardServices orchardService
+        public HeadCountController(IOrchardServices orchardService
                         ,ISiteService siteService
                         ,IShapeFactory shapeFactory
                         ,IAuthorizationService authorizationService
-                        ,IRepository<WorkingHourRecord> workingHourRecords)
+                        ,IRepository<HeadCountRecord> headCountRecords)
         {
             Services = orchardService;
             _siteService = siteService;
             _authorizationService = authorizationService;
-            _workingHourRecords = workingHourRecords;
+            _headCountRecords = headCountRecords;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -51,32 +51,32 @@ namespace Faurecia.ADL.Controllers
         public ILogger Logger { get; set; }
 
 
-        // GET: WorkingHour
-        public ActionResult Index(WorkingHourIndexOptions options, PagerParameters pagerParameters)
+        // GET: HeadCount
+        public ActionResult Index(HeadCountIndexOptions options, PagerParameters pagerParameters)
         {
-            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainWorkingHour, T("Not authorized to list working hours")))
-                return new HttpUnauthorizedResult();
+            //if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainHeadCount, T("Not authorized to list working hours")))
+            //    return new HttpUnauthorizedResult();
             return Filter(options, pagerParameters);
         }
 
         [HttpPost, ActionName("Index")]
         [Orchard.Mvc.FormValueRequired("submit.Filter")]
-        public ActionResult Filter(WorkingHourIndexOptions options, PagerParameters pagerParameters)
+        public ActionResult Filter(HeadCountIndexOptions options, PagerParameters pagerParameters)
         {
             var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
 
             // default options
             if (options == null)
-                options = new WorkingHourIndexOptions();
+                options = new HeadCountIndexOptions();
 
-            var queries = _workingHourRecords.Table;
+            var queries = _headCountRecords.Table;
             if (!string.IsNullOrWhiteSpace(options.Search))
             {
                 queries = queries.Where(w => w.Year.ToString().Contains(options.Search));
             }
             switch (options.Filter)
             {
-                case WorkingHourFilter.LastestVersion:
+                case HeadCountFilter.LastestVersion:
                     queries = queries.Where(o => o.IsUsed==true);
                     break;
             }
@@ -85,10 +85,10 @@ namespace Faurecia.ADL.Controllers
 
             switch (options.Order)
             {
-                case WorkingHourOrder.Year:
+                case HeadCountOrder.Year:
                     queries = queries.OrderBy(o =>o.Year).OrderBy(o=>o.EditTime);
                     break;
-                case WorkingHourOrder.YearDesc:
+                case HeadCountOrder.YearDesc:
                     queries = queries.OrderByDescending(o => o.Year).OrderBy(o => o.EditTime);
                     break;
             }
@@ -104,10 +104,10 @@ namespace Faurecia.ADL.Controllers
             }
             var results = queries.ToList();
 
-            var model = new WorkingHourIndexViewModel
+            var model = new HeadCountIndexViewModel
             {
-                WorkingHours = results
-                    .Select(x => new WorkingHoursEntry { WorkingHour = x })
+                HeadCounts = results
+                    .Select(x => new HeadCountsEntry { HeadCount = x })
                     .ToList(),
                 Options = options,
                 Pager = pagerShape
@@ -121,17 +121,17 @@ namespace Faurecia.ADL.Controllers
             pagerShape.RouteData(routeData);
             if (Request.IsAjaxRequest())
             {
-                return PartialView("_WorkingHours", model);
+                return PartialView("_HeadCounts", model);
             }
             return View("Index",model);
         }
 
         public ActionResult Create()
         {
-            WorkingHourRecord record = _workingHourRecords.Table.OrderByDescending(o => o.Year).FirstOrDefault();
+            HeadCountRecord record = _headCountRecords.Table.OrderByDescending(o => o.Year).FirstOrDefault();
             if (record == null)
             {
-                record = new WorkingHourRecord()
+                record = new HeadCountRecord()
                 {
                     Year=DateTime.Now.Year-1,
                     Jan = 22 * 8,
@@ -154,8 +154,8 @@ namespace Faurecia.ADL.Controllers
                 };
             }
 
-            WorkingHourCreateViewModel viewModel = new WorkingHourCreateViewModel();
-            viewModel.Action = WorkingHourAction.Create;
+            HeadCountCreateViewModel viewModel = new HeadCountCreateViewModel();
+            viewModel.Action = HeadCountAction.Create;
             viewModel.Ids.Add(0);
             viewModel.Year = record.Year+1;
             viewModel.Jan = record.Jan ?? 0;
@@ -174,18 +174,18 @@ namespace Faurecia.ADL.Controllers
         }
         public ActionResult Edit(int id)
         {
-            WorkingHourRecord record = null;
+            HeadCountRecord record = null;
             if (id != 0)
             {
-                record = _workingHourRecords.Get(id);
+                record = _headCountRecords.Get(id);
             }
             if (record == null)
             {
                 return Create();
             }
 
-            WorkingHourCreateViewModel viewModel = new WorkingHourCreateViewModel();
-            viewModel.Action = WorkingHourAction.Edit;
+            HeadCountCreateViewModel viewModel = new HeadCountCreateViewModel();
+            viewModel.Action = HeadCountAction.Edit;
             viewModel.Ids.Add(record.Id);
             viewModel.Year = record.Year;
             viewModel.Jan = record.Jan ?? 0;
@@ -205,17 +205,17 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult Delete(int id)
         {
-            WorkingHourRecord record = null;
+            HeadCountRecord record = null;
             if (id != 0)
             {
-                record = _workingHourRecords.Get(id);
+                record = _headCountRecords.Get(id);
             }
             if (record != null)
             {
                 record.Editor = User.Identity.Name;
                 record.EditTime = DateTime.Now;
                 record.IsUsed = false;
-                _workingHourRecords.Update(record);
+                _headCountRecords.Update(record);
             }
             return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
         }
@@ -227,26 +227,26 @@ namespace Faurecia.ADL.Controllers
             {
                 foreach (var id in ids)
                 {
-                    WorkingHourRecord record = null;
+                    HeadCountRecord record = null;
                     if (id != 0)
                     {
-                        record = _workingHourRecords.Get(id);
+                        record = _headCountRecords.Get(id);
                     }
                     if (record != null)
                     {
                         record.Editor = User.Identity.Name;
                         record.EditTime = DateTime.Now;
                         record.IsUsed = false;
-                        _workingHourRecords.Update(record);
+                        _headCountRecords.Update(record);
                     }
                 }
                 return Json(new { Code = 0, Message = T("Delete success.").Text }, JsonRequestBehavior.AllowGet);
             }
             else if(actionName.Equals("BulkEdit", StringComparison.InvariantCultureIgnoreCase))
             {
-                WorkingHourCreateViewModel viewModel = new WorkingHourCreateViewModel();
-                viewModel.Action = WorkingHourAction.BulkEdit;
-                WorkingHourRecord record = null;
+                HeadCountCreateViewModel viewModel = new HeadCountCreateViewModel();
+                viewModel.Action = HeadCountAction.BulkEdit;
+                HeadCountRecord record = null;
                 if (ids != null)
                 {
                     foreach (var id in ids)
@@ -255,7 +255,7 @@ namespace Faurecia.ADL.Controllers
                     }
                     if (ids.Count > 0 && ids[0] != 0)
                     {
-                        record = _workingHourRecords.Get(ids[0]);
+                        record = _headCountRecords.Get(ids[0]);
                     }
                 }
                 if (record != null)
@@ -284,32 +284,32 @@ namespace Faurecia.ADL.Controllers
         {
             try
             {
-                WorkingHourCreateViewModel viewModel = new WorkingHourCreateViewModel();
+                HeadCountCreateViewModel viewModel = new HeadCountCreateViewModel();
                 TryUpdateModel(viewModel);
 
                 foreach (var id in viewModel.Ids)
                 {
-                    WorkingHourRecord record = null;
+                    HeadCountRecord record = null;
                     int year = DateTime.Now.Year;
                     if (id != 0)
                     {
-                        record = _workingHourRecords.Get(id);
+                        record = _headCountRecords.Get(id);
                         record.IsUsed = false;
                         record.EditTime = DateTime.Now;
                         record.Editor = User.Identity.Name;
                         year = record.Year;
-                        _workingHourRecords.Update(record);
+                        _headCountRecords.Update(record);
                     }
                     else if (id==0 && viewModel.Year!=0)
                     {
-                        int recordCount = _workingHourRecords.Table.Where(w => w.Year == viewModel.Year && w.Id != id).Count();
+                        int recordCount = _headCountRecords.Table.Where(w => w.Year == viewModel.Year && w.Id != id).Count();
                         if (recordCount > 0)
                         {
                             throw new Exception(T("Year({0})'s record have been existed.", viewModel.Year).Text);
                         }
                         year = viewModel.Year;
                     }
-                    record = new WorkingHourRecord();
+                    record = new HeadCountRecord();
                     record.Year = year;
                     record.Jan = viewModel.Jan;
                     record.Feb = viewModel.Feb;
@@ -328,7 +328,7 @@ namespace Faurecia.ADL.Controllers
                     record.EditTime = DateTime.Now;
                     record.CreateTime = DateTime.Now;
                     record.Creator = User.Identity.Name;
-                    _workingHourRecords.Create(record);
+                    _headCountRecords.Create(record);
                 }
             }
             catch(Exception e)

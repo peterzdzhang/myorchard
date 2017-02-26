@@ -49,7 +49,7 @@ namespace Faurecia.ADL {
 
             SchemaBuilder.CreateTable("WorkingHourRecord", table => table
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
-                .Column("Year", DbType.Int32,col=>col.Unique())
+                .Column("Year", DbType.Int32)
                 .Column("Jan", DbType.Double)
                 .Column("Feb", DbType.Double)
                 .Column("Mar", DbType.Double)
@@ -341,7 +341,7 @@ namespace Faurecia.ADL {
 
             SchemaBuilder.CreateTable("HeadCountRecord", table => table
              .Column<int>("Id", col => col.PrimaryKey().Identity())
-             .Column("Year", DbType.Int32, col => col.Unique())
+             .Column("Year", DbType.Int32)
              .Column("Jan", DbType.Double)
              .Column("Feb", DbType.Double)
              .Column("Mar", DbType.Double)
