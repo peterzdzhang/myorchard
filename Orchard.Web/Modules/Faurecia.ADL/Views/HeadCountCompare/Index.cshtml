@@ -1,0 +1,108 @@
+﻿@model ADLIndexViewModel
+@using Faurecia.ADL.ViewModels;
+@{
+    Script.Require("echarts");
+    Script.Require("echarts.theme");
+    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+    string returnUrl = Request["ReturnUrl"];
+}
+<h1 style="margin:5px 10px 10px 10px">
+    @Html.TitleForPage(T("Compare Head Count").ToString())
+</h1>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-lg-6 col-sm-6 col-xs-6">
+                &nbsp;
+            </div>
+            <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                @if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default  btn-sm" });
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div id="chart" style="width: 800px;height:400px;"></div>
+        <table id="chartData" class="table table-condensed table-bordered" style="width: 720px;margin-top:0px;margin-left:0px">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init($("#chart")[0]);
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: ''
+                },
+                tooltip: {},
+                legend: {
+                    data: []
+                },
+                xAxis: {
+                    data: []
+                },
+                yAxis: {},
+                series: []
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+
+            var ids = "@Request["ids"]";
+            var url="@Url.Action("GetData", "HeadCountCompare", new { Area= "Faurecia.ADL" })";
+            url = url + "?ids=" + ids;
+            // 异步加载数据
+            $.get(url,null,function (data) {
+                // 填入数据
+                myChart.setOption({
+                    xAxis: {
+                        data: data.Categories
+                    },
+                    legend: {
+                        data: data.Legend
+                    },
+                    series: data.Series
+                });
+
+                var table = $("#chartData");
+                var thead = $(table).find("thead");
+
+                var tr = $("<tr></tr>");
+                var th = $("<th width='80px'></th>");
+                tr.append(th);
+                for (var i = 0; i < data.Categories.length; i++) {
+                    th = $("<th width='120px'></th>");
+                    th.text(data.Categories[i]);
+                    tr.append(th);
+                }
+                thead.append(tr);
+
+                var tbody = $(table).find("tbody");
+                for (var i = 0; i < data.Series.length; i++) {
+                    var tr = $("<tr></tr>");
+                    var td = $("<td></td>");
+                    td.text(data.Series[i].name);
+                    tr.append(td);
+                    for (var j = 0; j < data.Series[i].data.length; j++)
+                    {
+                        var td = $("<td></td>");
+                        td.text(data.Series[i].data[j]);
+                        tr.append(td);
+                    }
+                    tbody.append(tr);
+                }
+            });
+        });
+    </script>
+}

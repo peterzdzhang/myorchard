@@ -11,12 +11,15 @@ namespace Faurecia.ADL
     {
         public static readonly Permission MaintainWorkingHour = new Permission { Description = "Maintain working hours", Name = "MaintainWorkingHours" };
 
+        public static readonly Permission CompareHeadCount = new Permission { Description = "Compare head count", Name = "CompareHeadCount" };
+
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions()
         {
             return new[] {
                 MaintainWorkingHour,
+                CompareHeadCount
             };
         }
 
@@ -26,6 +29,10 @@ namespace Faurecia.ADL
                 new PermissionStereotype {
                     Name = "Administrator",
                     Permissions = new[] { MaintainWorkingHour }
+                },
+                 new PermissionStereotype {
+                    Name = "Administrator",
+                    Permissions = new[] { CompareHeadCount }
                 },
             };
         }

@@ -100,6 +100,7 @@
   <ItemGroup>
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ActivityTypeController.cs" />
+    <Compile Include="Controllers\HeadCountCompareController.cs" />
     <Compile Include="Controllers\WorkingHourController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Migrations.cs" />
@@ -145,6 +146,9 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\Faurecia.ADL.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\echarts.common.min.js" />
+    <Content Include="Scripts\echarts.js" />
+    <Content Include="Scripts\echarts.theme.macarons.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-ui-addon-timepicker.js" />
@@ -186,6 +190,7 @@
     <Content Include="Views\ActivityType\_EditHourRatio.cshtml" />
     <Content Include="Views\UserRole\_EditRole.cshtml" />
     <Content Include="Views\UserRole\_CreateUser.cshtml" />
+    <Content Include="Views\HeadCountCompare\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

@@ -25,7 +25,17 @@ namespace Faurecia.ADL
             manifest.DefineScript("Microsoft_jQueryAjax_Validate").SetVersion("3.2.3")
                                     .SetUrl("jquery.validate.unobtrusive.min.js", "jquery.validate.unobtrusive.js")
                                     .SetDependencies("Microsoft_jQueryAjax", "jquery_validate");
-            
+
+
+            manifest.DefineScript("echarts")
+                    .SetVersion("3.4.0")
+                    .SetUrl("echarts.common.min.js", "echarts.js");
+
+            manifest.DefineScript("echarts.theme")
+                    .SetVersion("3.4.0")
+                    .SetUrl("echarts.theme.macarons.js")
+                    .SetDependencies("echarts");
+
 
             manifest.DefineStyle("FaureciaADLStyle").SetUrl("styles/styles.css");
         }
