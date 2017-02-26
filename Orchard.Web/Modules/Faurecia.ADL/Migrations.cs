@@ -152,6 +152,7 @@ namespace Faurecia.ADL {
                 .Column<int>("Id", col => col.PrimaryKey().Identity())
                 .Column("Year", DbType.Int32)
                 .Column("Month", DbType.Int32)
+                .Column("Name", DbType.String)
                 .Column("Content", DbType.String)
                 .Column("CreateTime", DbType.DateTime)
                 .Column("Creator", DbType.String)
@@ -214,7 +215,7 @@ namespace Faurecia.ADL {
                                                     , tableDbName
                                                     , DateTime.Now));
 
-            return 4;
+            return 5;
         }
 
 
@@ -276,6 +277,16 @@ namespace Faurecia.ADL {
                 table.AddColumn("WBSID", DbType.String);
             });
             return 4;
+        }
+
+        public int UpdateFrom4()
+        {
+            // alert table ActivityTypeRecord
+            SchemaBuilder.AlterTable("ADLKickOffRecord", table =>
+            {
+                table.AddColumn("Name", DbType.String);
+            });
+            return 5;
         }
     }
 }

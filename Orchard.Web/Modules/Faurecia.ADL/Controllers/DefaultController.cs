@@ -1261,6 +1261,59 @@ namespace Faurecia.ADL.Controllers
                 SetADLRecord(adl, viewModel);
             };
             _adlRecords.Update(adl);
+            var adlKickOffQuery = from item in _adlKickOffRecords.Table
+                          where item.ADLRecord.Id == adl.Id
+                          select item;
+            foreach(var item in adlKickOffQuery)
+            {
+                if(item.Name==null)
+                {
+                    item.Name = string.Empty;
+                }
+
+                if (item.Name.EndsWith("_StartDate") && adl.StartDate!=null)
+                {
+                    item.Year = adl.StartDate.Value.Year;
+                    item.Month = adl.StartDate.Value.Month;
+                }
+                else if (item.Name.EndsWith("_MockUp") && adl.MockUp != null)
+                {
+                    item.Year = adl.MockUp.Value.Year;
+                    item.Month = adl.MockUp.Value.Month;
+                }
+                else if (item.Name.EndsWith("_OfferDate") && adl.OfferDate != null)
+                {
+                    item.Year = adl.OfferDate.Value.Year;
+                    item.Month = adl.OfferDate.Value.Month;
+                }
+                else if (item.Name.EndsWith("_ProtoDate") && adl.ProtoDate != null)
+                {
+                    item.Year = adl.ProtoDate.Value.Year;
+                    item.Month = adl.ProtoDate.Value.Month;
+                }
+                else if (item.Name.EndsWith("_Award") && adl.Award != null)
+                {
+                    item.Year = adl.Award.Value.Year;
+                    item.Month = adl.Award.Value.Month;
+                }
+                else if (item.Name.EndsWith("_SOPDate") && adl.SOPDate != null)
+                {
+                    item.Year = adl.SOPDate.Value.Year;
+                    item.Month = adl.SOPDate.Value.Month;
+                }
+                else if (item.Name.EndsWith("_PTRDate") && adl.PTRDate != null)
+                {
+                    item.Year = adl.PTRDate.Value.Year;
+                    item.Month = adl.PTRDate.Value.Month;
+                }
+                if (item.Year < 0)
+                {
+                    item.Year = 0;
+                    item.Month = 0;
+                }
+                _adlKickOffRecords.Update(item);
+            }
+
             if (viewModel.Detail != null)
             {
                 foreach (ADLDetailEntry entry in viewModel.Detail.Entries)
@@ -1683,13 +1736,14 @@ namespace Faurecia.ADL.Controllers
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <param name="content"></param>
-        public ActionResult AddKickOff(int adlRecordId,int year,int month,string content)
+        public ActionResult AddKickOff(string name,int adlRecordId,int year,int month,string content)
         {
             ADLRecord adl = _adlRecords.Get(adlRecordId);
             if(adl!=null)
             {
                 ADLKickOffRecord record = new ADLKickOffRecord()
                 {
+                    Name=name,
                     ADLRecord=adl,
                     Content=content,
                     Year=year,
@@ -1714,15 +1768,27 @@ namespace Faurecia.ADL.Controllers
             return Json(new {Id= recordId }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetKickOffs(int adlRecordId, int year, int month)
+        public ActionResult GetKickOffs(int adlRecordId, string name,int year, int month)
         {
-            var queries = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Year == year && w.Month == month);
+            var queries = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Name==name && w.Year == year && w.Month == month);
+            return Json(queries.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetKickOffsByName(int adlRecordId, string name)
+        {
+            var queries = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Name==name);
             return Json(queries.ToList(), JsonRequestBehavior.AllowGet);
         }
 
         public int GetKickOffCount(int adlRecordId, int year, int month)
         {
             int count = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Year == year && w.Month == month).Count();
+            return count;
+        }
+
+        public int GetKickOffCountByName(int adlRecordId, string name)
+        {
+            int count = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Name==name).Count();
             return count;
         }
     }

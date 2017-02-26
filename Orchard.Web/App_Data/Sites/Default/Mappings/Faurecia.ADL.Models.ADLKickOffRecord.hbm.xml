@@ -1,5 +1,5 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLKickOffRecord, App_Web_vzzqfibj, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLKickOffRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLKickOffRecord, App_Web_g4gs3dkf, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLKickOffRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />
@@ -11,6 +11,9 @@
     <property name="Month" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Month" />
     </property>
+    <property name="Name" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Name" />
+    </property>
     <property name="Content" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Content" />
     </property>
@@ -20,7 +23,7 @@
     <property name="Creator" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Creator" />
     </property>
-    <many-to-one class="Faurecia.ADL.Models.ADLRecord, App_Web_vzzqfibj, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ADLRecord">
+    <many-to-one class="Faurecia.ADL.Models.ADLRecord, App_Web_g4gs3dkf, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ADLRecord">
       <column name="ADLRecord_id" />
     </many-to-one>
   </class>

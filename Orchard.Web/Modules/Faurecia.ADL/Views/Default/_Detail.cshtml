@@ -66,16 +66,124 @@
                 <td style="word-break:break-all"></td>
                 @for (int k = 1; k <= 12; k++)
                 {
+                    bool isStartDate = (Model.Head.StartDate != null && Model.Head.StartDate.Value.Year == currentYear && Model.Head.StartDate.Value.Month == k);
+                    bool isMockup = (Model.Head.Mockup != null && Model.Head.Mockup.Value.Year == currentYear && Model.Head.Mockup.Value.Month == k);
+                    bool isOfferDate = (Model.Head.OfferDate != null && Model.Head.OfferDate.Value.Year == currentYear && Model.Head.OfferDate.Value.Month == k);
+                    bool isProtoDate = (Model.Head.ProtoDate != null && Model.Head.ProtoDate.Value.Year == currentYear && Model.Head.ProtoDate.Value.Month == k);
+                    bool isAward = (Model.Head.Award != null && Model.Head.Award.Value.Year == currentYear && Model.Head.Award.Value.Month == k);
+                    bool isSOPDate = (Model.Head.SOPDate != null && Model.Head.SOPDate.Value.Year == currentYear && Model.Head.SOPDate.Value.Month == k);
+                    bool isPTRDate = (Model.Head.PTRDate != null && Model.Head.PTRDate.Value.Year == currentYear && Model.Head.PTRDate.Value.Month == k);
+                    
                     <td style="word-break:break-all">
-                        <button type="button" class="btn btn-sm btn-success" 
-                                data-container="body" 
+                    @if (isStartDate)
+                    {
+                        <div>
+                        <button type="button" class="btn btn-sm btn-success"
+                                data-container="body"
                                 data-placement="top"
                                 data-html="true"
                                 data-trigger="manual"
-                                data-toggle="popover" 
+                                data-toggle="popover"
+                                data-name="Head_StartDate"
+                                data-year="@currentYear" data-day="@Model.Head.StartDate.Value.Day"
+                                data-month="@k">
+                            @T("Start({0})", Model.Head.StartDate.Value.Day)
+                        </button>
+                        </div>
+                    }
+                    @if (isMockup)
+                    {<div>
+                        <button type="button" class="btn btn-sm btn-success"
+                                data-container="body"
+                                data-placement="top"
+                                data-html="true"
+                                data-trigger="manual"
+                                data-toggle="popover"
+                                data-name="Head_Mockup" data-day="@Model.Head.Mockup.Value.Day"
                                 data-year="@currentYear"
-                                data-month="@k"></button>
-                    </td>
+                                data-month="@k">@T("Mockup:{0}", Model.Head.Mockup.Value.Day)</button></div>
+                    }
+                    @if (isOfferDate)
+                    {
+                        <div>
+                            <button type="button" class="btn btn-sm btn-success"
+                                    data-container="body"
+                                    data-placement="top"
+                                    data-html="true"
+                                    data-trigger="manual"
+                                    data-toggle="popover"
+                                    data-name="Head_OfferDate"
+                                    data-year="@currentYear" data-day="@Model.Head.OfferDate.Value.Day"
+                                    data-month="@k">
+                                @T("Offer({0})", Model.Head.OfferDate.Value.Day)
+                            </button>
+                        </div>
+                    }
+                    @if (isProtoDate)
+                    {
+                        <div>
+                            <button type="button" class="btn btn-sm btn-success"
+                                    data-container="body"
+                                    data-placement="top"
+                                    data-html="true"
+                                    data-trigger="manual"
+                                    data-name="Head_ProtoDate"
+                                    data-toggle="popover"
+                                    data-year="@currentYear" data-day="@Model.Head.ProtoDate.Value.Day"
+                                    data-month="@k">
+                                @T("Proto({0})", Model.Head.ProtoDate.Value.Day)
+                            </button>
+                        </div>
+                    }
+                    @if (isAward)
+                    {
+                        <div></div>
+                        <button type="button" class="btn btn-sm btn-success"
+                                data-container="body"
+                                data-placement="top"
+                                data-html="true"
+                                data-trigger="manual"
+                                data-name="Head_Award"
+                                data-toggle="popover"
+                                data-year="@currentYear"
+                                data-month="@k" data-day="@Model.Head.Award.Value.Day">
+                            @T("Award({0})", Model.Head.Award.Value.Day)
+                        </button>
+                     }
+                    @if (isSOPDate)
+                    {
+                        <div>
+                            <button type="button" class="btn btn-sm btn-success"
+                                    data-container="body"
+                                    data-placement="top"
+                                    data-html="true"
+                                    data-trigger="manual"
+                                    data-toggle="popover"
+                                    data-name="Head_SOPDate"
+                                    data-year="@currentYear"
+                                    data-month="@k" data-day="@Model.Head.SOPDate.Value.Day">
+                                @T("SOP({0})", Model.Head.SOPDate.Value.Day)
+                            </button>
+                        </div>
+                    }
+                     @if (isPTRDate)
+                    {
+                        <div>
+                            <button type="button" class="btn btn-sm btn-success"
+                                    data-container="body"
+                                    data-placement="top"
+                                    data-html="true"
+                                    data-trigger="manual"
+                                    data-toggle="popover"
+                                    data-name="Head_PTRDate"
+                                    data-year="@currentYear"
+                                    data-month="@k"
+                                    data-day="@Model.Head.PTRDate.Value.Day">
+                                @T("PTR({0})", Model.Head.PTRDate.Value.Day)
+                            </button>
+                        </div>
+                     }
+                 </td>
                 }
                 <td style="word-break:break-all"></td>
             </tr>

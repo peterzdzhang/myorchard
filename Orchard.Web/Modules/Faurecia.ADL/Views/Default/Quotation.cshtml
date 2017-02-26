@@ -352,75 +352,113 @@
 
 
         function popoverTitle() {
-            var year = $(this).data("year");
-            var month = $(this).data("month");
-            return year + "-" + month;
+            var title="";
+
+            var date=$(this).data("date");
+            if(!!date){
+                title=$("#"+date).val();
+            }
+            else{
+                var year = $(this).data("year");
+                var month = $(this).data("month");
+                var day = $(this).data("day");
+                var name = $(this).data("name");
+                name=name.split("_")[1];
+                title=name+"("+year+"-"+month+"-"+day+")";
+            }
+            return title;
         }
 
         function popoverContent() {
 
             var adlRecordId=@Model.Head.Id;
-            var year = $(this).data("year");
-            var month = $(this).data("month");
-            var popoverObject=$(this);
+            var date=$(this).data("date");
+            var year = -1;
+            var month =-1;
+            var name=$(this).data("name");
+            if(!!date){
+                name=date;
+            }
+            else{
+                year = $(this).data("year");
+                month = $(this).data("month");
+            }
 
+            var popoverObject=$(this);
             var popover=$("<div></div>");
             var action="@Model.Action";
             var phase="@Model.Head.Phase";
             var status="@Model.Head.Status";
-
-
             //Content
             var content = $("<div style=\"padding-top:5px\"></div>");
-            if (action != "@Faurecia.ADL.ViewModels.EnumActions.View"
-                && phase != "@Faurecia.ADL.Models.EnumPhase.IBP"
-                && status!="@Faurecia.ADL.Models.EnumStatus.Frozen")
-            {
-                //Header
-                var header = $("<div class=\"input-group\"></div>");
-                var text=$("<input type=\"text\" class=\"form-control\" placeholder=\"\">");
-                var buttonContent = $("<span class=\"input-group-btn\"></span>");
-                var button = $("<button class=\"btn btn-default\" type=\"button\">Add!</button>");
-                $(buttonContent).append(button);
-                $(header).append(text);
-                $(header).append(buttonContent);
-                //add kick off
-                $(button).bind("click", function () {
-                    var textVal=$(text).val().trim();
-                    if(textVal==""){ return;}
-                    var addUrl = "@Url.Action("AddKickOff", new { area = "Faurecia.ADL" })";
-                    var addTimestamp = Math.round(new Date().getTime() / 1000);
-                    var reqdata ={ ADLRecordId:adlRecordId,Year: year, Month:month,Content:textVal, key: addTimestamp };
+            if(!!date){
+                if (action != "@Faurecia.ADL.ViewModels.EnumActions.View"
+                    && phase != "@Faurecia.ADL.Models.EnumPhase.IBP"
+                    && status!="@Faurecia.ADL.Models.EnumStatus.Frozen")
+                {
+                    //Header
+                    var header = $("<div class=\"input-group\"></div>");
+                    var text=$("<input type=\"text\" class=\"form-control\" placeholder=\"\">");
+                    var buttonContent = $("<span class=\"input-group-btn\"></span>");
+                    var button = $("<button class=\"btn btn-default\" type=\"button\">Add!</button>");
+                    $(buttonContent).append(button);
+                    $(header).append(text);
+                    $(header).append(buttonContent);
+                    //add kick off
+                    $(button).bind("click", function () {
+                        var textVal=$(text).val().trim();
+                        if(textVal==""){ return;}
+                        var addUrl = "@Url.Action("AddKickOff", new { area = "Faurecia.ADL" })";
+                        var addTimestamp = Math.round(new Date().getTime() / 1000);
+                        var reqdata ={Name:name, ADLRecordId:adlRecordId,Year: year, Month:month,Content:textVal, key: addTimestamp };
 
-                    $.ajax({
-                        type: "get",
-                        url: addUrl,
-                        data: reqdata,
-                        async: false,
-                        success: function (data) {
-                            addKickOff($(popoverObject),$(content),data);
-                        }
-                    });
-                    $(text).val("");
-                    $(popoverObject).popover("show");
-                    setPopoverUI($(popoverObject));
-                });
-            }
-            //init kick off content
-            var initUrl = "@Url.Action("GetKickOffs", new { area = "Faurecia.ADL" })";
-            var initTimestamp = Math.round(new Date().getTime() / 1000);
-            var reqdata ={ ADLRecordId:adlRecordId,Year: year, Month:month, key: initTimestamp };
-            $.ajax({
-                type: "get",
-                url: initUrl,
-                data: reqdata,
-                async: false,
-                success: function (results) {
-                    $(results).each(function(index, data){
-                        addKickOff($(popoverObject),$(content),data);
+                        $.ajax({
+                            type: "get",
+                            url: addUrl,
+                            data: reqdata,
+                            async: false,
+                            success: function (data) {
+                                addKickOff($(popoverObject),$(content),data);
+                            }
+                        });
+                        $(text).val("");
+                        $(popoverObject).popover("show");
+                        setPopoverUI($(popoverObject));
                     });
                 }
-            });
+            }
+            //init kick off content
+            var initTimestamp = Math.round(new Date().getTime() / 1000);
+            if(!!date){
+                var initUrl = "@Url.Action("GetKickOffsByName", new { area = "Faurecia.ADL" })";
+                var reqdata ={Name:name, ADLRecordId:adlRecordId, key: initTimestamp };
+                $.ajax({
+                    type: "get",
+                    url: initUrl,
+                    data: reqdata,
+                    async: false,
+                    success: function (results) {
+                        $(results).each(function(index, data){
+                            addKickOff($(popoverObject),$(content),data,false);
+                        });
+                    }
+                });
+            }
+            else{
+                var initUrl = "@Url.Action("GetKickOffs", new { area = "Faurecia.ADL" })";
+                var reqdata ={ Name:name,ADLRecordId:adlRecordId,Year: year, Month:month, key: initTimestamp };
+                $.ajax({
+                    type: "get",
+                    url: initUrl,
+                    data: reqdata,
+                    async: false,
+                    success: function (results) {
+                        $(results).each(function(index, data){
+                            addKickOff($(popoverObject),$(content),data,true);
+                        });
+                    }
+                });
+            }
 
             $(popover).append(header);
             $(popover).append(content);
@@ -430,60 +468,80 @@
             return $(popover);
         }
 
-        function addKickOff(popoverObject,content,data){
+        function addKickOff(popoverObject,content,data,isOnlyView){
 
             var action="@Model.Action";
             var phase="@Model.Head.Phase";
             var status="@Model.Head.Status";
 
-            var alert = $("<div class=\"alert alert-warning alert-dismissible\" role=\"alert\" style=\"padding-top:2px;padding-bottom:2px;margin-top:2px;margin-bottom:2px;\"></div>");
+            var alertClass="alert-success";
+            if(data.Year<0){
+                alertClass="alert-warning";
+            }
+            var alert = $("<div class=\"alert "+alertClass+" alert-dismissible\" role=\"alert\" style=\"padding-top:2px;padding-bottom:2px;margin-top:2px;margin-bottom:2px;\"></div>");
           
             var alertContent = $("<span></span>");
             $(alertContent).html(data.Content);
             $(alert).append(alertContent);
 
-            if (action != "@Faurecia.ADL.ViewModels.EnumActions.View"
-                && phase != "@Faurecia.ADL.Models.EnumPhase.IBP"
-                && status!="@Faurecia.ADL.Models.EnumStatus.Frozen")
+            if(!isOnlyView)
             {
-                var alertCloseButton = $("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"></button>");
-                $(alertCloseButton).append("<span aria-hidden=\"true\">&times;</span>");
-                $(alertCloseButton).prop("recordId",data.Id);
+                if (action != "@Faurecia.ADL.ViewModels.EnumActions.View"
+                    && phase != "@Faurecia.ADL.Models.EnumPhase.IBP"
+                    && status!="@Faurecia.ADL.Models.EnumStatus.Frozen")
+                {
+                    var alertCloseButton = $("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"></button>");
+                    $(alertCloseButton).append("<span aria-hidden=\"true\">&times;</span>");
+                    $(alertCloseButton).prop("recordId",data.Id);
 
-                //delete kick off
-                $(alertCloseButton).bind("click", function (event) {
-                    var deleteUrl = "@Url.Action("DeleteKickOff", new { area = "Faurecia.ADL" })";
-                    var deleteTimestamp = Math.round(new Date().getTime() / 1000);
-                    var recordId=$(alertCloseButton).prop("recordId");
-                    var reqdata ={ RecordId:recordId, key: deleteTimestamp };
-                    $.ajax({
-                        type: "get",
-                        url: deleteUrl,
-                        data: reqdata,
-                        async: false,
-                        success: function (data) {}
+                    //delete kick off
+                    $(alertCloseButton).bind("click", function (event) {
+                        var deleteUrl = "@Url.Action("DeleteKickOff", new { area = "Faurecia.ADL" })";
+                        var deleteTimestamp = Math.round(new Date().getTime() / 1000);
+                        var recordId=$(alertCloseButton).prop("recordId");
+                        var reqdata ={ RecordId:recordId, key: deleteTimestamp };
+                        $.ajax({
+                            type: "get",
+                            url: deleteUrl,
+                            data: reqdata,
+                            async: false,
+                            success: function (data) {}
+                        });
+                        $(popoverObject).popover("show");
+                        setPopoverUI($(popoverObject));
                     });
-                    $(popoverObject).popover("show");
-                    setPopoverUI($(popoverObject));
-                });
                 
-                $(alert).append(alertCloseButton);
+                    $(alert).append(alertCloseButton);
+                }
             }
             $(content).append(alert);
         }
 
         function setPopoverUI(popover) {
 
-            var url = "@Url.Action("GetKickOffCount", new { area = "Faurecia.ADL" })";
+           
             var timestamp = Math.round(new Date().getTime() / 1000);
             var adlRecordId=@Model.Head.Id;
-            var year = $(popover).data("year");
-            var month = $(popover).data("month");
-            var reqdata ={ ADLRecordId:adlRecordId,Year: year, Month:month, key: timestamp };
+            var date=$(popover).data("date");
+            if(!!date)
+            {
+                var url = "@Url.Action("GetKickOffCountByName", new { area = "Faurecia.ADL" })";
+                var reqdata ={Name:date, ADLRecordId:adlRecordId, key: timestamp };
+                $.get(url, reqdata, function (data) {
+                    $(popover).text(data);
+                });
+            }
+            else
+            {
+                @*var url = "@Url.Action("GetKickOffCount", new { area = "Faurecia.ADL" })";
+                var year = $(popover).data("year");
+                var month = $(popover).data("month");
+                var reqdata ={ ADLRecordId:adlRecordId,Year: year, Month:month, key: timestamp };
 
-            $.get(url, reqdata, function (data) {
-                $(popover).text(data);
-            });
+                $.get(url, reqdata, function (data) {
+                    $(popover).text(data);
+                });*@
+            }
         }
 
         function banBackSpace(e) 
