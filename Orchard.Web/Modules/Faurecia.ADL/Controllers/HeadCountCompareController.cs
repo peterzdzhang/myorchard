@@ -63,7 +63,7 @@ namespace Faurecia.ADL.Controllers
             return View("Index");
         }
 
-
+        
         public ActionResult GetData(string ids)
         {
             var data = new ChartData();
@@ -82,7 +82,7 @@ namespace Faurecia.ADL.Controllers
             }
             var lnq = from item in _adlHeadCountRecords.Table
                       where lstIds.Contains(item.ADLRecord.Id)
-                      select new QueryData
+                      select new HeadCountQueryData
                       {
                           Name = string.Format("{0}:{1}",item.ADLRecord.Id,item.ADLRecord.Name),
                           Year = item.Year.ToString(),
@@ -90,7 +90,7 @@ namespace Faurecia.ADL.Controllers
                                       + (item.Feb ?? 0)
                                       + (item.May ?? 0)
                                       + (item.Apr ?? 0)
-                                      + (item.May ?? 0)
+                                      + (item.Mar ?? 0)
                                       + (item.Jun ?? 0) 
                                       + (item.Jul ?? 0) 
                                       + (item.Aug ?? 0)
@@ -99,7 +99,7 @@ namespace Faurecia.ADL.Controllers
                                       + (item.Nov ?? 0) 
                                       + (item.Dev ?? 0)
                       };
-            IList<QueryData> lst = lnq.ToList();
+            IList<HeadCountQueryData> lst = lnq.ToList();
             data.Categories = lst.Select(item => item.Year).Distinct().OrderBy(o=>o).ToList();
             IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
             data.Legend = names;
@@ -119,37 +119,10 @@ namespace Faurecia.ADL.Controllers
         
     }
 
-    public class QueryData
+    public class HeadCountQueryData
     {
         public string Name { get; set; }
         public string Year { get; set; }
         public double HeadCount { get; set; }
-    }
-    public class ChartData
-    {
-        public ChartData()
-        {
-            Categories = new List<string>();
-            Series = new List<ChartSeriesData>();
-            Legend = new List<string>();
-
-        }
-        public IList<string> Categories { get; set; }
-        public IList<ChartSeriesData> Series { get; set; }
-
-        public IList<string> Legend { get; set; }
-    }
-
-    public class ChartSeriesData
-    {
-        public ChartSeriesData()
-        {
-            data = new List<double>();
-            type = "bar";
-        }
-        public string name { get; set; }
-        public IList<double> data { get; set; }
-       
-        public string type { get; set; }
     }
 }

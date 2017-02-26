@@ -26,6 +26,10 @@ namespace Faurecia.ADL
                                     .SetUrl("jquery.validate.unobtrusive.min.js", "jquery.validate.unobtrusive.js")
                                     .SetDependencies("Microsoft_jQueryAjax", "jquery_validate");
 
+            manifest.DefineScript("jquery_form")
+                    .SetVersion("3.51.0")
+                    .SetUrl("jquery.form.js")
+                    .SetDependencies("jQuery");
 
             manifest.DefineScript("echarts")
                     .SetVersion("3.4.0")

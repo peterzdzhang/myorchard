@@ -100,10 +100,12 @@
   <ItemGroup>
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ActivityTypeController.cs" />
+    <Compile Include="Controllers\CostCompareController.cs" />
     <Compile Include="Controllers\HeadCountCompareController.cs" />
     <Compile Include="Controllers\WorkingHourController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\HeadCountRecord.cs" />
     <Compile Include="Models\ADLCostRecord.cs" />
     <Compile Include="Models\ADLKickOffRecord.cs" />
     <Compile Include="Models\HourRatioRecord.cs" />
@@ -112,11 +114,13 @@
     <Compile Include="Models\ADLHeadCountRecord.cs" />
     <Compile Include="Models\ADLRecord.cs" />
     <Compile Include="Models\ActivityTypeRecord.cs" />
+    <Compile Include="Models\ActualCostRecord.cs" />
     <Compile Include="Models\WorkingHourRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="ViewModels\ChartData.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\ADLHeadViewModel.cs" />
     <Compile Include="ViewModels\ADLDetailViewModel.cs" />
@@ -153,6 +157,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-ui-addon-timepicker.js" />
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -191,6 +196,7 @@
     <Content Include="Views\UserRole\_EditRole.cshtml" />
     <Content Include="Views\UserRole\_CreateUser.cshtml" />
     <Content Include="Views\HeadCountCompare\Index.cshtml" />
+    <Content Include="Views\CostCompare\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

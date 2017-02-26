@@ -215,7 +215,42 @@ namespace Faurecia.ADL {
                                                     , tableDbName
                                                     , DateTime.Now));
 
-            return 5;
+
+            // Creating table ActualCostRecord
+            SchemaBuilder.CreateTable("ActualCostRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("YearMonth", DbType.String)
+                .Column("WBSID", DbType.String)
+                .Column("WBSElement", DbType.String)
+                .Column("CostValue", DbType.Double)
+                .Column("Creator", DbType.String)
+                .Column("CreateTime", DbType.DateTime)
+                .Column("Editor", DbType.String)
+                .Column("EditTime", DbType.DateTime)
+            );
+
+            SchemaBuilder.CreateTable("HeadCountRecord", table => table
+               .Column<int>("Id", col => col.PrimaryKey().Identity())
+               .Column("Year", DbType.Int32, col => col.Unique())
+               .Column("Jan", DbType.Double)
+               .Column("Feb", DbType.Double)
+               .Column("Mar", DbType.Double)
+               .Column("Apr", DbType.Double)
+               .Column("May", DbType.Double)
+               .Column("Jun", DbType.Double)
+               .Column("Jul", DbType.Double)
+               .Column("Aug", DbType.Double)
+               .Column("Sep", DbType.Double)
+               .Column("Oct", DbType.Double)
+               .Column("Nov", DbType.Double)
+               .Column("Dev", DbType.Double)
+               .Column("IsUsed", DbType.Boolean)
+               .Column("CreateTime", DbType.DateTime)
+               .Column("Creator", DbType.String)
+               .Column("EditTime", DbType.DateTime)
+               .Column("Editor", DbType.String)
+           );
+            return 6;
         }
 
 
@@ -287,6 +322,45 @@ namespace Faurecia.ADL {
                 table.AddColumn("Name", DbType.String);
             });
             return 5;
+        }
+
+        public int UpdateFrom5()
+        {
+            // Creating table ActualCostRecord
+            SchemaBuilder.CreateTable("ActualCostRecord", table => table
+                .Column<int>("Id", col => col.PrimaryKey().Identity())
+                .Column("YearMonth", DbType.String)
+                .Column("WBSID", DbType.String)
+                .Column("WBSElement", DbType.String)
+                .Column("CostValue", DbType.Double)
+                .Column("Creator", DbType.String)
+                .Column("CreateTime", DbType.DateTime)
+                .Column("Editor", DbType.String)
+                .Column("EditTime", DbType.DateTime)
+            );
+
+            SchemaBuilder.CreateTable("HeadCountRecord", table => table
+             .Column<int>("Id", col => col.PrimaryKey().Identity())
+             .Column("Year", DbType.Int32, col => col.Unique())
+             .Column("Jan", DbType.Double)
+             .Column("Feb", DbType.Double)
+             .Column("Mar", DbType.Double)
+             .Column("Apr", DbType.Double)
+             .Column("May", DbType.Double)
+             .Column("Jun", DbType.Double)
+             .Column("Jul", DbType.Double)
+             .Column("Aug", DbType.Double)
+             .Column("Sep", DbType.Double)
+             .Column("Oct", DbType.Double)
+             .Column("Nov", DbType.Double)
+             .Column("Dev", DbType.Double)
+             .Column("IsUsed", DbType.Boolean)
+             .Column("CreateTime", DbType.DateTime)
+             .Column("Creator", DbType.String)
+             .Column("EditTime", DbType.DateTime)
+             .Column("Editor", DbType.String)
+         );
+            return 6;
         }
     }
 }

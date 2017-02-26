@@ -21,6 +21,7 @@
                     <button class="btn btn-info" type="submit" name="submit.Query" value="Query">@T("Filter")</button>
                     <button class="btn btn-success" type="button" name="button.Diff" value="Diff">@T("Compare")</button>
                     <button class="btn btn-success" type="button" name="button.CompareHeadCount" value="CompareHeadCount">@T("Compare HeadCount")</button>
+                    <button class="btn btn-success" type="button" name="button.CompareCost" value="CompareCost">@T("Compare Cost")</button>
                     <button class="btn btn-danger" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
@@ -106,6 +107,22 @@
                 if (ids == "") return;
                 var returnurl = "@HttpContext.Current.Request.RawUrl";
                 var url="@Url.Action("Index", "HeadCountCompare", new { Area= "Faurecia.ADL" })";
+                location.href = url + "?ids=" + ids + "&returnurl=" + returnurl;
+            });
+
+            $("button[name='button.CompareCost']").bind("click", function () {
+
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+
+                var ids = "";
+                $(checkboxs).each(function(i,item){
+                    if (ids != "") ids = ids + ",";
+                    ids = ids + $(item).val();
+                });
+                if (ids == "") return;
+                var returnurl = "@HttpContext.Current.Request.RawUrl";
+                var url="@Url.Action("Index", "CostCompare", new { Area= "Faurecia.ADL" })";
                 location.href = url + "?ids=" + ids + "&returnurl=" + returnurl;
             });
 
