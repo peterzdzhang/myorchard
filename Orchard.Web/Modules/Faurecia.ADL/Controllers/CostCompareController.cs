@@ -67,6 +67,11 @@ namespace Faurecia.ADL.Controllers
         {
             try
             {
+                if (costFile == null)
+                {
+                    return Json(new { Code = 0, Message = string.Empty }, JsonRequestBehavior.AllowGet);
+                }
+
                 if (costFile != null && costFile.ContentLength > 10)
                 {
                     if (!costFile.FileName.EndsWith(".xls") && !costFile.FileName.EndsWith(".xlsx"))
@@ -173,9 +178,8 @@ namespace Faurecia.ADL.Controllers
             }
         }
 
-        public ActionResult GetData(string ids)
+        public ActionResult GetData(string ids, string type, string year)
         {
-            var data = new ChartData();
             IList<int> lstIds = new List<int>();
             if (!string.IsNullOrEmpty(ids))
             {
@@ -189,27 +193,136 @@ namespace Faurecia.ADL.Controllers
                     }
                 }
             }
+            var data = (type == "Year") ? GetYearChartData(lstIds) : GetMonthChartData(lstIds, year);
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        private ChartData GetYearChartData(IList<int> lstIds)
+        {
+            var data = new ChartData();
             var lnq = from item in _adlCostRecords.Table
                       where lstIds.Contains(item.ADLRecord.Id)
-                      select new CostQueryData
+                      select new CostYearQueryData
                       {
                           Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
-                          WBSID=item.ADLRecord.WBSID,
+                          WBSID = item.ADLRecord.WBSID,
                           Year = item.Year.ToString(),
-                          Jan = (item.Jan ?? 0),
-                          Feb = (item.Feb ?? 0),
-                          May = (item.May ?? 0),
-                          Apr = (item.Apr ?? 0),
-                          Mar = (item.Mar ?? 0),
-                          Jun = (item.Jun ?? 0),
-                          Jul = (item.Jul ?? 0),
-                          Aug = (item.Aug ?? 0),
-                          Sep = (item.Sep ?? 0),
-                          Oct = (item.Oct ?? 0),
-                          Nov = (item.Nov ?? 0),
-                          Dev = (item.Dev ?? 0)
+                          Cost = (item.Jan ?? 0)
+                                      + (item.Feb ?? 0)
+                                      + (item.May ?? 0)
+                                      + (item.Apr ?? 0)
+                                      + (item.Mar ?? 0)
+                                      + (item.Jun ?? 0)
+                                      + (item.Jul ?? 0)
+                                      + (item.Aug ?? 0)
+                                      + (item.Sep ?? 0)
+                                      + (item.Oct ?? 0)
+                                      + (item.Nov ?? 0)
+                                      + (item.Dev ?? 0)
                       };
-            IList<CostQueryData> lst = lnq.ToList();
+            IList<CostYearQueryData> lst = lnq.ToList();
+            var lstYears= lst.Select(item => item.Year).Distinct().OrderBy(o => o).ToList();
+            data.Categories = lstYears;
+            IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
+            foreach (var name in names)
+            {
+                data.Legend.Add(name);
+                //Actual Cost
+                string wbsid = string.Empty;
+                var costQueryData = lst.Where(w => w.Name == name).FirstOrDefault();
+                if (costQueryData != null)
+                {
+                    wbsid = costQueryData.WBSID;
+                }
+                if (!string.IsNullOrEmpty(wbsid))
+                {
+                    var qry = _actualCostRecords.Table.Where(w => w.WBSID == wbsid);
+                    if (qry.Count() > 0)
+                    {
+                        ChartSeriesData seriesData0 = new ChartSeriesData();
+                        seriesData0.name = wbsid;
+                        data.Legend.Add(wbsid);
+                        foreach (var year in lstYears)
+                        {
+                            string startMonth = string.Format("{0}01",year);
+                            string endMonth = string.Format("{0}12", year);
+                            var cost = qry.Where(w => w.YearMonth.CompareTo(startMonth)>=0 && w.YearMonth.CompareTo(endMonth)<=0)
+                                          .Sum(s => s.CostValue);
+                            seriesData0.data.Add(cost ?? 0);
+                        }
+                        data.Series.Add(seriesData0);
+                    }
+                }
+                //Cost
+                ChartSeriesData seriesData = new ChartSeriesData();
+                seriesData.name = name;
+                foreach (var year in lstYears)
+                {
+                    var cost = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Cost);
+                    seriesData.data.Add(cost);
+                }
+                data.Series.Add(seriesData);
+            }
+            return data;
+        }
+
+
+        private ChartData GetMonthChartData(IList<int> lstIds, string nyear)
+        {
+            var data = new ChartData();
+            
+            IList<CostMonthQueryData> lst;
+            if (string.IsNullOrEmpty(nyear))
+            {
+                var lnq = from item in _adlCostRecords.Table
+                          where lstIds.Contains(item.ADLRecord.Id)
+                          select new CostMonthQueryData
+                          {
+                              Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
+                              WBSID = item.ADLRecord.WBSID,
+                              Year = item.Year.ToString(),
+                              Jan = (item.Jan ?? 0),
+                              Feb = (item.Feb ?? 0),
+                              May = (item.May ?? 0),
+                              Apr = (item.Apr ?? 0),
+                              Mar = (item.Mar ?? 0),
+                              Jun = (item.Jun ?? 0),
+                              Jul = (item.Jul ?? 0),
+                              Aug = (item.Aug ?? 0),
+                              Sep = (item.Sep ?? 0),
+                              Oct = (item.Oct ?? 0),
+                              Nov = (item.Nov ?? 0),
+                              Dev = (item.Dev ?? 0)
+                          };
+                lst = lnq.ToList();
+            }
+            else
+            {
+                var lnq = from item in _adlCostRecords.Table
+                          where lstIds.Contains(item.ADLRecord.Id) && item.Year == Convert.ToInt32(nyear)
+                          select new CostMonthQueryData
+                          {
+                              Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
+                              WBSID = item.ADLRecord.WBSID,
+                              Year = item.Year.ToString(),
+                              Jan = (item.Jan ?? 0),
+                              Feb = (item.Feb ?? 0),
+                              May = (item.May ?? 0),
+                              Apr = (item.Apr ?? 0),
+                              Mar = (item.Mar ?? 0),
+                              Jun = (item.Jun ?? 0),
+                              Jul = (item.Jul ?? 0),
+                              Aug = (item.Aug ?? 0),
+                              Sep = (item.Sep ?? 0),
+                              Oct = (item.Oct ?? 0),
+                              Nov = (item.Nov ?? 0),
+                              Dev = (item.Dev ?? 0)
+                          };
+                lst = lnq.ToList();
+            }
+
+            
             IList<string> lstYears = lst.Select(item => item.Year).Distinct().OrderBy(o => o).ToList();
             foreach (var year in lstYears)
             {
@@ -299,9 +412,8 @@ namespace Faurecia.ADL.Controllers
                 }
                 data.Series.Add(seriesData);
             }
-            return Json(data, JsonRequestBehavior.AllowGet);
+            return data;
         }
-
     }
 
     public class ActualCostUploadData{
@@ -309,7 +421,15 @@ namespace Faurecia.ADL.Controllers
         public double CostValue { get; set; }
     }
 
-    public class CostQueryData
+    public class CostYearQueryData
+    {
+        public string Name { get; set; }
+        public string WBSID { get; set; }
+        public string Year { get; set; }
+        public double Cost { get; set; }
+    }
+
+    public class CostMonthQueryData
     {
         public string Name { get; set; }
         public string WBSID { get; set; }

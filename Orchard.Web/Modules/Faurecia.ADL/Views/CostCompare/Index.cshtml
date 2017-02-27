@@ -15,38 +15,50 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
-            <div class="col-lg-6 col-sm-6 col-xs-6">
-            @using (Html.BeginForm("UploadFile", "CostCompare", null, FormMethod.Post,
-                                    new { @class = "form-horizontal", resource = "form", id = "frmUploadFile", enctype = "multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="input-group">
-                    <input type="file" id="CostFile" name="CostFile" class="form-control">
-                    <span class="input-group-btn">
-                        <button type="submit" name="Upload" class="btn btn-success">@T("Upload")</button>
-                    </span>
+            <div class="col-lg-10 col-sm-10 col-xs-10">
+                <div class="form-inline">
+                    <div class="form-group"  style="min-width:240px">
+                        <button class="btn btn-sm btn-default" type="button" name="button.Year" value="Year">@T("By Year")</button>
+                        <button class="btn btn-sm btn-success" type="button" name="button.Month" value="Month">@T("By Month")</button>
+                        <select id="drpYears" class="form-control" style="display:none"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-static" for="CostFile">@T("Finance File"):</label>
+                    </div>
+                    <div class="form-group">
+                        @using (Html.BeginForm("UploadFile", "CostCompare", null, FormMethod.Post,
+                                new { @class = "form-inline", resource = "form", id = "frmUploadFile", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="input-group">
+                                <input type="file" id="CostFile" name="CostFile" class="form-control">
+                                <span class="input-group-btn">
+                                    <button type="submit" name="Upload" class="btn btn-success">@T("Upload")</button>
+                                </span>
+                            </div>
+                        }
+                    </div>
                 </div>
-            }
             </div>
-            <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+            <div class="col-lg-2 col-sm-2 col-xs-2 text-right">
                 @if (!string.IsNullOrEmpty(returnUrl))
-            {
-                    @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default  btn-sm" });
-            }
+                {
+                    @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default btn-sm" });
+                }
             </div>
         </div>
     </div>
  
     <div class="panel-body">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-lg-12" id="chartContainer">
-                <div id="chart" style="width:1000px;height:400px;"></div>
-            </div>
+        <div id="chartContainer">
+            <div id="chart" style="width:1000px;height:400px;"></div>
         </div>
-        <table id="chartData" class="table table-condensed table-bordered"  style="width:auto;">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
+        <div style="margin-left:80px;margin-right:80px;overflow:auto">
+            <table id="chartData" class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
 @using (Script.Foot())
@@ -83,8 +95,32 @@
 
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
-            refreshChart();
 
+            refreshChart("Year");
+            $("button[name='button.Year']").click(function () {
+                refreshChart("Year");
+
+                $("button[name='button.Year']").removeClass("btn-success");
+                $("button[name='button.Year']").addClass("btn-default");
+
+                $("button[name='button.Month']").removeClass("btn-default");
+                $("button[name='button.Month']").addClass("btn-success");
+            });
+
+            $("button[name='button.Month']").click(function () {
+                refreshChart("Month");
+
+                $("button[name='button.Month']").removeClass("btn-success");
+                $("button[name='button.Month']").addClass("btn-default");
+
+                $("button[name='button.Year']").removeClass("btn-default");
+                $("button[name='button.Year']").addClass("btn-success");
+            });
+
+            $("#drpYears").change(function () {
+                var year = $(this).val();
+                refreshChart("Month", year);
+            });
         });
 
         function beginSave() {
@@ -95,18 +131,22 @@
             if (result.Code > 0) {
                 alert(result.Message);
             }
-            else {
+            else
+            {
+                if(result.Message=="") {
+                    return;
+                }
                 alert(result.Message);
-                refreshChart();
+                refreshChart("Month", year);
             }
         }
 
-        function refreshChart() {
+        function refreshChart(type, year) {
             var ids = "@Request["ids"]";
             var url="@Url.Action("GetData", "CostCompare", new { Area= "Faurecia.ADL" })";
-            url = url + "?ids=" + ids;
+            var reqdata = { type: type, ids: ids, year: year };
             // 异步加载数据
-            $.get(url,null,function (data) {
+            $.get(url, reqdata, function (data) {
                 // 填入数据
                 myChart.setOption({
                     xAxis: {
@@ -117,33 +157,42 @@
                     },
                     series: data.Series
                 });
-
+                if (type == "Year") {
+                    $("#drpYears").css("display", "none");
+                    $("#drpYears").empty();
+                    $("#drpYears").append("<option></option>");
+                    for (var i = 0; i < data.Categories.length; i++) {
+                        var option = $("<option></option>");
+                        $(option).val(data.Categories[i]);
+                        $(option).text(data.Categories[i]);
+                        $("#drpYears").append(option);
+                    }
+                }
+                else {
+                    $("#drpYears").css("display", "inline");
+                }
                 var table = $("#chartData");
                 var thead = $(table).find("thead");
                 thead.empty();
                 var tr = $("<tr></tr>");
                 var th = $("<th></th>");
                 tr.append(th);
-                for (var i = 0; i < data.Series.length; i++) {
+                for (var i = 0; i < data.Categories.length; i++) {
                     th = $("<th></th>");
-                    th.text(data.Series[i].name);
+                    th.text(data.Categories[i]);
                     tr.append(th);
                 }
                 thead.append(tr);
-
-
-
                 var tbody = $(table).find("tbody");
                 tbody.empty();
-                for (var i = 0; i < data.Categories.length; i++) {
+                for (var i = 0; i < data.Series.length; i++) {
                     var tr = $("<tr></tr>");
                     var td = $("<td></td>");
-                    td.text(data.Categories[i]);
+                    td.text(data.Series[i].name);
                     tr.append(td);
-
-                    for (var j = 0; j < data.Series.length; j++) {
+                    for (var j = 0; j < data.Series[i].data.length; j++) {
                         var td = $("<td></td>");
-                        td.text( data.Series[j].data[i]);
+                        td.text(data.Series[i].data[j]);
                         tr.append(td);
                     }
                     tbody.append(tr);
