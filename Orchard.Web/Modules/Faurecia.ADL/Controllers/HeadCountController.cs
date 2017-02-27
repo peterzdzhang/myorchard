@@ -135,17 +135,17 @@ namespace Faurecia.ADL.Controllers
                 {
                     Year=DateTime.Now.Year-1,
                     Jan = 22 * 8,
-                    Feb = 20 * 8,
-                    Mar = 22 * 8,
-                    Apr = 21 * 8,
-                    May = 22 * 8,
-                    Jun = 21 * 8,
-                    Jul = 22 * 8,
-                    Aug = 22 * 8,
-                    Sep = 21 * 8,
-                    Oct = 22 * 8,
-                    Nov = 21 * 8,
-                    Dev = 22 * 8,
+                    //Feb = 20 * 8,
+                    //Mar = 22 * 8,
+                    //Apr = 21 * 8,
+                    //May = 22 * 8,
+                    //Jun = 21 * 8,
+                    //Jul = 22 * 8,
+                    //Aug = 22 * 8,
+                    //Sep = 21 * 8,
+                    //Oct = 22 * 8,
+                    //Nov = 21 * 8,
+                    //Dev = 22 * 8,
                     IsUsed=true,
                     CreateTime=DateTime.Now,
                     Creator=User.Identity.Name,
@@ -159,17 +159,17 @@ namespace Faurecia.ADL.Controllers
             viewModel.Ids.Add(0);
             viewModel.Year = record.Year+1;
             viewModel.Jan = record.Jan ?? 0;
-            viewModel.Feb = record.Feb ?? 0;
-            viewModel.Mar = record.Mar ?? 0;
-            viewModel.Apr = record.Apr ?? 0;
-            viewModel.May = record.May ?? 0;
-            viewModel.Jun = record.Jun ?? 0;
-            viewModel.Jul = record.Jul ?? 0;
-            viewModel.Aug = record.Aug ?? 0;
-            viewModel.Sep = record.Sep ?? 0;
-            viewModel.Oct = record.Oct ?? 0;
-            viewModel.Nov = record.Nov ?? 0;
-            viewModel.Dev = record.Dev ?? 0;
+            viewModel.Feb = record.Jan ?? 0;
+            viewModel.Mar = record.Jan ?? 0;
+            viewModel.Apr = record.Jan ?? 0;
+            viewModel.May = record.Jan ?? 0;
+            viewModel.Jun = record.Jan ?? 0;
+            viewModel.Jul = record.Jan ?? 0;
+            viewModel.Aug = record.Jan ?? 0;
+            viewModel.Sep = record.Jan ?? 0;
+            viewModel.Oct = record.Jan ?? 0;
+            viewModel.Nov = record.Jan ?? 0;
+            viewModel.Dev = record.Jan ?? 0;
             return PartialView("_Create", viewModel);
         }
         public ActionResult Edit(int id)
@@ -312,17 +312,17 @@ namespace Faurecia.ADL.Controllers
                     record = new HeadCountRecord();
                     record.Year = year;
                     record.Jan = viewModel.Jan;
-                    record.Feb = viewModel.Feb;
-                    record.Mar = viewModel.Mar;
-                    record.Apr = viewModel.Apr;
-                    record.May = viewModel.May;
-                    record.Jun = viewModel.Jun;
-                    record.Jul = viewModel.Jul;
-                    record.Aug = viewModel.Aug;
-                    record.Sep = viewModel.Sep;
-                    record.Oct = viewModel.Oct;
-                    record.Nov = viewModel.Nov;
-                    record.Dev = viewModel.Dev;
+                    record.Feb = viewModel.Jan;
+                    record.Mar = viewModel.Jan;
+                    record.Apr = viewModel.Jan;
+                    record.May = viewModel.Jan;
+                    record.Jun = viewModel.Jan;
+                    record.Jul = viewModel.Jan;
+                    record.Aug = viewModel.Jan;
+                    record.Sep = viewModel.Jan;
+                    record.Oct = viewModel.Jan;
+                    record.Nov = viewModel.Jan;
+                    record.Dev = viewModel.Jan;
                     record.IsUsed = true;
                     record.Editor = User.Identity.Name;
                     record.EditTime = DateTime.Now;
