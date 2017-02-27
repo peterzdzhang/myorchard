@@ -193,7 +193,7 @@ namespace Faurecia.ADL.Controllers
                       where lstIds.Contains(item.ADLRecord.Id)
                       select new CostQueryData
                       {
-                          Name = string.Format("{0}:{1}", item.ADLRecord.Id, item.ADLRecord.Name),
+                          Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
                           WBSID=item.ADLRecord.WBSID,
                           Year = item.Year.ToString(),
                           Jan = (item.Jan ?? 0),

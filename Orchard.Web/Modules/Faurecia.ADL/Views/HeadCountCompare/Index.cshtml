@@ -14,7 +14,12 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-lg-6 col-sm-6 col-xs-6">
-                &nbsp;
+                <div class="form-inline">
+                    <button class="btn btn-sm btn-default" type="button" name="button.Year" value="Year">@T("By Year")</button>
+                    <button class="btn btn-sm btn-success" type="button" name="button.Month" value="Month">@T("By Month")</button>
+                    <select id="drpYears" class="form-control" style="display:none">
+                    </select>
+                </div>
             </div>
             <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
                 @if (!string.IsNullOrEmpty(returnUrl))
@@ -26,19 +31,28 @@
     </div>
 
     <div class="panel-body">
-        <div id="chart" style="width: 800px;height:400px;"></div>
-        <table id="chartData" class="table table-condensed table-bordered" style="width: 720px;margin-top:0px;margin-left:0px">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
+        <div id="chartContainer">
+            <div id="chart" style="width: 800px;height:400px;"></div>
+        </div>
+        <div style="margin-left:80px;margin-right:80px;overflow:auto">
+            <table id="chartData" class="table table-condensed table-bordered">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
 @using (Script.Foot())
 {
     <script type="text/javascript">
+        var myChart;
         $(function () {
+
+            var width = $("#chartContainer").width();
+            $("#chart").width(width);
+
             // 基于准备好的dom，初始化echarts实例
-            var myChart = echarts.init($("#chart")[0]);
+            myChart = echarts.init($("#chart")[0]);
 
             // 指定图表的配置项和数据
             var option = {
@@ -58,12 +72,40 @@
 
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
+            refresh("Year");
+            $("button[name='button.Year']").click(function(){
+                refresh("Year");
 
+                $("button[name='button.Year']").removeClass("btn-success");
+                $("button[name='button.Year']").addClass("btn-default");
+
+                $("button[name='button.Month']").removeClass("btn-default");
+                $("button[name='button.Month']").addClass("btn-success");
+            });
+
+            $("button[name='button.Month']").click(function () {
+                refresh("Month");
+
+                $("button[name='button.Month']").removeClass("btn-success");
+                $("button[name='button.Month']").addClass("btn-default");
+
+                $("button[name='button.Year']").removeClass("btn-default");
+                $("button[name='button.Year']").addClass("btn-success");
+            });
+
+            $("#drpYears").change(function () {
+                var year=$(this).val();
+                refresh("Month", year);
+            });
+        });
+
+        function refresh(type,year) {
             var ids = "@Request["ids"]";
             var url="@Url.Action("GetData", "HeadCountCompare", new { Area= "Faurecia.ADL" })";
-            url = url + "?ids=" + ids;
+            //url = url + "?ids=" + ids;
+            var reqdata = {type:type,ids:ids,year:year};
             // 异步加载数据
-            $.get(url,null,function (data) {
+            $.get(url, reqdata, function (data) {
                 // 填入数据
                 myChart.setOption({
                     xAxis: {
@@ -75,20 +117,36 @@
                     series: data.Series
                 });
 
+                if (type == "Year") {
+                    $("#drpYears").css("display", "none");
+                    $("#drpYears").empty();
+                    $("#drpYears").append("<option></option>");
+                    for (var i = 0; i < data.Categories.length; i++) {
+                        var option = $("<option></option>");
+                        $(option).val(data.Categories[i]);
+                        $(option).text(data.Categories[i]);
+                        $("#drpYears").append(option);
+                    }
+                }
+                else {
+                    $("#drpYears").css("display", "inline");
+                }
+
                 var table = $("#chartData");
                 var thead = $(table).find("thead");
-
+                thead.empty();
                 var tr = $("<tr></tr>");
-                var th = $("<th width='80px'></th>");
+                var th = $("<th></th>");
                 tr.append(th);
                 for (var i = 0; i < data.Categories.length; i++) {
-                    th = $("<th width='120px'></th>");
+                    th = $("<th></th>");
                     th.text(data.Categories[i]);
                     tr.append(th);
                 }
                 thead.append(tr);
 
                 var tbody = $(table).find("tbody");
+                tbody.empty();
                 for (var i = 0; i < data.Series.length; i++) {
                     var tr = $("<tr></tr>");
                     var td = $("<td></td>");
@@ -103,6 +161,6 @@
                     tbody.append(tr);
                 }
             });
-        });
+        }
     </script>
 }
