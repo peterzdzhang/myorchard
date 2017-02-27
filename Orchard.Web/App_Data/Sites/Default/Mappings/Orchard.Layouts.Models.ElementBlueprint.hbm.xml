@@ -1,0 +1,27 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Layouts.Models.ElementBlueprint, Orchard.Layouts, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Layouts_ElementBlueprint">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <property name="BaseElementTypeName" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="BaseElementTypeName" />
+    </property>
+    <property name="ElementTypeName" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ElementTypeName" />
+    </property>
+    <property name="ElementDisplayName" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ElementDisplayName" />
+    </property>
+    <property name="ElementDescription" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ElementDescription" />
+    </property>
+    <property name="ElementCategory" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ElementCategory" />
+    </property>
+    <property name="BaseElementState" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="BaseElementState" length="10000" />
+    </property>
+  </class>
+</hibernate-mapping>

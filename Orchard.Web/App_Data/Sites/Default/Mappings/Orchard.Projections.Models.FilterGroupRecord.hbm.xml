@@ -1,0 +1,19 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Projections.Models.FilterGroupRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Projections_FilterGroupRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <bag cascade="all-delete-orphan" fetch="select" name="Filters">
+      <cache usage="read-write" />
+      <key>
+        <column name="FilterGroupRecord_id" />
+      </key>
+      <one-to-many class="Orchard.Projections.Models.FilterRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" />
+    </bag>
+    <many-to-one class="Orchard.Projections.Models.QueryPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="QueryPartRecord">
+      <column name="QueryPartRecord_id" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

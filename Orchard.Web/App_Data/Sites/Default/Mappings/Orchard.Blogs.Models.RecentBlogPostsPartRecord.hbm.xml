@@ -1,0 +1,18 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.Blogs.Models.RecentBlogPostsPartRecord, Orchard.Blogs, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Blogs_RecentBlogPostsPartRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="foreign">
+        <param name="property">ContentItemRecord</param>
+      </generator>
+    </id>
+    <property name="BlogId" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="BlogId" />
+    </property>
+    <property name="Count" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Count" />
+    </property>
+    <one-to-one class="Orchard.ContentManagement.Records.ContentItemRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" constrained="true" name="ContentItemRecord" />
+  </class>
+</hibernate-mapping>

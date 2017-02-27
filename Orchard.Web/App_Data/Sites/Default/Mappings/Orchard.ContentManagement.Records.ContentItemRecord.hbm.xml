@@ -1,0 +1,100 @@
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Orchard.ContentManagement.Records.ContentItemRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Orchard_Framework_ContentItemRecord">
+    <cache usage="read-write" />
+    <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Id" />
+      <generator class="identity" />
+    </id>
+    <bag name="Versions">
+      <cache usage="read-write" />
+      <key>
+        <column name="ContentItemRecord_id" />
+      </key>
+      <one-to-many class="Orchard.ContentManagement.Records.ContentItemVersionRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" />
+    </bag>
+    <property name="Data" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="Data" length="10000" />
+    </property>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Common.Models.IdentityPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="IdentityPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Common.Models.CommonPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="CommonPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Users.Models.UserPartRecord, Orchard.Users, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="UserPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.MediaProcessing.Models.ImageProfilePartRecord, Orchard.MediaProcessing, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="ImageProfilePartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Widgets.Models.LayerPartRecord, Orchard.Widgets, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="LayerPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Widgets.Models.WidgetPartRecord, Orchard.Widgets, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="WidgetPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Navigation.Models.AdminMenuPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="AdminMenuPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Navigation.Models.MenuPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="MenuPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.ContentPicker.Models.ContentMenuItemPartRecord, Orchard.ContentPicker, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="ContentMenuItemPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Comments.Models.CommentPartRecord, Orchard.Comments, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="CommentPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Comments.Models.CommentsPartRecord, Orchard.Comments, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="CommentsPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Taxonomies.Models.TaxonomyPartRecord, Orchard.Taxonomies, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="TaxonomyPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Taxonomies.Models.TermPartRecord, Orchard.Taxonomies, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="TermPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Taxonomies.Models.TermsPartRecord, Orchard.Taxonomies, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="TermsPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Projections.Models.NavigationQueryPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="NavigationQueryPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Projections.Models.ProjectionPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="ProjectionPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Projections.Models.FieldIndexPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="FieldIndexPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Projections.Models.QueryPartRecord, Orchard.Projections, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="QueryPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Containers.Models.ContainablePartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="ContainablePartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Containers.Models.ContainerPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="ContainerPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Containers.Models.ContainerWidgetPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="ContainerWidgetPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Core.Containers.Models.CustomPropertiesPartRecord, Orchard.Core, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="CustomPropertiesPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.MediaLibrary.Models.MediaPartRecord, Orchard.MediaLibrary, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="MediaPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Blogs.Models.BlogArchivesPartRecord, Orchard.Blogs, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="BlogArchivesPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Blogs.Models.RecentBlogPostsPartRecord, Orchard.Blogs, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="RecentBlogPostsPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one access="noop" cascade="all" class="Orchard.Tags.Models.TagsPartRecord, Orchard.Tags, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" foreign-key="none" insert="false" name="TagsPartRecord" update="false">
+      <column name="Id" unique="true" />
+    </many-to-one>
+    <many-to-one class="Orchard.ContentManagement.Records.ContentTypeRecord, Orchard.Framework, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ContentType">
+      <column name="ContentType_id" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

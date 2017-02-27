@@ -93,9 +93,7 @@ namespace Orchard.Data.Migration {
                     distributedLockSchemaBuilder.CreateSchema();
                     return;
                 }
-
-                //distributedLockSchemaBuilder.CreateSchema();
-
+                distributedLockSchemaBuilder.CreateSchema();
                 distributedLockSchemaBuilder.CreateSchema();
                 _transactionManager.RequireNew();
             }
