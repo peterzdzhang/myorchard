@@ -71,7 +71,7 @@
             $("input[type='checkbox'][name$='.IsChecked']").bind("change", function () {
                 var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
                 var isChecked = $(this).prop("checked");
-                if (isChecked && $(checkboxs).length > 3) {
+                if (isChecked && $(checkboxs).length > 20) {
                     $(this).prop("checked", !isChecked);
                     event.preventDefault();
                 }

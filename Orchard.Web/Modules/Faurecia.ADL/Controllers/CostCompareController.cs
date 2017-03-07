@@ -205,7 +205,9 @@ namespace Faurecia.ADL.Controllers
                       where lstIds.Contains(item.ADLRecord.Id)
                       select new CostYearQueryData
                       {
-                          Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
+                          Name = string.Format("{0}.{1}({2})", item.ADLRecord.ProjectNo
+                                             , item.ADLRecord.VersionNo
+                                             , string.IsNullOrEmpty(item.ADLRecord.WBSID)?T("None").Text:item.ADLRecord.WBSID),
                           WBSID = item.ADLRecord.WBSID,
                           Year = item.Year.ToString(),
                           Cost = (item.Jan ?? 0)
@@ -224,46 +226,82 @@ namespace Faurecia.ADL.Controllers
             IList<CostYearQueryData> lst = lnq.ToList();
             var lstYears= lst.Select(item => item.Year).Distinct().OrderBy(o => o).ToList();
             data.Categories = lstYears;
-            IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
-            foreach (var name in names)
+            IList<string> lstWBSID = lst.Select(item => item.WBSID).Distinct().OrderBy(o => o).ToList();
+
+            foreach(var wbsid in lstWBSID)
             {
-                data.Legend.Add(name);
-                //Actual Cost
-                string wbsid = string.Empty;
-                var costQueryData = lst.Where(w => w.Name == name).FirstOrDefault();
-                if (costQueryData != null)
+                //Finance File Series.
+                ChartSeriesData seriesData0 = new ChartSeriesData();
+                seriesData0.name = string.Format("WBSID:({0})",string.IsNullOrEmpty(wbsid)? T("None").Text :wbsid);
+                data.Legend.Add(seriesData0.name);
+                var qry = _actualCostRecords.Table.Where(w => w.WBSID == wbsid);
+                if (qry.Count() > 0)
                 {
-                    wbsid = costQueryData.WBSID;
-                }
-                if (!string.IsNullOrEmpty(wbsid))
-                {
-                    var qry = _actualCostRecords.Table.Where(w => w.WBSID == wbsid);
-                    if (qry.Count() > 0)
+                    foreach (var year in lstYears)
                     {
-                        ChartSeriesData seriesData0 = new ChartSeriesData();
-                        seriesData0.name = wbsid;
-                        data.Legend.Add(wbsid);
-                        foreach (var year in lstYears)
-                        {
-                            string startMonth = string.Format("{0}01",year);
-                            string endMonth = string.Format("{0}12", year);
-                            var cost = qry.Where(w => w.YearMonth.CompareTo(startMonth)>=0 && w.YearMonth.CompareTo(endMonth)<=0)
-                                          .Sum(s => s.CostValue);
-                            seriesData0.data.Add(cost ?? 0);
-                        }
-                        data.Series.Add(seriesData0);
+                        string startMonth = string.Format("{0}01", year);
+                        string endMonth = string.Format("{0}12", year);
+                        var cost = qry.Where(w => w.YearMonth.CompareTo(startMonth) >= 0 && w.YearMonth.CompareTo(endMonth) <= 0)
+                                      .Sum(s => s.CostValue);
+                        seriesData0.data.Add(cost ?? 0);
                     }
                 }
-                //Cost
-                ChartSeriesData seriesData = new ChartSeriesData();
-                seriesData.name = name;
-                foreach (var year in lstYears)
+                else
                 {
-                    var cost = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Cost);
-                    seriesData.data.Add(cost);
+                    foreach (var year in lstYears)
+                    {
+                        seriesData0.data.Add(0);
+                    }
                 }
-                data.Series.Add(seriesData);
+                data.Series.Add(seriesData0);
+
+                //寻求所有WBSID==WBSID的项目数据。
+                ChartSeriesData seriesDataSum = null;
+
+                var names = lst.Where(w => w.WBSID == wbsid).Select(item => item.Name).Distinct().OrderBy(o => o);
+                var nameCount = names.Count();
+                if (nameCount > 1)
+                {
+                    seriesDataSum = new ChartSeriesData();
+                }
+                foreach (var name in names)
+                {
+                    ChartSeriesData seriesData = new ChartSeriesData();
+                    seriesData.name = name;
+                    data.Legend.Add(name);
+                    if (seriesDataSum != null)
+                    {
+                        seriesDataSum.name += string.Format("+ {0}", name);
+                    }
+                    for(int i=0;i<lstYears.Count;i++)
+                    {
+                        var year = lstYears[i];
+                        var cost = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Cost);
+                        seriesData.data.Add(cost);
+
+                        if (seriesDataSum != null)
+                        {
+                            if (seriesDataSum.data.Count > i)
+                            {
+                                seriesDataSum.data[i] += cost;
+                            }
+                            else
+                            {
+                                seriesDataSum.data.Add(cost);
+                            }
+                        }
+                    }
+                    data.Series.Add(seriesData);
+                }
+
+                if (seriesDataSum != null)
+                {
+                    seriesDataSum.name = seriesDataSum.name.Trim('+');
+                    data.Legend.Add(seriesDataSum.name);
+                    data.Series.Add(seriesDataSum);
+                }
             }
+            
             return data;
         }
 
@@ -279,7 +317,9 @@ namespace Faurecia.ADL.Controllers
                           where lstIds.Contains(item.ADLRecord.Id)
                           select new CostMonthQueryData
                           {
-                              Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
+                              Name = string.Format("{0}.{1}({2})", item.ADLRecord.ProjectNo
+                                             , item.ADLRecord.VersionNo
+                                             , string.IsNullOrEmpty(item.ADLRecord.WBSID) ? T("None").Text : item.ADLRecord.WBSID),
                               WBSID = item.ADLRecord.WBSID,
                               Year = item.Year.ToString(),
                               Jan = (item.Jan ?? 0),
@@ -303,7 +343,9 @@ namespace Faurecia.ADL.Controllers
                           where lstIds.Contains(item.ADLRecord.Id) && item.Year == Convert.ToInt32(nyear)
                           select new CostMonthQueryData
                           {
-                              Name = string.Format("{0}.{1}", item.ADLRecord.ProjectNo, item.ADLRecord.VersionNo),
+                              Name = string.Format("{0}.{1}({2})", item.ADLRecord.ProjectNo
+                                             , item.ADLRecord.VersionNo
+                                             , string.IsNullOrEmpty(item.ADLRecord.WBSID) ? T("None").Text : item.ADLRecord.WBSID),
                               WBSID = item.ADLRecord.WBSID,
                               Year = item.Year.ToString(),
                               Jan = (item.Jan ?? 0),
@@ -331,89 +373,134 @@ namespace Faurecia.ADL.Controllers
                     data.Categories.Add(string.Format("{0}{1}", year, month.ToString("00")));
                 }
             }
-            IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
-            foreach (var name in names)
+            IList<string> lstWBSID = lst.Select(item => item.WBSID).Distinct().OrderBy(o => o).ToList();
+
+            foreach (var wbsid in lstWBSID)
             {
-                data.Legend.Add(name);
-                //Actual Cost
-                string wbsid = string.Empty;
-                var costQueryData = lst.Where(w => w.Name == name).FirstOrDefault();
-                if (costQueryData != null)
+                //Finance File Series.
+                ChartSeriesData seriesData0 = new ChartSeriesData();
+                seriesData0.name = string.Format("WBSID:({0})", string.IsNullOrEmpty(wbsid) ? T("None").Text : wbsid);
+                data.Legend.Add(seriesData0.name);
+                var qry = _actualCostRecords.Table.Where(w => w.WBSID == wbsid);
+                if (qry.Count() > 0)
                 {
-                    wbsid = costQueryData.WBSID;
-                }
-                if (!string.IsNullOrEmpty(wbsid))
-                {
-                    var qry = _actualCostRecords.Table.Where(w => w.WBSID == wbsid);
-                    if (qry.Count() > 0)
+                    foreach (var year in lstYears)
                     {
-                        ChartSeriesData seriesData0 = new ChartSeriesData();
-                        seriesData0.name = wbsid;
-                        data.Legend.Add(wbsid);
-                        foreach (var year in lstYears)
-                        {
-                            var jan = qry.Where(w => w.YearMonth == string.Format("{0}01", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(jan ?? 0);
-                            var feb = qry.Where(w => w.YearMonth == string.Format("{0}02", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(feb ?? 0);
-                            var may = qry.Where(w => w.YearMonth == string.Format("{0}03", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(may ?? 0);
-                            var apr = qry.Where(w => w.YearMonth == string.Format("{0}04", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(apr ?? 0);
-                            var mar = qry.Where(w => w.YearMonth == string.Format("{0}05", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(mar ?? 0);
-                            var jun = qry.Where(w => w.YearMonth == string.Format("{0}06", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(jun ?? 0);
-                            var jul = qry.Where(w => w.YearMonth == string.Format("{0}07", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(jul ?? 0);
-                            var aug = qry.Where(w => w.YearMonth == string.Format("{0}08", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(aug ?? 0);
-                            var sep = qry.Where(w => w.YearMonth == string.Format("{0}09", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(sep ?? 0);
-                            var oct = qry.Where(w => w.YearMonth == string.Format("{0}10", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(oct ?? 0);
-                            var nov = qry.Where(w => w.YearMonth == string.Format("{0}11", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(nov ?? 0);
-                            var dev = qry.Where(w => w.YearMonth == string.Format("{0}12", year)).Sum(s => s.CostValue);
-                            seriesData0.data.Add(dev ?? 0);
-                        }
-                        data.Series.Add(seriesData0);
+                        var jan = qry.Where(w => w.YearMonth == string.Format("{0}01", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(jan ?? 0);
+                        var feb = qry.Where(w => w.YearMonth == string.Format("{0}02", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(feb ?? 0);
+                        var may = qry.Where(w => w.YearMonth == string.Format("{0}03", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(may ?? 0);
+                        var apr = qry.Where(w => w.YearMonth == string.Format("{0}04", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(apr ?? 0);
+                        var mar = qry.Where(w => w.YearMonth == string.Format("{0}05", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(mar ?? 0);
+                        var jun = qry.Where(w => w.YearMonth == string.Format("{0}06", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(jun ?? 0);
+                        var jul = qry.Where(w => w.YearMonth == string.Format("{0}07", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(jul ?? 0);
+                        var aug = qry.Where(w => w.YearMonth == string.Format("{0}08", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(aug ?? 0);
+                        var sep = qry.Where(w => w.YearMonth == string.Format("{0}09", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(sep ?? 0);
+                        var oct = qry.Where(w => w.YearMonth == string.Format("{0}10", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(oct ?? 0);
+                        var nov = qry.Where(w => w.YearMonth == string.Format("{0}11", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(nov ?? 0);
+                        var dev = qry.Where(w => w.YearMonth == string.Format("{0}12", year)).Sum(s => s.CostValue);
+                        seriesData0.data.Add(dev ?? 0);
                     }
                 }
-                //Cost
-                ChartSeriesData seriesData = new ChartSeriesData();
-                seriesData.name = name;
-                foreach (var year in lstYears)
+                else
                 {
-                    var jan = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jan);
-                    seriesData.data.Add(jan);
-                    var feb = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Feb);
-                    seriesData.data.Add(feb);
-                    var may = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.May);
-                    seriesData.data.Add(may);
-                    var apr = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Apr);
-                    seriesData.data.Add(apr);
-                    var mar = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Mar);
-                    seriesData.data.Add(mar);
-                    var jun = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jun);
-                    seriesData.data.Add(jun);
-                    var jul = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jul);
-                    seriesData.data.Add(jul);
-                    var aug = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Aug);
-                    seriesData.data.Add(aug);
-                    var sep = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Sep);
-                    seriesData.data.Add(sep);
-                    var oct = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Oct);
-                    seriesData.data.Add(oct);
-                    var nov = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Nov);
-                    seriesData.data.Add(nov);
-                    var dev = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Dev);
-                    seriesData.data.Add(dev);
+                    foreach (var year in lstYears)
+                    {
+                        for (var month = 1; month <= 12; month++)
+                        {
+                            seriesData0.data.Add(0);
+                        }
+                    }
                 }
-                data.Series.Add(seriesData);
+                data.Series.Add(seriesData0);
+
+                //寻求所有WBSID==WBSID的项目数据。
+                ChartSeriesData seriesDataSum = null;
+
+                var names = lst.Where(w => w.WBSID == wbsid).Select(item => item.Name).Distinct().OrderBy(o => o);
+                var nameCount = names.Count();
+                if (nameCount > 1)
+                {
+                    seriesDataSum = new ChartSeriesData();
+                }
+
+                foreach (var name in names)
+                {
+                    ChartSeriesData seriesData = new ChartSeriesData();
+                    seriesData.name = name;
+                    data.Legend.Add(name);
+                    if (seriesDataSum != null)
+                    {
+                        seriesDataSum.name += string.Format("+{0} ", name);
+                    }
+                    for (int i = 0; i < lstYears.Count; i++)
+                    {
+                        var year = lstYears[i];
+                        var jan = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jan);
+                        seriesData.data.Add(jan);
+                        var feb = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Feb);
+                        seriesData.data.Add(feb);
+                        var may = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.May);
+                        seriesData.data.Add(may);
+                        var apr = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Apr);
+                        seriesData.data.Add(apr);
+                        var mar = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Mar);
+                        seriesData.data.Add(mar);
+                        var jun = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jun);
+                        seriesData.data.Add(jun);
+                        var jul = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jul);
+                        seriesData.data.Add(jul);
+                        var aug = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Aug);
+                        seriesData.data.Add(aug);
+                        var sep = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Sep);
+                        seriesData.data.Add(sep);
+                        var oct = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Oct);
+                        seriesData.data.Add(oct);
+                        var nov = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Nov);
+                        seriesData.data.Add(nov);
+                        var dev = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Dev);
+                        seriesData.data.Add(dev);
+
+                        if (seriesDataSum != null)
+                        {
+                            for (var month = 0; month < 12; month++)
+                            {
+                                var index = i * 12 + month;
+                                if (seriesDataSum.data.Count > index)
+                                {
+                                    seriesDataSum.data[index] += seriesData.data[index];
+                                }
+                                else
+                                {
+                                    seriesDataSum.data.Add(seriesData.data[index]);
+                                }
+                            }
+                        }
+                    }
+                    data.Series.Add(seriesData);
+                }
+                if (seriesDataSum != null)
+                {
+                    seriesDataSum.name = seriesDataSum.name.Trim('+');
+                    data.Legend.Add(seriesDataSum.name);
+                    data.Series.Add(seriesDataSum);
+                }
             }
+            
             return data;
         }
+
+        
     }
 
     public class ActualCostUploadData{

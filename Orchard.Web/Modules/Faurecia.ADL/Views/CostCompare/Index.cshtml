@@ -175,7 +175,7 @@
                 var thead = $(table).find("thead");
                 thead.empty();
                 var tr = $("<tr></tr>");
-                var th = $("<th></th>");
+                var th = $("<th style='width:300px'></th>");
                 tr.append(th);
                 for (var i = 0; i < data.Categories.length; i++) {
                     th = $("<th></th>");
@@ -187,7 +187,7 @@
                 tbody.empty();
                 for (var i = 0; i < data.Series.length; i++) {
                     var tr = $("<tr></tr>");
-                    var td = $("<td></td>");
+                    var td = $("<td style='word-wrap:break-word'></td>");
                     td.text(data.Series[i].name);
                     tr.append(td);
                     for (var j = 0; j < data.Series[i].data.length; j++) {

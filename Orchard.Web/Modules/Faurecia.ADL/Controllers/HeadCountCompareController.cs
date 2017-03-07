@@ -31,6 +31,7 @@ namespace Faurecia.ADL.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IRepository<HeadCountRecord> _headCountRecords;
         private readonly IRepository<ADLHeadCountRecord> _adlHeadCountRecords;
+        private readonly IRepository<ADLRecord> _adlRecords;
 
         public IOrchardServices Services { get; set; }
         public HeadCountCompareController(IOrchardServices orchardService
@@ -38,13 +39,15 @@ namespace Faurecia.ADL.Controllers
                         ,IShapeFactory shapeFactory
                         ,IAuthorizationService authorizationService
                         ,IRepository<HeadCountRecord> headCountRecords
-                        , IRepository<ADLHeadCountRecord> adlHeadCountRecords)
+                        , IRepository<ADLHeadCountRecord> adlHeadCountRecords
+                        , IRepository<ADLRecord> adlRecords)
         {
             Services = orchardService;
             _siteService = siteService;
             _authorizationService = authorizationService;
             _headCountRecords = headCountRecords;
             _adlHeadCountRecords = adlHeadCountRecords;
+            _adlRecords = adlRecords;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -88,6 +91,10 @@ namespace Faurecia.ADL.Controllers
         private ChartData GetYearChartData(IList<int> lstIds)
         {
             var data = new ChartData();
+            var lnqADLRecord = from item in _adlRecords.Table
+                               where lstIds.Contains(item.Id)
+                               select string.Format("{0}.{1}", item.ProjectNo, item.VersionNo);
+
             var lnq = from item in _adlHeadCountRecords.Table
                       where lstIds.Contains(item.ADLRecord.Id)
                       select new HeadCountYearQueryData
@@ -109,8 +116,8 @@ namespace Faurecia.ADL.Controllers
                       };
             IList<HeadCountYearQueryData> lst = lnq.ToList();
             data.Categories = lst.Select(item => item.Year).Distinct().OrderBy(o => o).ToList();
-            IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
-            foreach (var name in names)
+            IList<string> names = lnqADLRecord.ToList();
+            foreach (var name in names.OrderBy(o => o))
             {
                 data.Legend.Add(name);
                 ChartSeriesData seriesData = new ChartSeriesData();
@@ -222,8 +229,11 @@ namespace Faurecia.ADL.Controllers
                     data.Categories.Add(string.Format("{0}{1}", year, month.ToString("00")));
                 }
             }
-            IList<string> names = lst.Select(item => item.Name).Distinct().OrderBy(o => o).ToList();
-            foreach (var name in names)
+            var lnqADLRecord = from item in _adlRecords.Table
+                               where lstIds.Contains(item.Id)
+                               select string.Format("{0}.{1}", item.ProjectNo, item.VersionNo);
+            IList<string> names = lnqADLRecord.ToList();
+            foreach (var name in names.OrderBy(o=>o))
             {
                 data.Legend.Add(name);
                 ChartSeriesData seriesData = new ChartSeriesData();
@@ -286,10 +296,13 @@ namespace Faurecia.ADL.Controllers
 
         private void Sum(ChartData data)
         {
+            if (data == null) return;
+            if (data.Series.Count <= 1) return;
+
             string sumLegendName = string.Empty;
             foreach(var name in data.Legend)
             {
-                sumLegendName +=string.Format("+{0}", name);
+                sumLegendName +=string.Format("+{0} ", name);
             }
             sumLegendName = sumLegendName.Trim('+');
             data.Legend.Add(sumLegendName);
