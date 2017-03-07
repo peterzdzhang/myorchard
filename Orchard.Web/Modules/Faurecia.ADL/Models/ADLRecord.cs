@@ -27,15 +27,27 @@ namespace Faurecia.ADL.Models
         public virtual string Type { get; set; }
 
         public virtual DateTime? StartDate { get; set; }
+
+        public virtual DateTime? PTRDate { get; set; }
+
+        public virtual DateTime? MockUp { get; set; }
+
         public virtual DateTime? OfferDate { get; set; }
+
+        public virtual DateTime? Award { get; set; }
+
+        public DateTime? ProgramKickOff { get; set; }
 
         public virtual DateTime? ProtoDate { get; set; }
 
-        public virtual DateTime? PTRDate { get; set; }
-        public virtual DateTime? SOPDate { get; set; }
-        public virtual DateTime? MockUp { get; set; }
-        public virtual DateTime? Award { get; set; }
+        public DateTime? DV { get; set; }
 
+        public DateTime? ToolingKickOff { get; set; }
+
+        public DateTime? PV { get; set; }
+
+        public virtual DateTime? SOPDate { get; set; }
+        
         public virtual string MileStoneComments { get; set; }
         //Vehicle/Frame information
         public virtual string Variant1 { get; set; }

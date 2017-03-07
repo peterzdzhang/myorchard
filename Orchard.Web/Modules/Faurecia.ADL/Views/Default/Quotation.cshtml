@@ -570,22 +570,22 @@
 
         $(function () {
 
-            $("[data-toggle='popover']").popover({
-                title: popoverTitle,
-                content:popoverContent
-            });
-            $("[data-toggle='popover']").bind("click",function(event){
-                $(this).popover("toggle");
-                event.stopPropagation();
-            });
+            //$("[data-toggle='popover']").popover({
+            //    title: popoverTitle,
+            //    content:popoverContent
+            //});
+            //$("[data-toggle='popover']").bind("click",function(event){
+            //    $(this).popover("toggle");
+            //    event.stopPropagation();
+            //});
 
-            $("[data-toggle='popover']").each(function(i,data){
-                setPopoverUI($(this));
-            });
+            //$("[data-toggle='popover']").each(function(i,data){
+            //    setPopoverUI($(this));
+            //});
 
-            $("body").bind("click",function(){
-                $("[data-toggle='popover']").popover("hide");
-            });
+            //$("body").bind("click",function(){
+            //    $("[data-toggle='popover']").popover("hide");
+            //});
 
             if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.View") {
                 $("input").attr("readonly", "readonly");
@@ -705,7 +705,7 @@
         }
 
         function GetProjectNo(name) {
-            if (name.length < 3) { return; }
+            if (name.length < 1) { return; }
             var url = "@Url.Action("GetProjectNo",new { area = "Faurecia.ADL" })";
             var timestamp = Math.round(new Date().getTime() / 1000);
             var reqdata = { name: name, key: timestamp };

@@ -81,130 +81,80 @@
         </div>
         @Html.LabelFor(m => m.Head.StartDate, T("Start Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2">
-            <div class="form-inline">
-                @Html.TextBoxFor(m => m.Head.StartDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "", @style = "margin:0px" })
-                <button type="button" class="btn btn-success" style="margin:0px"
-                        data-container="body"
-                        data-placement="top"
-                        data-html="true"
-                        data-trigger="manual"
-                        data-toggle="popover"
-                        data-date="@Html.IdFor(m=>m.Head.StartDate)">
-                   
-                </button>
-            </div>
-           
+            @Html.TextBoxFor(m => m.Head.StartDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "", @style = "margin:0px" })
             @Html.ValidationMessageFor(m => m.Head.StartDate)
         </div>
-        @Html.LabelFor(m => m.Head.Mockup, T("Mock up").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        @Html.LabelFor(m => m.Head.PTRDate, T("PTR Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
-            <div class="form-inline">
-                @Html.TextBoxFor(m => m.Head.Mockup, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
-                <button type="button" class="btn btn-success" style="margin:0px"
-                        data-container="body"
-                        data-placement="top"
-                        data-html="true"
-                        data-trigger="manual"
-                        data-toggle="popover"
-                        data-date="@Html.IdFor(m=>m.Head.Mockup)">
-                   
-                </button>
-            </div>
-            @Html.ValidationMessageFor(m => m.Head.Mockup)
+            @Html.TextBoxFor(m => m.Head.PTRDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.PTRDate)
         </div>
     </div>
     <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Mockup, T("Mockup Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.Mockup, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.Mockup)
+        </div>
+
         @Html.LabelFor(m => m.Head.OfferDate, T("Offer Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
-            <div class="form-inline">
             @Html.TextBoxFor(m => m.Head.OfferDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
-            <button type="button" class="btn btn-success" style="margin:0px"
-                    data-container="body"
-                    data-placement="top"
-                    data-html="true"
-                    data-trigger="manual"
-                    data-toggle="popover"
-                    data-date="@Html.IdFor(m=>m.Head.OfferDate)">
-               
-            </button>
-            </div>
             @Html.ValidationMessageFor(m => m.Head.OfferDate)
         </div>
-        @Html.LabelFor(m => m.Head.ProtoDate, T("Proto Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+       
+        @Html.LabelFor(m => m.Head.Award, T("Award Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
-            <div class="form-inline">
-            @Html.TextBoxFor(m => m.Head.ProtoDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
-            <button type="button" class="btn btn-success" style="margin:0px"
-                    data-container="body"
-                    data-placement="top"
-                    data-html="true"
-                    data-trigger="manual"
-                    data-toggle="popover"
-                    data-date="@Html.IdFor(m=>m.Head.ProtoDate)">
-               
-            </button>
-            </div>
-            @Html.ValidationMessageFor(m => m.Head.ProtoDate)
-        </div>
-        @Html.LabelFor(m => m.Head.Award, T("Award").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
-        <div class="col-sm-2 col-xs-2 col-lg-2">
-            <div class="form-inline">
             @Html.TextBoxFor(m => m.Head.Award, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
-            <button type="button" class="btn btn-success" style="margin:0px"
-                    data-container="body"
-                    data-placement="top"
-                    data-html="true"
-                    data-trigger="manual"
-                    data-toggle="popover"
-                    data-date="@Html.IdFor(m=>m.Head.Award)">
-               
-            </button>
-            </div>
             @Html.ValidationMessageFor(m => m.Head.Award)
         </div>
     </div>
     <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.ProgramKickOff, T("Program Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.ProgramKickOff, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.ProgramKickOff)
+        </div>
+        @Html.LabelFor(m => m.Head.ProtoDate, T("Proto Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.ProtoDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.ProtoDate)
+        </div>
+        @Html.LabelFor(m => m.Head.DV, T("DV Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.DV, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.DV)
+        </div>
+
+
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.ToolingKickOff, T("Tooling Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.ToolingKickOff, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.ToolingKickOff)
+        </div>
+        @Html.LabelFor(m => m.Head.PV, T("PV Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            @Html.TextBoxFor(m => m.Head.PV, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
+            @Html.ValidationMessageFor(m => m.Head.PV)
+        </div>
+
         @Html.LabelFor(m => m.Head.SOPDate, T("SOP Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
-            <div class="form-inline">
             @Html.TextBoxFor(m => m.Head.SOPDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
-            <button type="button" class="btn btn-success" style="margin:0px"
-                    data-container="body"
-                    data-placement="top"
-                    data-html="true"
-                    data-trigger="manual"
-                    data-toggle="popover"
-                    data-date="@Html.IdFor(m=>m.Head.SOPDate)">
-               
-            </button>
-            </div>
             @Html.ValidationMessageFor(m => m.Head.SOPDate)
-        </div>
-        @Html.LabelFor(m => m.Head.PTRDate, T("PTR Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
-        <div class="col-sm-2 col-xs-2 col-lg-2">
-            <div class="form-inline">
-            @Html.TextBoxFor(m => m.Head.PTRDate, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
-            <button type="button" class="btn btn-success" style="margin:0px"
-                    data-container="body"
-                    data-placement="top"
-                    data-html="true"
-                    data-trigger="manual"
-                    data-toggle="popover"
-                    data-date="@Html.IdFor(m=>m.Head.PTRDate)">
-               
-            </button>
-            </div>
-            @Html.ValidationMessageFor(m => m.Head.PTRDate)
         </div>
     </div>
     <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.MileStoneComments, T("Comments").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-10 col-lg-10">
-            @Html.TextAreaFor(m => m.Head.MileStoneComments, new { @class = "form-control", placeholder = "", rows = "10"  })
+            @Html.TextAreaFor(m => m.Head.MileStoneComments, new { @class = "form-control", placeholder = "", rows = "10" })
             @Html.ValidationMessageFor(m => m.Head.MileStoneComments)
         </div>
     </div>
 </div>
+
 <div class="alert alert-info text-center" style="padding:2px;margin:2px;">
     <div class="row" style="padding:5px;">
         <div class="col-sm-11 col-xs-11 col-lg-11">

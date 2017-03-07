@@ -128,7 +128,7 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult Create()
         {
-            HeadCountRecord record = _headCountRecords.Table.OrderByDescending(o => o.Year).FirstOrDefault();
+            HeadCountRecord record = _headCountRecords.Table.Where(w => w.IsUsed == true).OrderByDescending(o => o.Year).FirstOrDefault();
             if (record == null)
             {
                 record = new HeadCountRecord()
@@ -312,17 +312,17 @@ namespace Faurecia.ADL.Controllers
                     record = new HeadCountRecord();
                     record.Year = year;
                     record.Jan = viewModel.Jan;
-                    record.Feb = viewModel.Jan;
-                    record.Mar = viewModel.Jan;
-                    record.Apr = viewModel.Jan;
-                    record.May = viewModel.Jan;
-                    record.Jun = viewModel.Jan;
-                    record.Jul = viewModel.Jan;
-                    record.Aug = viewModel.Jan;
-                    record.Sep = viewModel.Jan;
-                    record.Oct = viewModel.Jan;
-                    record.Nov = viewModel.Jan;
-                    record.Dev = viewModel.Jan;
+                    record.Feb = viewModel.Feb;
+                    record.Mar = viewModel.Mar;
+                    record.Apr = viewModel.Apr;
+                    record.May = viewModel.May;
+                    record.Jun = viewModel.Jun;
+                    record.Jul = viewModel.Jul;
+                    record.Aug = viewModel.Aug;
+                    record.Sep = viewModel.Sep;
+                    record.Oct = viewModel.Oct;
+                    record.Nov = viewModel.Nov;
+                    record.Dev = viewModel.Dev;
                     record.IsUsed = true;
                     record.Editor = User.Identity.Name;
                     record.EditTime = DateTime.Now;

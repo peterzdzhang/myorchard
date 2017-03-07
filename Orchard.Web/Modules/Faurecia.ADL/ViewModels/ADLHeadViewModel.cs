@@ -59,17 +59,28 @@ namespace Faurecia.ADL.ViewModels
 
         public DateTime? StartDate { get; set; }
 
+        public DateTime? PTRDate { get; set; }
+
+        public DateTime? Mockup { get; set; }
+
         public DateTime? OfferDate { get; set; }
+
+        public DateTime? Award { get; set; }
+
+        public DateTime? ProgramKickOff { get; set; }
 
         public DateTime? ProtoDate { get; set; }
 
-        public DateTime? PTRDate { get; set; }
+        public DateTime? DV { get; set; }
 
+        public DateTime? ToolingKickOff { get; set; }
+
+        public DateTime? PV { get; set; }
+        
+        
         public DateTime? SOPDate { get; set; }
         
-        public DateTime? Mockup { get; set; }
-
-        public DateTime? Award { get; set; }
+        
         [StringLength(500)]
         public string MileStoneComments { get; set; }
 

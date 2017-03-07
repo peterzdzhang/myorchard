@@ -171,12 +171,16 @@ namespace Faurecia.ADL {
 				.Column("ProgramController", DbType.String)
 				.Column("Type", DbType.String)
 				.Column("StartDate", DbType.DateTime)
-				.Column("OfferDate", DbType.DateTime)
-				.Column("ProtoDate", DbType.DateTime)
-				.Column("PTRDate", DbType.DateTime)
-				.Column("SOPDate", DbType.DateTime)
-				.Column("MockUp", DbType.DateTime)
-				.Column("Award", DbType.DateTime)
+                .Column("PTRDate", DbType.DateTime)
+                .Column("MockUp", DbType.DateTime)
+                .Column("OfferDate", DbType.DateTime)
+                .Column("Award", DbType.DateTime)
+                .Column("ProgramKickOff", DbType.DateTime)
+                .Column("ProtoDate", DbType.DateTime)
+                .Column("DV", DbType.DateTime)
+                .Column("ToolingKickOff", DbType.DateTime)
+                .Column("PV", DbType.DateTime)
+                .Column("SOPDate", DbType.DateTime)
 				.Column("MileStoneComments", DbType.String)
 				.Column("Variant1", DbType.String)
 				.Column("Variant2", DbType.String)
@@ -250,7 +254,7 @@ namespace Faurecia.ADL {
                .Column("EditTime", DbType.DateTime)
                .Column("Editor", DbType.String)
            );
-            return 6;
+            return 7;
         }
 
 
@@ -361,6 +365,19 @@ namespace Faurecia.ADL {
              .Column("Editor", DbType.String)
          );
             return 6;
+        }
+
+        public int UpdateFrom6()
+        {
+            // alert table ActivityTypeRecord
+            SchemaBuilder.AlterTable("ADLRecord", table =>
+            {
+                table.AddColumn("ProgramKickOff", DbType.DateTime);
+                table.AddColumn("DV", DbType.DateTime);
+                table.AddColumn("ToolingKickOff", DbType.DateTime);
+                table.AddColumn("PV", DbType.DateTime);
+            });
+            return 7;
         }
     }
 }
