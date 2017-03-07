@@ -11,6 +11,7 @@ namespace Faurecia.ADL.Models
 
         public virtual int Id { get; set; }
         public virtual ActivityTypeRecord ActivityTypeRecord { get; set; }
+        public virtual int VersionNo { get; set; }
         public virtual int Year { get; set; }
         public virtual double? Jan { get; set; }
         public virtual double? Feb { get; set; }

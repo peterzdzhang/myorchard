@@ -85,12 +85,13 @@ namespace Faurecia.ADL.Controllers
             switch (options.Order)
             {
                 case ActivityTypeOrder.CostCenter:
-                    queries = queries.OrderBy(o =>o.CostCenter).OrderBy(o=>o.EditTime);
+                    queries = queries.OrderBy(o =>o.CostCenter);
                     break;
                 case ActivityTypeOrder.CostCenterDesc:
-                    queries = queries.OrderByDescending(o => o.CostCenter).OrderBy(o => o.EditTime);
+                    queries = queries.OrderByDescending(o => o.CostCenter);
                     break;
             }
+            queries = queries.OrderBy(o => o.ActivityType).OrderBy(o => o.RMBHour).OrderBy(o => o.VersionNo).OrderBy(o => o.EditTime);
             if (pager.GetStartIndex() > 0)
             {
                 queries = queries.Skip(pager.GetStartIndex());
@@ -166,7 +167,28 @@ namespace Faurecia.ADL.Controllers
             SetViewModelHourRatios(id, viewModel);
             return View("Create", viewModel);
         }
-
+        public ActionResult View(int id)
+        {
+            var activityTypeRecord = _activityTypeRecords.Table.Where(w => w.Id == id).FirstOrDefault();
+            if (activityTypeRecord == null)
+            {
+                return Create();
+            }
+            var viewModel = new ActivityTypeCreateViewModel()
+            {
+                ActivityType = activityTypeRecord.ActivityType,
+                Comment = activityTypeRecord.Comment,
+                CostCenter = activityTypeRecord.CostCenter,
+                DisplayGroup = activityTypeRecord.DisplayGroup,
+                IsUsed = activityTypeRecord.IsUsed,
+                RMBHour = activityTypeRecord.RMBHour,
+                TotalGroup = activityTypeRecord.TotalGroup
+            };
+            viewModel.Action = ActivityTypeBulkAction.View;
+            viewModel.Ids.Add(activityTypeRecord.Id);
+            SetViewModelHourRatios(id, viewModel);
+            return View("Create", viewModel);
+        }
 
         private void SetViewModelHourRatios(int id, ActivityTypeCreateViewModel viewModel)
         {
@@ -323,28 +345,24 @@ namespace Faurecia.ADL.Controllers
 
                 foreach (var id in viewModel.Ids)
                 {
-                    var record = new ActivityTypeRecord()
-                    {
-                        CreateTime = DateTime.Now,
-                        Creator = User.Identity.Name,
-                        IsUsed=true,
-                        Editor=User.Identity.Name,
-                        EditTime=DateTime.Now
-                    };
+                    ActivityTypeRecord record;
                     if (id != 0)
                     {
-                        var oldRecord = _activityTypeRecords.Get(id);
-                        oldRecord.EditTime = DateTime.Now;
-                        oldRecord.Editor = User.Identity.Name;
-                        oldRecord.IsUsed = false;
-                        _activityTypeRecords.Update(oldRecord);
-
-                        record.ActivityType = oldRecord.ActivityType;
-                        record.CostCenter = oldRecord.CostCenter;
-                        record.Comment = oldRecord.Comment;
-                        record.DisplayGroup = oldRecord.DisplayGroup;
-                        record.RMBHour = oldRecord.RMBHour;
-                        record.TotalGroup = oldRecord.TotalGroup;
+                        record = _activityTypeRecords.Get(id);
+                        SaveHistory(record);
+                        record.EditTime = DateTime.Now;
+                        record.Editor = User.Identity.Name;
+                    }
+                    else
+                    {
+                        record = new ActivityTypeRecord()
+                        {
+                            CreateTime = DateTime.Now,
+                            Creator = User.Identity.Name,
+                            IsUsed = true,
+                            Editor = User.Identity.Name,
+                            EditTime = DateTime.Now
+                        };
                     }
                     if (viewModel.Action == ActivityTypeBulkAction.Create)
                     {
@@ -367,8 +385,16 @@ namespace Faurecia.ADL.Controllers
                     {
                         record.Comment = viewModel.Comment;
                     }
+                    record.VersionNo = record.VersionNo + 1;
+                    if (id != 0)
+                    {
+                        _activityTypeRecords.Update(record);
+                    }
+                    else
+                    {
+                        _activityTypeRecords.Create(record);
+                    }
 
-                    _activityTypeRecords.Create(record);
                     foreach (var item in viewModel.HourRatios)
                     {
                         HourRatioRecord hrRecord = null;
@@ -396,7 +422,14 @@ namespace Faurecia.ADL.Controllers
                         hrRecord.Oct = item.HourRatio.Jan;
                         hrRecord.Nov = item.HourRatio.Jan;
                         hrRecord.Dev = item.HourRatio.Jan;
-                        _hourRatioRecords.Create(hrRecord);
+                        if (item.HourRatio.Id != 0)
+                        {
+                            _hourRatioRecords.Update(hrRecord);
+                        }
+                        else
+                        {
+                            _hourRatioRecords.Create(hrRecord);
+                        }
                     }
                 }
 
@@ -408,6 +441,50 @@ namespace Faurecia.ADL.Controllers
             }
 
             return Json(new { Code = 0, Message = T("Save success.").Text }, JsonRequestBehavior.AllowGet);
+        }
+
+        private void SaveHistory(ActivityTypeRecord record)
+        {
+            ActivityTypeRecord newRecord=new ActivityTypeRecord()
+            {
+                ActivityType=record.ActivityType,
+                CreateTime=record.CreateTime,
+                Comment=record.Comment,
+                CostCenter=record.CostCenter,
+                Creator=record.Creator,
+                DisplayGroup=record.DisplayGroup,
+                Editor = User.Identity.Name,
+                EditTime = DateTime.Now,
+                IsUsed =false,
+                OriginalRecordId=record.Id,
+                RMBHour=record.RMBHour,
+                TotalGroup=record.TotalGroup,
+                VersionNo=record.VersionNo
+            };
+            _activityTypeRecords.Create(newRecord);
+
+            var queries = _hourRatioRecords.Table.Where(w =>w.ActivityTypeRecord.Id == record.Id);
+            foreach (var item in queries)
+            {
+                HourRatioRecord hrRecord = hrRecord = new HourRatioRecord()
+                {
+                    ActivityTypeRecord = newRecord
+                };
+                hrRecord.Year = item.Year;
+                hrRecord.Jan = item.Jan;
+                hrRecord.Feb = item.Feb;
+                hrRecord.Mar = item.Mar;
+                hrRecord.Apr = item.Apr;
+                hrRecord.May = item.May;
+                hrRecord.Jun = item.Jun;
+                hrRecord.Jul = item.Jul;
+                hrRecord.Aug = item.Aug;
+                hrRecord.Sep = item.Sep;
+                hrRecord.Oct = item.Oct;
+                hrRecord.Nov = item.Nov;
+                hrRecord.Dev = item.Dev;
+                _hourRatioRecords.Create(hrRecord);
+            }
         }
     }
 }

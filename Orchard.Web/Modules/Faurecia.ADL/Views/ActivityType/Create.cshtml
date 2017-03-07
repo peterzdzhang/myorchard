@@ -3,6 +3,7 @@
 @{
     Script.Require("Microsoft_jQueryAjax_Validate");
     string returnUrl = Request["ReturnUrl"];
+    string readonlyClass = "";
 }
 <h1>
 @if (Model.Action == ActivityTypeBulkAction.Create)
@@ -12,6 +13,7 @@
 else if (Model.Action == ActivityTypeBulkAction.Edit)
 {
     @Html.TitleForPage(T("Hour rate maintenance (edit)").ToString())
+    readonlyClass = "readonly";
 }
 else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
 {
@@ -25,7 +27,10 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
        <div class="panel-heading">
            <div class="row">
                <div class="col-lg-6 col-sm-6 col-xs-6">
+                   @if (Model.Action != ActivityTypeBulkAction.View)
+                   {
                    <button type="submit" name="submit.Save" class="btn btn-primary" value="@T("Save")">@T("Save")</button>
+                   }
                </div>
                <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
                    @if (!string.IsNullOrEmpty(returnUrl))
@@ -50,17 +55,38 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 <div class="form-group">
                     @Html.LabelFor(m => m.CostCenter, T("Cost Center").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-xs-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.CostCenter, new { @class = "form-control", maxlength = "50", placeholder = "Cost Center" })
+                        @if (Model.Action == ActivityTypeBulkAction.Create)
+                        {                        
+                            @Html.TextBoxFor(m => m.CostCenter, new { @class = "form-control", maxlength = "50", placeholder = "Cost Center" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.CostCenter, new { @class = "form-control", @readonly="readonly", maxlength = "50", placeholder = "Cost Center" })
+                        }
                         @Html.ValidationMessageFor(m => m.CostCenter)
                     </div>
                     @Html.LabelFor(m => m.ActivityType, T("SAP Activity Type").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-xs-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.ActivityType, new { @class = "form-control", maxlength = "50", placeholder = "Activity Type" })
+                        @if (Model.Action == ActivityTypeBulkAction.Create)
+                        {
+                            @Html.TextBoxFor(m => m.ActivityType, new { @class = "form-control", maxlength = "50", placeholder = "Activity Type" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.ActivityType, new { @class = "form-control", @readonly = "readonly", maxlength = "50", placeholder = "Activity Type" })
+                        }
                         @Html.ValidationMessageFor(m => m.ActivityType)
                     </div>
                     @Html.LabelFor(m => m.RMBHour, T("Description").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-2 col-xs-2 col-lg-2">
-                        @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", maxlength = "50", placeholder = "RMB Hour" })
+                        @if (Model.Action == ActivityTypeBulkAction.Create)
+                        {
+                            @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", maxlength = "50", placeholder = "RMB Hour" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", @readonly = "readonly", maxlength = "50", placeholder = "RMB Hour" })
+                        }
                         @Html.ValidationMessageFor(m => m.RMBHour)
                     </div>
                 </div>
@@ -68,16 +94,26 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 <div class="form-group">
                     @Html.LabelFor(m => m.Comment, T("Comment").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
                     <div class="col-sm-10 col-xs-10 col-lg-10">
-                        @Html.TextBoxFor(m => m.Comment, new { @class = "form-control", maxlength = "50", placeholder = "Comment" })
+                        @if (Model.Action == ActivityTypeBulkAction.View)
+                        {
+                            @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", @readonly = "readonly", maxlength = "50", placeholder = "RMB Hour" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.Comment, new { @class = "form-control", maxlength = "50", placeholder = "Comment" })
+                        }
                         @Html.ValidationMessageFor(m => m.Comment)
                     </div>
                 </div>
             </div>
         </div>
        <div class="panel-body" style="margin-top:0px;margin-bottom:0px">
-           <button id="btnEditHourRatio" disabled="disabled" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
-               @T("Edit")
-           </button>
+           @if (Model.Action != ActivityTypeBulkAction.View)
+           {
+            <button id="btnEditHourRatio" disabled="disabled" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+                @T("Edit")
+            </button>
+           }
            <div id="hourRatios">
                @Html.Partial("_HourRatios", Model)
            </div>

@@ -18,6 +18,8 @@ namespace Faurecia.ADL {
                 .Column("ActivityType", DbType.String)
                 .Column("CostCenter", DbType.String)
                 .Column("RMBHour", DbType.String)
+                .Column("VersionNo", DbType.Int32)
+                .Column("OriginalRecordId", DbType.Int32)
                 .Column("Comment", DbType.String)
                 .Column("DisplayGroup", DbType.String)
                 .Column("TotalGroup", DbType.String)
@@ -124,6 +126,7 @@ namespace Faurecia.ADL {
 				.Column("Nov", DbType.Double)
 				.Column("Dev", DbType.Double)
                 .Column<int>("ActivityTypeRecord_Id")
+                .Column<int>("VersionNo")
                 .Column<int>("ADLRecord_Id")
             );
 
@@ -254,7 +257,7 @@ namespace Faurecia.ADL {
                .Column("EditTime", DbType.DateTime)
                .Column("Editor", DbType.String)
            );
-            return 7;
+            return 10;
         }
 
 
@@ -369,7 +372,7 @@ namespace Faurecia.ADL {
 
         public int UpdateFrom6()
         {
-            // alert table ActivityTypeRecord
+            // alert table ADLRecord
             SchemaBuilder.AlterTable("ADLRecord", table =>
             {
                 table.AddColumn("ProgramKickOff", DbType.DateTime);
@@ -377,7 +380,57 @@ namespace Faurecia.ADL {
                 table.AddColumn("ToolingKickOff", DbType.DateTime);
                 table.AddColumn("PV", DbType.DateTime);
             });
+            SchemaBuilder.AlterTable("ActivityTypeRecord", table =>
+            {
+                table.AddColumn("VersionNo", DbType.Int32);
+            });
+            
             return 7;
+        }
+        public int UpdateFrom7()
+        {
+            SchemaBuilder.AlterTable("ActivityTypeRecord", table =>
+            {
+                table.AddColumn("VersionNo", DbType.Int32);
+            });
+
+            var tableDbName = SchemaBuilder.TableDbName("ActivityTypeRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET VersionNo=1 WHERE IsUsed=1"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET VersionNo=0 WHERE IsUsed=0"
+                                        , tableDbName
+                                        , DateTime.Now));
+            return 8;
+        }
+        public int UpdateFrom8()
+        {
+            SchemaBuilder.AlterTable("ActivityTypeRecord", table =>
+            {
+                table.AddColumn("OriginalRecordId", DbType.Int32);
+            });
+
+            var tableDbName = SchemaBuilder.TableDbName("ActivityTypeRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET OriginalRecordId=1 WHERE IsUsed=0"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET OriginalRecordId=0 WHERE IsUsed=1"
+                                        , tableDbName
+                                        , DateTime.Now));
+            return 9;
+        }
+        public int UpdateFrom9()
+        {
+            SchemaBuilder.AlterTable("ADLHourRatioRecord", table =>
+            {
+                table.AddColumn("VersionNo", DbType.Int32);
+            });
+
+            var tableDbName = SchemaBuilder.TableDbName("ADLHourRatioRecord");
+            SchemaBuilder.ExecuteSql(string.Format("Update {0} SET VersionNo=1"
+                                                    , tableDbName
+                                                    , DateTime.Now));
+            return 10;
         }
     }
 }

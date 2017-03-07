@@ -1,5 +1,5 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLRecord, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.ADLRecord, App_Web_4uxyr4gu, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_ADLRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />
@@ -32,23 +32,35 @@
     <property name="StartDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="StartDate" />
     </property>
-    <property name="OfferDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="OfferDate" />
-    </property>
-    <property name="ProtoDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="ProtoDate" />
-    </property>
     <property name="PTRDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="PTRDate" />
-    </property>
-    <property name="SOPDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-      <column name="SOPDate" />
     </property>
     <property name="MockUp" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="MockUp" />
     </property>
+    <property name="OfferDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="OfferDate" />
+    </property>
     <property name="Award" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Award" />
+    </property>
+    <property name="ProgramKickOff" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ProgramKickOff" />
+    </property>
+    <property name="ProtoDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ProtoDate" />
+    </property>
+    <property name="DV" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="DV" />
+    </property>
+    <property name="ToolingKickOff" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="ToolingKickOff" />
+    </property>
+    <property name="PV" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="PV" />
+    </property>
+    <property name="SOPDate" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <column name="SOPDate" />
     </property>
     <property name="MileStoneComments" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="MileStoneComments" />
@@ -86,10 +98,10 @@
     <property name="WBSID" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="WBSID" />
     </property>
-    <property name="Status" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumStatus, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
+    <property name="Status" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumStatus, App_Web_4uxyr4gu, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
       <column name="Status" />
     </property>
-    <property name="Phase" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumPhase, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
+    <property name="Phase" type="FluentNHibernate.Mapping.GenericEnumMapper`1[[Faurecia.ADL.Models.EnumPhase, App_Web_4uxyr4gu, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null]], FluentNHibernate, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null">
       <column name="Phase" />
     </property>
     <property name="QuotationComments" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

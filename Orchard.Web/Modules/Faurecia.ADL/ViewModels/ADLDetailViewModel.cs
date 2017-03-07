@@ -53,6 +53,7 @@ namespace Faurecia.ADL.ViewModels
     {
         public int Id { get; set; }
         public string Comment { get; set; }
+        public int VersionNo { get; set; }
         public string RMBHour { get; set; }
         public string CostCenter { get; set; }
         public string ActivityType { get; set; }

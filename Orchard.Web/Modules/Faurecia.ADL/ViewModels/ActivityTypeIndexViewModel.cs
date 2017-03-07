@@ -67,6 +67,7 @@ namespace Faurecia.ADL.ViewModels
         None,
         Create,
         Edit,
+        View,
         Delete,
         BulkEdit,
         BulkDelete,

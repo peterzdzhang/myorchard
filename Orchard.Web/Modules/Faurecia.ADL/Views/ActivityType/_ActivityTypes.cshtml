@@ -10,6 +10,7 @@
             <th>@T("Cost Center")</th>
             <th>@T("SAP Activity Type")</th>
             <th>@T("Description")</th>
+            <th>@T("VersionNo")</th>
             <th>@T("Comment")</th>
             <th>@T("Is Used")</th>
             <th>@T("Editor")</th>
@@ -34,6 +35,9 @@
                 @entry.ActivityType.RMBHour
             </td>
             <td>
+                @entry.ActivityType.VersionNo
+            </td>
+            <td>
                 @entry.ActivityType.Comment
             </td>
             <td>
@@ -46,10 +50,9 @@
                 @string.Format("{0:yyyy-MM-dd HH:mm:ss}", entry.ActivityType.EditTime)
             </td>
             <td>
-                @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.ActivityType.Id, returnurl = HttpContext.Current.Request.RawUrl }) 
-                
-                @if (entry.ActivityType.IsUsed)
+                @if (entry.ActivityType.OriginalRecordId == 0)
                 {
+                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.ActivityType.Id, returnurl = HttpContext.Current.Request.RawUrl })
                     @T("|") 
                     @Ajax.ActionLink(T("Delete").ToString()
                        , "Delete"
@@ -58,6 +61,10 @@
                        {
                            OnComplete = "onCompleteDelete"
                        })
+                }
+                else
+                {
+                    @Html.ActionLink(T("View").ToString(), "View", new { entry.ActivityType.Id, returnurl = HttpContext.Current.Request.RawUrl })
                 }
             </td>
         </tr>

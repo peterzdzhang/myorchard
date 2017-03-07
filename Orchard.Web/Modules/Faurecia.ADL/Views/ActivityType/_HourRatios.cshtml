@@ -6,7 +6,10 @@
 <table class="table table-bordered table-condensed" style="margin-top:0px;margin-bottom:0px;width:300px">
     <thead>
         <tr class="active">
-            <th><input type="checkbox" class="check-all" /></th>
+            @if (Model.Action != ActivityTypeBulkAction.View)
+            {
+                <th><input type="checkbox" class="check-all" /></th>
+            }
             <th>@T("Year")</th>
             <th>@T("Hour rate")</th>
             @*<th>@T("Feb")</th>
@@ -25,16 +28,27 @@
     @foreach (var entry in Model.HourRatios)
     {
         <tr>
+            @if (Model.Action != ActivityTypeBulkAction.View)
+            {
             <td>
-                <input type="hidden" value="@Model.HourRatios[index].HourRatio.Id" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Id)" />
                 <input type="checkbox" value="true" name="@Html.NameOf(m => m.HourRatios[index].IsChecked)" />
             </td>
+            }
             <td>
+                <input type="hidden" value="@Model.HourRatios[index].HourRatio.Id" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Id)" />
                 @entry.HourRatio.Year.ToString()
                 <input type="hidden" value="@Model.HourRatios[index].HourRatio.Year" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Year)" />
             </td>
             <td style="padding:0px">
-                <input type="text" value="@Model.HourRatios[index].HourRatio.Jan" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jan)" id="@Html.IdFor(m=>m.HourRatios[index].HourRatio.Jan)"/>
+                @if (Model.Action == ActivityTypeBulkAction.View)
+                {
+                    <input type="text" readonly="readonly" value="@Model.HourRatios[index].HourRatio.Jan" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jan)" id="@Html.IdFor(m=>m.HourRatios[index].HourRatio.Jan)" />
+
+                }
+                else
+                {
+                    <input type="text" value="@Model.HourRatios[index].HourRatio.Jan" name="@Html.NameOf(m => m.HourRatios[index].HourRatio.Jan)" id="@Html.IdFor(m=>m.HourRatios[index].HourRatio.Jan)" />
+                }
             </td>
             @*<td style="padding:0px">
                 <input type="text" 

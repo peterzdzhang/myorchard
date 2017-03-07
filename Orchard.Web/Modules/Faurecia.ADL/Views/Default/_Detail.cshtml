@@ -296,6 +296,7 @@
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].Year)
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Id, new { @data_index = index })
+                        @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.VersionNo, new { @data_index = index })
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Comment)
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.DisplayGroup)
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.TotalGroup)

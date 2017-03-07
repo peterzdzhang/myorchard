@@ -505,6 +505,7 @@ namespace Faurecia.ADL.Controllers
                 lst.Add(new ActivityTypeEntry()
                 {
                     Id=item.Id,
+                    VersionNo=item.VersionNo,
                     ActivityType=item.ActivityType,
                     CostCenter=item.CostCenter,
                     RMBHour=item.RMBHour,
@@ -555,6 +556,10 @@ namespace Faurecia.ADL.Controllers
             viewModel.Head.IBP = adl.IBP;
             viewModel.Head.IBPTime = adl.IBPTime;
             viewModel.Head.WBSID = adl.WBSID;
+            viewModel.Head.PV= adl.PV;
+            viewModel.Head.DV=adl.DV;
+            viewModel.Head.ProgramKickOff=adl.ProgramKickOff;
+            viewModel.Head.ToolingKickOff = adl.ToolingKickOff;
         }
         private void SetDetailViewModel(ADLViewModel viewModel,ADLRecord adl)
         {
@@ -570,6 +575,7 @@ namespace Faurecia.ADL.Controllers
                     {
                         Id = item.Id,
                         ActivityType = item.ActivityType,
+                        VersionNo=item.VersionNo,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
                         Comment = item.Comment,
@@ -597,6 +603,7 @@ namespace Faurecia.ADL.Controllers
                     var activityTypeEntry = new ActivityTypeEntry()
                     {
                         Id = item.Id,
+                        VersionNo=item.VersionNo,
                         ActivityType = item.ActivityType,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
@@ -615,6 +622,7 @@ namespace Faurecia.ADL.Controllers
                     var activityTypeEntry = new ActivityTypeEntry()
                     {
                         Id = item.Id,
+                         VersionNo=item.VersionNo,
                         ActivityType = item.ActivityType,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
@@ -634,6 +642,7 @@ namespace Faurecia.ADL.Controllers
                     {
                         Id = item.Id,
                         ActivityType = item.ActivityType,
+                        VersionNo=item.VersionNo,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
                         Comment = item.Comment,
@@ -652,6 +661,7 @@ namespace Faurecia.ADL.Controllers
                     {
                         Id = item.Id,
                         ActivityType = item.ActivityType,
+                        VersionNo = item.VersionNo,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
                         Comment = item.Comment,
@@ -670,6 +680,7 @@ namespace Faurecia.ADL.Controllers
                     {
                         Id = item.Id,
                         ActivityType = item.ActivityType,
+                        VersionNo = item.VersionNo,
                         CostCenter = item.CostCenter,
                         RMBHour = item.RMBHour,
                         Comment = item.Comment,
@@ -735,6 +746,7 @@ namespace Faurecia.ADL.Controllers
             {
                 Id = activityType.Id,
                 ActivityType = activityType.ActivityType,
+                VersionNo = activityType.VersionNo,
                 Comment = activityType.Comment,
                 CostCenter = activityType.CostCenter,
                 RMBHour = activityType.RMBHour,
@@ -1456,6 +1468,10 @@ namespace Faurecia.ADL.Controllers
             adl.KEZE = viewModel.Head.KEZE;
             adl.MileStoneComments = viewModel.Head.MileStoneComments;
             adl.MockUp = viewModel.Head.Mockup;
+            adl.PV = viewModel.Head.PV;
+            adl.DV = viewModel.Head.DV;
+            adl.ProgramKickOff = viewModel.Head.ProgramKickOff;
+            adl.ToolingKickOff = viewModel.Head.ToolingKickOff;
             adl.OfferDate = viewModel.Head.OfferDate;
             adl.ProgramController = viewModel.Head.ProgramController;
             adl.ProgramManager = viewModel.Head.ProgramManager;
@@ -1562,6 +1578,7 @@ namespace Faurecia.ADL.Controllers
             {
                 Id=entry.ActivityType.Id
             };
+            record.VersionNo = entry.ActivityType.VersionNo;
             record.ADLRecord = adl;
             record.Apr = entry.Apr;
             record.Aug = entry.Aug;
