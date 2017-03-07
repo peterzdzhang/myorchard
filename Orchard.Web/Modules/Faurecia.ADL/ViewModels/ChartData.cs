@@ -31,5 +31,7 @@ namespace Faurecia.ADL.ViewModels
         public IList<double> data { get; set; }
 
         public string type { get; set; }
+
+        public string stack { get; set; }
     }
 }

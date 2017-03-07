@@ -115,6 +115,7 @@ namespace Faurecia.ADL.Controllers
                 data.Legend.Add(name);
                 ChartSeriesData seriesData = new ChartSeriesData();
                 seriesData.name = name;
+                //seriesData.stack = "Project";
                 foreach (var category in data.Categories)
                 {
                     var sum = lst.Where(w => w.Name == name && w.Year == category).Sum(s => s.HeadCount);
@@ -122,6 +123,7 @@ namespace Faurecia.ADL.Controllers
                 }
                 data.Series.Add(seriesData);
             }
+            Sum(data);
 
             var lnqHeadCount = _headCountRecords.Table.Where(w => w.IsUsed == true);
             ChartSeriesData seriesDataHeadCount = new ChartSeriesData();
@@ -226,6 +228,7 @@ namespace Faurecia.ADL.Controllers
                 data.Legend.Add(name);
                 ChartSeriesData seriesData = new ChartSeriesData();
                 seriesData.name = name;
+                //seriesData.stack = "Project";
                 foreach (var year in lstYears)
                 {
                     var jan = lst.Where(w => w.Name == name && w.Year == year).Sum(s => s.Jan);
@@ -255,6 +258,7 @@ namespace Faurecia.ADL.Controllers
                 }
                 data.Series.Add(seriesData);
             }
+            Sum(data);
 
             var lnqHeadCount = _headCountRecords.Table.Where(w => w.IsUsed == true);
             ChartSeriesData seriesDataHeadCount = new ChartSeriesData();
@@ -279,7 +283,32 @@ namespace Faurecia.ADL.Controllers
             data.Series.Add(seriesDataHeadCount);
             return data;
         }
+
+        private void Sum(ChartData data)
+        {
+            string sumLegendName = string.Empty;
+            foreach(var name in data.Legend)
+            {
+                sumLegendName +=string.Format("+{0}", name);
+            }
+            sumLegendName = sumLegendName.Trim('+');
+            data.Legend.Add(sumLegendName);
+
+            ChartSeriesData seriesData = new ChartSeriesData();
+            seriesData.name = sumLegendName;
+            for (int i = 0; i < data.Categories.Count; i++)
+            {
+                double sum = 0.0;
+                foreach (var item in data.Series)
+                {
+                    sum += item.data[i];
+                }
+                seriesData.data.Add(sum);
+            }
+            data.Series.Add(seriesData);
+        }
     }
+
 
     public class HeadCountYearQueryData
     {
