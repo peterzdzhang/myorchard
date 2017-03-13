@@ -1451,6 +1451,71 @@ namespace Faurecia.ADL.Controllers
                             _adlCostRecords.Update(record);
                         }
                     }
+                    //创建新的DVs
+                    foreach (CostEntry costEntry in entry.DVs)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlCostRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlCostRecords.Update(record);
+                        }
+                    }
+                    //创建新的PVs
+                    foreach (CostEntry costEntry in entry.PVs)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlCostRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlCostRecords.Update(record);
+                        }
+                    }
+                    //创建新的Travels
+                    foreach (CostEntry costEntry in entry.Travels)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlCostRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlCostRecords.Update(record);
+                        }
+                    }
+                    //创建新的Externals
+                    foreach (CostEntry costEntry in entry.Externals)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlCostRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlCostRecords.Update(record);
+                        }
+                    }
+                    //创建新的Capitalizeds
+                    foreach (CostEntry costEntry in entry.Capitalizeds)
+                    {
+                        ADLCostRecord record = GetCostRecord(adl, costEntry, false);
+                        if (record.Id == 0)
+                        {
+                            _adlCostRecords.Create(record);
+                        }
+                        else
+                        {
+                            _adlCostRecords.Update(record);
+                        }
+                    }
                 }
             }
             return adl;

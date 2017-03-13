@@ -380,10 +380,6 @@ namespace Faurecia.ADL {
                 table.AddColumn("ToolingKickOff", DbType.DateTime);
                 table.AddColumn("PV", DbType.DateTime);
             });
-            SchemaBuilder.AlterTable("ActivityTypeRecord", table =>
-            {
-                table.AddColumn("VersionNo", DbType.Int32);
-            });
             
             return 7;
         }
