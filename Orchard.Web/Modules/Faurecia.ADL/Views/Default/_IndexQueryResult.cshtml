@@ -15,6 +15,7 @@
             <th>@T("Item No")</th>
             <th>@T("Project No")</th>
             <th>@T("Version No")</th>
+            <th>@T("WBS ID")</th>
             <th>@T("Status")</th>
             <th>@T("ADL/PDL")</th>
             <th>@T("Customer")</th>
@@ -72,6 +73,9 @@
                 </td>
                 <td>
                     @entry.ADLRecord.VersionNo
+                </td>
+                <td>
+                    @entry.ADLRecord.WBSID
                 </td>
                 <td>
                     @(entry.ADLRecord.Phase + "-" + entry.ADLRecord.Status)
