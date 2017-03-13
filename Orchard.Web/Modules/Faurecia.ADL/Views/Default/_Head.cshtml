@@ -110,7 +110,7 @@
         </div>
     </div>
     <div class="row" style="padding:5px;">
-        @Html.LabelFor(m => m.Head.ProgramKickOff, T("Program Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        @Html.LabelFor(m => m.Head.ProgramKickOff, T("Program Kick Off Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             @Html.TextBoxFor(m => m.Head.ProgramKickOff, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
             @Html.ValidationMessageFor(m => m.Head.ProgramKickOff)
@@ -129,7 +129,7 @@
 
     </div>
     <div class="row" style="padding:5px;">
-        @Html.LabelFor(m => m.Head.ToolingKickOff, T("Tooling Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        @Html.LabelFor(m => m.Head.ToolingKickOff, T("Tooling Kick Off Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             @Html.TextBoxFor(m => m.Head.ToolingKickOff, "{0:yyyy/MM/dd}", new { @class = "form-control datepicker", placeholder = "" })
             @Html.ValidationMessageFor(m => m.Head.ToolingKickOff)

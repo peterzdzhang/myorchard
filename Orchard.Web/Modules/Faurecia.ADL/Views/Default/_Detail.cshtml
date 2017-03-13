@@ -97,7 +97,7 @@
                     bool isProgramKickOff = (Model.Head.ProgramKickOff != null && Model.Head.ProgramKickOff.Value.Year == currentYear && Model.Head.ProgramKickOff.Value.Month == k);
                     if (isProgramKickOff)
                     {
-                        dicKickOff.Add("Program", T("Program-{0}", Model.Head.ProgramKickOff.Value.Day).Text);
+                        dicKickOff.Add("Program", T("ProgramKickoff-{0}", Model.Head.ProgramKickOff.Value.Day).Text);
                     }
                     bool isProtoDate = (Model.Head.ProtoDate != null && Model.Head.ProtoDate.Value.Year == currentYear && Model.Head.ProtoDate.Value.Month == k);
                     if (isProtoDate)
@@ -112,7 +112,7 @@
                     bool isToolingKickOff = (Model.Head.ToolingKickOff != null && Model.Head.ToolingKickOff.Value.Year == currentYear && Model.Head.ToolingKickOff.Value.Month == k);
                     if (isToolingKickOff)
                     {
-                        dicKickOff.Add("Tooling", T("Tooling-{0}", Model.Head.ToolingKickOff.Value.Day).Text);
+                        dicKickOff.Add("Tooling", T("ToolingKickoff-{0}", Model.Head.ToolingKickOff.Value.Day).Text);
                     }
                     bool isPV = (Model.Head.PV != null && Model.Head.PV.Value.Year == currentYear && Model.Head.PV.Value.Month == k);
                     if (isPV)
