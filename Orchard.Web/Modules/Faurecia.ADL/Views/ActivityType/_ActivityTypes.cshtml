@@ -11,6 +11,7 @@
             <th>@T("SAP Activity Type")</th>
             <th>@T("Description")</th>
             <th>@T("VersionNo")</th>
+            <th>@T("Total Group")</th>
             <th>@T("Comment")</th>
             <th>@T("Is Used")</th>
             <th>@T("Editor")</th>
@@ -36,6 +37,9 @@
             </td>
             <td>
                 @entry.ActivityType.VersionNo
+            </td>
+            <td>
+                @entry.ActivityType.TotalGroup.ToString()
             </td>
             <td>
                 @entry.ActivityType.Comment

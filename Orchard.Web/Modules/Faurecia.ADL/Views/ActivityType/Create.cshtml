@@ -92,8 +92,17 @@ else if (Model.Action == ActivityTypeBulkAction.BulkEdit)
                 </div>
                 }
                 <div class="form-group">
+                    @Html.LabelFor(m => m.TotalGroup, T("Total Group").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                        <select id="publishActions" class="form-control" name="@Html.NameOf(m => m.TotalGroup)">
+                            @Html.SelectOption(Model.TotalGroup, Faurecia.ADL.Models.ActivityTypeTotalGroup.DD, T("DD").ToString())
+                            @Html.SelectOption(Model.TotalGroup, Faurecia.ADL.Models.ActivityTypeTotalGroup.ME, T("ME").ToString())
+                            @Html.SelectOption(Model.TotalGroup, Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT, T("otherCT").ToString())
+                        </select>
+                        @Html.ValidationMessageFor(m => m.TotalGroup)
+                    </div>
                     @Html.LabelFor(m => m.Comment, T("Comment").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
-                    <div class="col-sm-10 col-xs-10 col-lg-10">
+                    <div class="col-sm-6 col-xs-6 col-lg-6">
                         @if (Model.Action == ActivityTypeBulkAction.View)
                         {
                             @Html.TextBoxFor(m => m.RMBHour, new { @class = "form-control", @readonly = "readonly", maxlength = "50", placeholder = "RMB Hour" })
