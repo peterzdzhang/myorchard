@@ -22,7 +22,7 @@
     <ExtensionId>Maps</ExtensionId>
     <LoaderName>DynamicExtensionLoader</LoaderName>
     <VirtualPath>~/Modules/Maps/Maps.csproj</VirtualPath>
-    <Hash>b5065c3b6c0ae7b6</Hash>
+    <Hash>46aa6d424dc703b6</Hash>
   </Dependency>
   <Dependency>
     <ExtensionId>Markdown</ExtensionId>
@@ -418,7 +418,7 @@
     <ExtensionId>PJS.Bootstrap</ExtensionId>
     <LoaderName>DynamicExtensionLoader</LoaderName>
     <VirtualPath>~/Themes/PJS.Bootstrap/PJS.Bootstrap.csproj</VirtualPath>
-    <Hash>7d789136e5124ab8</Hash>
+    <Hash>fac2d3b21d40a39</Hash>
   </Dependency>
   <Dependency>
     <ExtensionId>SysCache</ExtensionId>

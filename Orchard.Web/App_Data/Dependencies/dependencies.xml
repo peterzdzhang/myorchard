@@ -1888,6 +1888,11 @@
     <LoaderName>DynamicExtensionLoader</LoaderName>
     <References>
       <Reference>
+        <Name>JetBrains.Annotations</Name>
+        <LoaderName>DynamicExtensionLoader</LoaderName>
+        <VirtualPath>~/Themes/PJS.Bootstrap/bin/JetBrains.Annotations.dll</VirtualPath>
+      </Reference>
+      <Reference>
         <Name>Orchard.Comments</Name>
         <LoaderName>PrecompiledExtensionLoader</LoaderName>
         <VirtualPath>~/Modules/Orchard.Comments/bin/Orchard.Comments.dll</VirtualPath>

@@ -725,6 +725,17 @@
         function InitailizeValue() {
             var tabpanels = $("div[role='tabpanel']");
             tabpanels.each(function (xi, xitem) {
+
+                //var table = $(xitem).find("table[name='HeadCount']");
+                //var rows = table.find("tr");
+                //for (var i = 2; i < rows.length; i++) {
+                //    var cells = $(rows[i]).find("td");
+                //    for (var c = 5; c < cells.length-1; c++) {
+                //        var headCountInputName = $(cells[c]).find("input").attr("name");
+                //        CalcCost($(xitem),"HeadCount", headCountInputName);
+                //    }
+                //}
+
                 var costTables = $(xitem).find("table[name='Cost']");
                 costTables.each(function (xt, xtable) {
                     var firstRow = $(xtable).find("tr:first");
