@@ -10,8 +10,8 @@
             <th scope="col">@T("SAP Activity Type")</th>
             <th scope="col">@T("Cost Center")</th>
             <th scope="col">@T("Description")</th>
-            <th scope="col">@T("Total Group")</th>
             <th scope="col">@T("Comment")</th>
+            <th scope="col">@T("Total Group")</th>
         </tr>
     </thead>
     @foreach (var row in Model.ActivityTypes)
@@ -26,8 +26,8 @@
             <td>@row.ActivityType</td>
             <td>@row.CostCenter</td>
             <td>@row.RMBHour</td>
-            <td>@row.TotalGroup.ToString()</td>
             <td>@row.Comment</td>
+            <td>@row.TotalGroup.ToString()</td>
         </tr>
         i++;
     }
