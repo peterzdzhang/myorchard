@@ -80,24 +80,24 @@
                 @string.Format("{0:yyyy/MM/dd}", Model.Head.StartDate)
             </label>
         </div>
-        @Html.LabelFor(m => m.Head.Mockup, T("Mock up").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        @Html.LabelFor(m => m.Head.PTRDate, T("PTR Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.PTRDate)
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.Mockup, T("Mockup Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <label class="form-control">
                 @string.Format("{0:yyyy/MM/dd}", Model.Head.Mockup)
             </label>
         </div>
-    </div>
-    <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.OfferDate, T("Offer Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <label class="form-control">
                 @string.Format("{0:yyyy/MM/dd}", Model.Head.OfferDate)
-            </label>
-        </div>
-        @Html.LabelFor(m => m.Head.ProtoDate, T("Proto Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
-        <div class="col-sm-2 col-xs-2 col-lg-2">
-            <label class="form-control">
-                @string.Format("{0:yyyy/MM/dd}", Model.Head.ProtoDate)
             </label>
         </div>
         @Html.LabelFor(m => m.Head.Award, T("Award").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
@@ -108,25 +108,49 @@
         </div>
     </div>
     <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.ProgramKickOff, T("Program KickOff Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.ProgramKickOff)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.ProtoDate, T("Proto Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.ProtoDate)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.DV, T("DV Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.DV)
+            </label>
+        </div>
+    </div>
+    <div class="row" style="padding:5px;">
+        @Html.LabelFor(m => m.Head.ToolingKickOff, T("Tooling KickOff Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.ToolingKickOff)
+            </label>
+        </div>
+        @Html.LabelFor(m => m.Head.PV, T("PV Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
+        <div class="col-sm-2 col-xs-2 col-lg-2">
+            <label class="form-control">
+                @string.Format("{0:yyyy/MM/dd}", Model.Head.PV)
+            </label>
+        </div>
         @Html.LabelFor(m => m.Head.SOPDate, T("SOP Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <label class="form-control">
                 @string.Format("{0:yyyy/MM/dd}", Model.Head.SOPDate)
             </label>
         </div>
-        @Html.LabelFor(m => m.Head.PTRDate, T("PTR Date").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
-        <div class="col-sm-2 col-xs-2 col-lg-2">
-            <label class="form-control">
-                @string.Format("{0:yyyy/MM/dd}", Model.Head.PTRDate)
-            </label>
-        </div>
     </div>
     <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.MileStoneComments, T("Comments").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-10 col-lg-10">
-            <label class="form-control">
-                @Model.Head.MileStoneComments
-            </label>
+            @Html.TextAreaFor(m => m.Head.MileStoneComments, new { @class = "form-control", @readonly = "readonly", placeholder = "", rows = "10" })
         </div>
     </div>
 </div>
@@ -168,9 +192,7 @@
     <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.VehicelComments, T("Comments").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left" })
         <div class="col-sm-10 col-lg-10">
-            <label class="form-control">
-                @Model.Head.VehicelComments
-            </label>
+            @Html.TextAreaFor(m => m.Head.VehicelComments, new { @class = "form-control",@readonly="readonly", placeholder = "", rows = "10" })
         </div>
     </div>
 </div>

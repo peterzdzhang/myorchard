@@ -10,6 +10,7 @@
     int entryIndex = Model.Detail.Entries.IndexOf(entry);
     string cssClassName = i==0? "tab-pane active" : "tab-pane";
     var tabName = string.Format("YEAR{1}_{0}", currentYear, Model.Head.Id);
+    Dictionary<string, string> dicKickOff = new Dictionary<string, string>();
 
 <div role="tabpanel" class="@cssClassName" id="@tabName" data-year="@currentYear" data-adlid="@Model.Head.Id">
     <!--HeadCounts-->
@@ -51,41 +52,76 @@
                 <td style=""></td>
                 <td style=""></td>
                 <td style=""></td>
-                @for (int k = 1; k <= 12; k++)
+               @for (int k = 1; k <= 12; k++)
                 {
-                    <td style="">
-                    @if (Model.Head.StartDate != null && Model.Head.StartDate.Value.Year == currentYear && Model.Head.StartDate.Value.Month == k)
+                    dicKickOff.Clear();
+                    bool isStartDate = (Model.Head.StartDate != null && Model.Head.StartDate.Value.Year == currentYear && Model.Head.StartDate.Value.Month == k);
+                    if (isStartDate)
                     {
-                        <div class="label label-success" style="display:block;line-height:2;padding:0px;cursor:pointer;"  title="@T("Start Date")">
-                            @T("Start")
-                        </div>
+                        dicKickOff.Add("Start", T("Start-{0}", Model.Head.StartDate.Value.Day).Text);
                     }
-                    @if (Model.Head.SOPDate != null && Model.Head.SOPDate.Value.Year == currentYear && Model.Head.SOPDate.Value.Month == k)
+                    bool isPTRDate = (Model.Head.PTRDate != null && Model.Head.PTRDate.Value.Year == currentYear && Model.Head.PTRDate.Value.Month == k);
+                    if (isPTRDate)
                     {
-                        <div class="label label-primary"  style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("SOP Date")">
-                            @T("SOP")
-                        </div>
+                        dicKickOff.Add("PTR", T("PTR-{0}", Model.Head.PTRDate.Value.Day).Text);
                     }
-                    @if (Model.Head.ProtoDate != null && Model.Head.ProtoDate.Value.Year == currentYear && Model.Head.ProtoDate.Value.Month == k)
+                    bool isMockup = (Model.Head.Mockup != null && Model.Head.Mockup.Value.Year == currentYear && Model.Head.Mockup.Value.Month == k);
+                    if (isMockup)
                     {
-                        <div class="label label-success"  style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("Proto Date")">
-                            @T("Proto")
-                        </div>
+                        dicKickOff.Add("Mockup", T("Mockup-{0}", Model.Head.Mockup.Value.Day).Text);
                     }
-                    @if (Model.Head.OfferDate != null && Model.Head.OfferDate.Value.Year == currentYear && Model.Head.OfferDate.Value.Month == k)
+                    bool isOfferDate = (Model.Head.OfferDate != null && Model.Head.OfferDate.Value.Year == currentYear && Model.Head.OfferDate.Value.Month == k);
+                    if (isOfferDate)
                     {
-                        <div class="label label-success"  style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("Offer Date")">
-                            @T("Offer")
-                        </div>
+                        dicKickOff.Add("Offer", T("Offer-{0}", Model.Head.OfferDate.Value.Day).Text);
                     }
-                    @if (Model.Head.PTRDate != null && Model.Head.PTRDate.Value.Year == currentYear && Model.Head.PTRDate.Value.Month == k)
+                    bool isAward = (Model.Head.Award != null && Model.Head.Award.Value.Year == currentYear && Model.Head.Award.Value.Month == k);
+                    if (isAward)
                     {
-                        <div class="label label-success" style="display:block;line-height:2;padding:0px;cursor:pointer;" title="@T("PTR Date")">
-                            @T("PTR")
-                        </div>
+                        dicKickOff.Add("Award", T("Award-{0}", Model.Head.Award.Value.Day).Text);
                     }
-                    </td>
-                }
+                    bool isProgramKickOff = (Model.Head.ProgramKickOff != null && Model.Head.ProgramKickOff.Value.Year == currentYear && Model.Head.ProgramKickOff.Value.Month == k);
+                    if (isProgramKickOff)
+                    {
+                        dicKickOff.Add("Program", T("ProgramKickoff-{0}", Model.Head.ProgramKickOff.Value.Day).Text);
+                    }
+                    bool isProtoDate = (Model.Head.ProtoDate != null && Model.Head.ProtoDate.Value.Year == currentYear && Model.Head.ProtoDate.Value.Month == k);
+                    if (isProtoDate)
+                    {
+                        dicKickOff.Add("Proto", T("Proto-{0}", Model.Head.ProtoDate.Value.Day).Text);
+                    }
+                    bool isDV = (Model.Head.DV != null && Model.Head.DV.Value.Year == currentYear && Model.Head.DV.Value.Month == k);
+                    if (isDV)
+                    {
+                        dicKickOff.Add("DV", T("DV-{0}", Model.Head.DV.Value.Day).Text);
+                    }
+                    bool isToolingKickOff = (Model.Head.ToolingKickOff != null && Model.Head.ToolingKickOff.Value.Year == currentYear && Model.Head.ToolingKickOff.Value.Month == k);
+                    if (isToolingKickOff)
+                    {
+                        dicKickOff.Add("Tooling", T("ToolingKickoff-{0}", Model.Head.ToolingKickOff.Value.Day).Text);
+                    }
+                    bool isPV = (Model.Head.PV != null && Model.Head.PV.Value.Year == currentYear && Model.Head.PV.Value.Month == k);
+                    if (isPV)
+                    {
+                        dicKickOff.Add("PV", T("PV-{0}", Model.Head.PV.Value.Day).Text);
+                    }
+                    bool isSOPDate = (Model.Head.SOPDate != null && Model.Head.SOPDate.Value.Year == currentYear && Model.Head.SOPDate.Value.Month == k);
+                    if (isSOPDate)
+                    {
+                        dicKickOff.Add("SOP", T("SOP-{0}", Model.Head.SOPDate.Value.Day).Text);
+                    }
+                    var kickOffCount = 0;
+                <td style="">
+                    @foreach (var kickOffKey in dicKickOff.Keys)
+                    {
+                        kickOffCount++;
+                        if (kickOffCount > 3) { break; }
+                        <button type="button" class="btn btn-sm btn-success">
+                            @dicKickOff[kickOffKey]
+                        </button>
+                    }
+                </td>
+               }
                 <td style=""></td>
             </tr>
             @foreach (var item in Model.Detail.Entries[entryIndex].HeadCounts)

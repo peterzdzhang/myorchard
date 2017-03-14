@@ -10,7 +10,6 @@ namespace Faurecia.ADL
     public class Permissions: IPermissionProvider
     {
         public static readonly Permission MaintainWorkingHour = new Permission { Description = "Maintain working hours", Name = "MaintainWorkingHours" };
-
         public static readonly Permission CompareHeadCount = new Permission { Description = "Compare head count", Name = "CompareHeadCount" };
 
         public virtual Feature Feature { get; set; }

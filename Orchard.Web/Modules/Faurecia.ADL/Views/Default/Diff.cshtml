@@ -65,163 +65,171 @@
                     <div class="tab-content">
                         @Html.Partial("_DiffDetail", vm)
                     </div>
-                    <div>
-                        <table class="table table-bordered table-condensed table-hover" id="totalTable" data-adlid="@vm.Head.Id"
-                               style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:10px">
-                            <thead>
-                                <tr class="active">
-                                    <th style="width:auto">@T("Actual H")</th>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        var titleName = string.Format("Y{0}", year);
-                                        <th style="width:61px" data-year="@year">@titleName</th>
-                                    }
-                                    <th style="width:61px">@T("Total")</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="width:auto">@T("Total D&D")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr>
-                                    <td style="width:auto">@T("Total FEA")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr>
-                                    <td style="width:auto">@T("Total DV")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr>
-                                    <td style="width:auto">@T("Total PV")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr class="success">
-                                    <td style="width:auto">@T("Total D&D (BP)")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-sum="1" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr>
-                                    <td style="width:auto">@T("Total other CT")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr>
-                                    <td style="width:auto">@T("Total ME")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr class="success">
-                                    <td style="width:auto">@T("Total CT (BP)")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-sum="1" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr class="success">
-                                    <td style="width:auto">@T("Total travel")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                                <tr class="warning">
-                                    <td style="width:auto">@T("Total")</td>
-                                    @for (int i = 0; i < vm.Years.Count; i++)
-                                    {
-                                        int year = vm.Years[i];
-                                        <td style="width:61px" data-total="1" data-year="@year"></td>
-                                    }
-                                    <td style="width:61px"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row" style="padding:5px;">
+                    <div class="row" style="margin-top:10px">
                         <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                            @T("Quotation Comments").Text
+                            @T("WBS ID").Text
                         </label>
-                        <div class="col-sm-10 col-lg-10">
-                            @vm.Head.QuotationComments
+                        <div class="col-sm-4 col-lg-4">
+                            @vm.Head.WBSID
+                        </div>
+                        <div class="col-sm-6 col-lg-6">
+                            <table class="table table-bordered table-condensed table-hover" id="totalTable" data-adlid="@vm.Head.Id"
+                                    style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:10px">
+                                <thead>
+                                    <tr class="active">
+                                        <th style="width:auto">@T("Actual H")</th>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            var titleName = string.Format("Y{0}", year);
+                                            <th style="width:61px" data-year="@year">@titleName</th>
+                                        }
+                                        <th style="width:61px">@T("Total")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:auto">@T("Total D&D")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:auto">@T("Total FEA")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:auto">@T("Total DV")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:auto">@T("Total PV")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr class="success">
+                                        <td style="width:auto">@T("Total D&D (BP)")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:auto">@T("Total other CT")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:auto">@T("Total ME")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr class="success">
+                                        <td style="width:auto">@T("Total CT (BP)")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr class="success">
+                                        <td style="width:auto">@T("Total travel")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                    <tr class="warning">
+                                        <td style="width:auto">@T("Total")</td>
+                                        @for (int i = 0; i < vm.Years.Count; i++)
+                                        {
+                                            int year = vm.Years[i];
+                                            <td style="width:61px" data-total="1" data-year="@year"></td>
+                                        }
+                                        <td style="width:61px"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="row" style="padding:5px;">
-                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                            @T("IBP Comments").Text
-                        </label>
-                        <div class="col-sm-10 col-lg-10">
-                            @vm.Head.IBPComments
-                        </div>
+                <div class="row" style="padding:5px;">
+                    <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                        @T("Quotation Comments").Text
+                    </label>
+                    <div class="col-sm-10 col-lg-10">
+                        @Html.TextArea("QuotationComments_" + vmIndex.ToString(), vm.Head.QuotationComments, new { @class = "form -control", @readonly = "readonly", placeholder = "", rows = "10" })
                     </div>
-                    <div class="panel-footer">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                                    @T("IBP").Text
+                </div>
+                <div class="row" style="padding:5px;">
+                    <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                        @T("IBP Comments").Text
+                    </label>
+                    <div class="col-sm-10 col-lg-10">
+                        @Html.TextArea("IBPComments_" + vmIndex.ToString(), vm.Head.IBPComments, new { @class = "form -control", @readonly = "readonly", placeholder = "", rows = "10" })
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("IBP").Text
+                            </label>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @vm.Head.IBP
                                 </label>
-                                <div class="col-sm-2 col-lg-2 col-xs-2">
-                                    <label class="control-label text-success" style="text-align:left">
-                                        @vm.Head.IBP
-                                    </label>
-                                </div>
-                                <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                                    @T("Quotation").Text
+                            </div>
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("Quotation").Text
+                            </label>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @vm.Head.Quotation
                                 </label>
-                                <div class="col-sm-2 col-lg-2 col-xs-2">
-                                    <label class="control-label text-success" style="text-align:left">
-                                        @vm.Head.Quotation
-                                    </label>
-                                </div>
-                                <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                                    @T("Creator").Text
+                            </div>
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("Creator").Text
+                            </label>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @vm.Head.Creator
                                 </label>
-                                <div class="col-sm-2 col-lg-2 col-xs-2">
-                                    <label class="control-label text-success" style="text-align:left">
-                                        @vm.Head.Creator
-                                    </label>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         }
     </div>
 </div>
