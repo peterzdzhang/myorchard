@@ -54,7 +54,7 @@ namespace Faurecia.ADL.Controllers
         // GET: WorkingHour
         public ActionResult Index(WorkingHourIndexOptions options, PagerParameters pagerParameters)
         {
-            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainWorkingHour, T("Not authorized to list working hours")))
+            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainWorkingHour, T("Not authorized to maintain working hour")))
                 return new HttpUnauthorizedResult();
             return Filter(options, pagerParameters);
         }

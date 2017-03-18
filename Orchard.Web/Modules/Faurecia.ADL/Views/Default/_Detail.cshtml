@@ -26,7 +26,8 @@
         </div>
     </div>
     <div style="overflow:auto;font-size:12px" class="form-horizontal collapse in" id="headCount_@currentYear">
-        <table class="table table-bordered table-condensed" id="detailHeadCount_@entryIndex"  name="HeadCount" data-entryIndex="@entryIndex">
+        <table class="table table-bordered table-condensed" id="detailHeadCount_@entryIndex" style="width:100%"
+                name="HeadCount" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
                     <th></th>
@@ -45,12 +46,12 @@
                     <th>@T("Sep")</th>
                     <th>@T("Oct")</th>
                     <th>@T("Nov")</th>
-                    <th>@T("Dev")</th>
+                    <th>@T("Dec")</th>
                     <th>@T("Y1")</th>
                 </tr>
             </thead>
             <tr class="success">
-                <td style="word-break:break-all">
+                <td style="word-wrap:break-word;word-break:break-all;">
                     @Ajax.ActionLink("+", actionName: null
                                         , routeValues: null
                                         , ajaxOptions: new AjaxOptions()
@@ -62,10 +63,10 @@
                                         }
                                         , htmlAttributes: new { @class= "btn btn-primary btn-sm" })
                 </td>
-                <td style="word-break:break-all"></td>
-                <td style="word-break:break-all"></td>
-                <td style="word-break:break-all"></td>
-                <td style="word-break:break-all"></td>
+                <td style="word-wrap:break-word;word-break:break-all;"></td>
+                <td style="word-wrap:break-word;word-break:break-all;"></td>
+                <td style="word-wrap:break-word;word-break:break-all;"></td>
+                <td style="word-wrap:break-word;word-break:break-all;"></td>
                 @for (int k = 1; k <= 12; k++)
                 {
                     dicKickOff.Clear();
@@ -130,9 +131,9 @@
                     {
                         kickOffCount++;
                         if (kickOffCount > 3) { break; }
-                        <button type="button"  class="btn btn-sm btn-success">
+                        <div style="width:50px;word-wrap:break-word;word-break:break-all;background:#00ff90;margin-top:2px;margin-bottom:2px">
                             @dicKickOff[kickOffKey]
-                        </button>
+                        </div>
                     }
                     </td>
                 }
@@ -157,7 +158,7 @@
                                         }
                                         , htmlAttributes: new { @class = "btn btn-warning btn-sm" })
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].Year)
@@ -167,15 +168,15 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.TotalGroup)
                         @Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.Comment
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                     </td>
@@ -284,14 +285,14 @@
                     <th>@T("Sep")</th>
                     <th>@T("Oct")</th>
                     <th>@T("Nov")</th>
-                    <th>@T("Dev")</th>
+                    <th>@T("Dec")</th>
                     <th>@T("Y1")</th>
                 </tr>
             </thead>
             @foreach (var item in Model.Detail.Entries[entryIndex].HourRatios)
             {
                 <tr  class="data">
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].Year)
@@ -302,15 +303,15 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.TotalGroup)
                         @Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Comment
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                     </td>
-                    <td style="word-break:break-all">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                     </td>
@@ -413,7 +414,7 @@
                     <th>@T("Sep")</th>
                     <th>@T("Oct")</th>
                     <th>@T("Nov")</th>
-                    <th>@T("Dev")</th>
+                    <th>@T("Dec")</th>
                     <th>@T("Y1")</th>
                 </tr>
             </thead>
@@ -527,14 +528,14 @@
                         <th style="width:61px">@T("Sep")</th>
                         <th style="width:61px">@T("Oct")</th>
                         <th style="width:61px">@T("Nov")</th>
-                        <th style="width:61px">@T("Dev")</th>
+                        <th style="width:61px">@T("Dec")</th>
                         <th style="width:61px">@T("Y1")</th>
                     </tr>
                 </thead>
                 @foreach (var item in Model.Detail.Entries[entryIndex].Costs)
                 {
                     <tr class="data">
-                        <td style="word-break:break-all">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             <input type="hidden" value="@Model.Detail.Entries[entryIndex].Costs[index].Id"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Id)" />
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].Year)
@@ -544,15 +545,15 @@
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.TotalGroup)
                             @Model.Detail.Entries[entryIndex].Costs[index].ActivityType.Comment
                         </td>
-                        <td style="word-break:break-all">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                         </td>
-                        <td style="word-break:break-all">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                         </td>
-                        <td style="word-break:break-all">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                         </td>
@@ -662,7 +663,7 @@
                     <th>@T("Sep")</th>
                     <th>@T("Oct")</th>
                     <th>@T("Nov")</th>
-                    <th>@T("Dev")</th>
+                    <th>@T("Dec")</th>
                     <th>@T("Y1")</th>
                 </tr>
                 <tr class="success">
@@ -789,7 +790,7 @@
                     <th>@T("Sep")</th>
                     <th>@T("Oct")</th>
                     <th>@T("Nov")</th>
-                    <th>@T("Dev")</th>
+                    <th>@T("Dec")</th>
                     <th>@T("Y1")</th>
                 </tr>
                 <tr class="success">
@@ -916,7 +917,7 @@
                     <th>@T("Sep")</th>
                     <th>@T("Oct")</th>
                     <th>@T("Nov")</th>
-                    <th>@T("Dev")</th>
+                    <th>@T("Dec")</th>
                     <th>@T("Y1")</th>
                 </tr>
                 <tr class="success">

@@ -56,8 +56,8 @@ namespace Faurecia.ADL.Controllers
         // GET: ActivityType
         public ActionResult Index(ActivityTypeIndexOptions options, PagerParameters pagerParameters)
         {
-            //if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainActivityType, T("Not authorized to list working hours")))
-            //    return new HttpUnauthorizedResult();
+            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainHourRateBaseline, T("Not authorized to maintain hour rate baseline")))
+                return new HttpUnauthorizedResult();
 
             var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
 

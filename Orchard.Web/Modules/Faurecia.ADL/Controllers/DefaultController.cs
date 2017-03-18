@@ -72,6 +72,9 @@ namespace Faurecia.ADL.Controllers
         // GET: Default
         public ActionResult Index(ADLIndexOptions options, PagerParameters pagerParameters)
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetHome, T("Not authorized to show budget home.")))
+                return new HttpUnauthorizedResult();
+
             var pager = new AjaxPager(_siteService.GetSiteSettings(), pagerParameters);
             pager.UpdateTargetId = "indexQueryResults";
             if (options == null)
@@ -160,6 +163,9 @@ namespace Faurecia.ADL.Controllers
         // GET: Create
         public ActionResult Create(int Id = 0)
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetCreateNew, T("Not authorized to create new on the budget module.")))
+                return new HttpUnauthorizedResult();
+
             ViewBag.Title = T("Create New Budget").Text;
             var viewModel = new ADLCreateViewModel()
             {
@@ -194,6 +200,9 @@ namespace Faurecia.ADL.Controllers
         }
         public ActionResult Quotation(int Id=0)
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetQuotation, T("Not authorized to quotation on the budget module.")))
+                return new HttpUnauthorizedResult();
+
             ViewBag.Title = T("Budget Quotation").Text;
             var viewModel = new ADLQuotationViewModel()
             {
@@ -229,6 +238,9 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult IBP(int Id = 0)
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetIBP, T("Not authorized to IBP on the budget module.")))
+                return new HttpUnauthorizedResult();
+
             ViewBag.Title = T("Budget IBP").Text;
             var viewModel = new ADLIBPViewModel()
             {
@@ -264,6 +276,9 @@ namespace Faurecia.ADL.Controllers
         }
         public ActionResult ECR(int Id = 0)
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetECR, T("Not authorized to ECR on the budget module.")))
+                return new HttpUnauthorizedResult();
+
             ViewBag.Title = T("Budget ECR").Text;
             var viewModel = new ADLECRViewModel()
             {
@@ -300,6 +315,8 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult View(int Id = 0)
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetView, T("Not authorized to view on the budget module.")))
+                return new HttpUnauthorizedResult();
 
             ViewBag.Title = T("Budget View").Text;
             var viewModel = new ADLQuotationViewModel()
@@ -327,6 +344,9 @@ namespace Faurecia.ADL.Controllers
         
         public ActionResult Delete()
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetDelete, T("Not authorized to delete on the budget module.")))
+                return new HttpUnauthorizedResult();
+
             string ids = Request["ids"];
             if (!string.IsNullOrEmpty(ids))
             {
@@ -372,6 +392,10 @@ namespace Faurecia.ADL.Controllers
 
         public ActionResult Diff()
         {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetCompare, T("Not authorized to compare on the budget module.")))
+                return new HttpUnauthorizedResult();
+
+
             ADLDiffViewModel viewModel = new ADLDiffViewModel();
             string ids = Request["ids"];
             if (!string.IsNullOrEmpty(ids))

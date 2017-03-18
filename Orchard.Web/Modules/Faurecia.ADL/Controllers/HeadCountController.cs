@@ -54,8 +54,8 @@ namespace Faurecia.ADL.Controllers
         // GET: HeadCount
         public ActionResult Index(HeadCountIndexOptions options, PagerParameters pagerParameters)
         {
-            //if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainHeadCount, T("Not authorized to list working hours")))
-            //    return new HttpUnauthorizedResult();
+            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.MaintainHeadCount, T("Not authorized to maintain head count")))
+                return new HttpUnauthorizedResult();
             return Filter(options, pagerParameters);
         }
 

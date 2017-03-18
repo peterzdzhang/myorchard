@@ -61,7 +61,7 @@ namespace Faurecia.ADL.Controllers
         // GET: WorkingHour
         public ActionResult Index(string ids)
         {
-            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.CompareHeadCount, T("Not authorized to compare head count")))
+            if (!Services.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetCompareHeadCount, T("Not authorized to compare head count")))
                 return new HttpUnauthorizedResult();
             return View("Index");
         }

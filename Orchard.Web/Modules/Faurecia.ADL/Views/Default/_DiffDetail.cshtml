@@ -25,7 +25,8 @@
         </div>
     </div>
     <div style="font-size:12px" class="form-horizontal collapse in" id="headCount_@currentYear">
-        <table class="table table-bordered table-condensed" id="detailHeadCount_@entryIndex"  name="HeadCount" data-entryIndex="@entryIndex">
+        <table class="table table-bordered table-condensed" id="detailHeadCount_@entryIndex"  style="width:100%"
+               name="HeadCount" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
                     <th nowrap>@T("Comment")</th>
@@ -43,7 +44,7 @@
                     <th nowrap>@T("Sep")</th>
                     <th nowrap>@T("Oct")</th>
                     <th nowrap>@T("Nov")</th>
-                    <th nowrap>@T("Dev")</th>
+                    <th nowrap>@T("Dec")</th>
                     <th nowrap>@T("Y1")</th>
                 </tr>
             </thead>
@@ -112,14 +113,14 @@
                     }
                     var kickOffCount = 0;
                 <td style="">
-                    @foreach (var kickOffKey in dicKickOff.Keys)
+                     @foreach (var kickOffKey in dicKickOff.Keys)
                     {
                         kickOffCount++;
                         if (kickOffCount > 3) { break; }
-                        <button type="button" class="btn btn-sm btn-success">
+                        <div style="width:50px;word-wrap:break-word;word-break:break-all;background:#00ff90;margin-top:2px;margin-bottom:2px">
                             @dicKickOff[kickOffKey]
-                        </button>
-                    }
+                        </div>
+                     }
                 </td>
                }
                 <td style=""></td>
@@ -127,7 +128,7 @@
             @foreach (var item in Model.Detail.Entries[entryIndex].HeadCounts)
             {
                 <tr class="data">
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HeadCounts[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HeadCounts[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].Year)
@@ -137,15 +138,15 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.TotalGroup)
                         @Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.Comment
                     </td>
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.RMBHour)
                     </td>
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.CostCenter)
                     </td>
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HeadCounts[index].ActivityType.ActivityType)
                     </td>
@@ -235,7 +236,8 @@
         </div>
     </div>
     <div style="font-size:12px" class="form-horizontal collapse in" id="hourRatio_@currentYear">
-        <table class="table table-bordered table-condensed table-hover" id="detailHourRatio_@entryIndex" name="HourRatio" data-entryIndex="@entryIndex">
+        <table class="table table-bordered table-condensed table-hover" id="detailHourRatio_@entryIndex" style="width:100%"
+               name="HourRatio" data-entryIndex="@entryIndex">
             <thead>
                 <tr class="active">
                     <th nowrap>@T("Comment")</th>
@@ -253,14 +255,14 @@
                     <th nowrap>@T("Sep")</th>
                     <th nowrap>@T("Oct")</th>
                     <th nowrap>@T("Nov")</th>
-                    <th nowrap>@T("Dev")</th>
+                    <th nowrap>@T("Dec")</th>
                     <th nowrap>@T("Y1")</th>
                 </tr>
             </thead>
             @foreach (var item in Model.Detail.Entries[entryIndex].HourRatios)
             {
                 <tr  class="data">
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         <input type="hidden" value="@Model.Detail.Entries[entryIndex].HourRatios[index].Id" 
                                              name="@Html.NameOf(m => m.Detail.Entries[entryIndex].HourRatios[index].Id)" />
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].Year)
@@ -270,15 +272,15 @@
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.TotalGroup)
                         @Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.Comment
                     </td>
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.RMBHour)
                     </td>
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.CostCenter)
                     </td>
-                    <td style="">
+                    <td style="word-wrap:break-word;word-break:break-all;">
                         @Html.HiddenFor(m => m.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                         @(Model.Detail.Entries[entryIndex].HourRatios[index].ActivityType.ActivityType)
                     </td>
@@ -380,7 +382,7 @@
                     <th nowrap>@T("Sep")</th>
                     <th nowrap>@T("Oct")</th>
                     <th nowrap>@T("Nov")</th>
-                    <th nowrap>@T("Dev")</th>
+                    <th nowrap>@T("Dec")</th>
                     <th nowrap>@T("Y1")</th>
                 </tr>
             </thead>
@@ -474,7 +476,7 @@
     <div style="font-size:12px" class="form-horizontal collapse in" id="cost_@currentYear">
         <div style="" >
             <table class="table table-bordered table-condensed table-hover"
-                   style="margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:0px" name="Cost"
+                   style="margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:0px;width:100%" name="Cost"
                    id="detailCost_@entryIndex" data-entryIndex="@entryIndex">
                 <thead>
                     <tr class="active">
@@ -493,14 +495,14 @@
                         <th style="width:61px">@T("Sep")</th>
                         <th style="width:61px">@T("Oct")</th>
                         <th style="width:61px">@T("Nov")</th>
-                        <th style="width:61px">@T("Dev")</th>
+                        <th style="width:61px">@T("Dec")</th>
                         <th style="width:61px">@T("Y1")</th>
                     </tr>
                 </thead>
                 @foreach (var item in Model.Detail.Entries[entryIndex].Costs)
                 {
                     <tr class="data">
-                        <td style="">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             <input type="hidden" value="@Model.Detail.Entries[entryIndex].Costs[index].Id"
                                    name="@Html.NameOf(m => m.Detail.Entries[entryIndex].Costs[index].Id)" />
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].Year)
@@ -510,15 +512,15 @@
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.TotalGroup)
                             @Model.Detail.Entries[entryIndex].Costs[index].ActivityType.Comment
                         </td>
-                        <td style="">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.RMBHour)
                         </td>
-                        <td style="">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.CostCenter)
                         </td>
-                        <td style="">
+                        <td style="word-wrap:break-word;word-break:break-all;">
                             @Html.HiddenFor(m => m.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                             @(Model.Detail.Entries[entryIndex].Costs[index].ActivityType.ActivityType)
                         </td>

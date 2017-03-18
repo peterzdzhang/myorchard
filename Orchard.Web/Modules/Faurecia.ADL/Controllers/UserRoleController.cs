@@ -502,7 +502,7 @@ namespace Faurecia.ADL.Controllers
             var dic = _roleService.GetInstalledPermissions();
 
             var queries = from item in dic
-                          where item.Key.StartsWith("Faurecia.")
+                          where item.Key.StartsWith("Faurecia.") || item.Key.StartsWith("Orchard.Roles") || item.Key.StartsWith("Orchard.Users")
                           select item;
 
             IDictionary<string, IEnumerable<Permission>> results = new Dictionary<string, IEnumerable<Permission>>();
