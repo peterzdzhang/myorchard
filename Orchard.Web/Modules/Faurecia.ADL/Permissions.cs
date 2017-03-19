@@ -16,6 +16,7 @@ namespace Faurecia.ADL
 
      
         public static readonly Permission BudgetCreateNew = new Permission { Description = "Budget Create new", Name = "BudgetCreateNew"};
+        public static readonly Permission BudgetCopyTo = new Permission { Description = "Budget Create new by copy", Name = "BudgetCopyTo" };
         public static readonly Permission BudgetDelete = new Permission { Description = "Budget Delete", Name = "BudgetDelete" };
         public static readonly Permission BudgetCompare = new Permission { Description = "Budget Compare", Name = "BudgetCompare" };
         public static readonly Permission BudgetQuotation = new Permission { Description = "Budget Quotation", Name = "BudgetQuotation" };
@@ -29,7 +30,7 @@ namespace Faurecia.ADL
         {
             Description = "Budget Home",
             Name = "BudgetHome",
-            ImpliedBy = new[] { BudgetCreateNew, BudgetDelete, BudgetCompare, BudgetQuotation, BudgetIBP, BudgetECR, BudgetView,BudgetCompareHeadCount,BudgetCompareCost }
+            ImpliedBy = new[] { BudgetCreateNew, BudgetCopyTo, BudgetDelete, BudgetCompare, BudgetQuotation, BudgetIBP, BudgetECR, BudgetView,BudgetCompareHeadCount,BudgetCompareCost }
         };
 
         public virtual Feature Feature { get; set; }
@@ -43,6 +44,7 @@ namespace Faurecia.ADL
 
                 BudgetHome,
                 BudgetCreateNew,
+                BudgetCopyTo,
                 BudgetDelete,
                 BudgetQuotation,
                 BudgetIBP,
@@ -67,6 +69,7 @@ namespace Faurecia.ADL
 
                                             BudgetHome,
                                             BudgetCreateNew,
+                                            BudgetCopyTo,
                                             BudgetDelete,
                                             BudgetQuotation,
                                             BudgetIBP,

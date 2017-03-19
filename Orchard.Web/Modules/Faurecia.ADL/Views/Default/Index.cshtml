@@ -25,6 +25,7 @@
                     <button class="btn btn-danger" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
+                    <button class="btn btn-warning" type="button" name="button.CopyTo" value="CopyTo">@T("Copy To")</button>
                     @Html.ActionLink(T("Create New").Text, "Create","Default", new { Area = "Faurecia.ADL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
                 </div>
             </div>
@@ -110,6 +111,7 @@
                 location.href = url + "?ids=" + ids + "&returnurl=" + returnurl;
             });
 
+
             $("button[name='button.CompareCost']").bind("click", function () {
 
                 var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
@@ -149,6 +151,25 @@
                         $("button[name='submit.Query']").click();
                     }
                 });
+            });
+
+            $("button[name='button.CopyTo']").bind("click", function () {
+
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+                if ($(checkboxs).length > 1) {
+                    alert("@T("Can only choice one item.").Text");
+                    return;
+                }
+                var id = "";
+                $(checkboxs).each(function(i,item){
+                    if (id != "") id = id + ",";
+                    id = id + $(item).val();
+                });
+                if (id == "") return;
+                var returnurl = "@HttpContext.Current.Request.RawUrl";
+                var url="@Url.Action("CopyTo", "Default", new { Area= "Faurecia.ADL" })";
+                location.href = url + "/" + id + "?returnurl=" + returnurl;
             });
         })
     </script>

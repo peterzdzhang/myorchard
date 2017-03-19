@@ -207,6 +207,45 @@ namespace Faurecia.ADL.Controllers
             SetDetailViewModel(viewModel, record);
             return View("Quotation",viewModel);
         }
+
+        public ActionResult CopyTo(int Id = 0)
+        {
+            if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetCopyTo, T("Not authorized to create new by copy on the budget module.")))
+            {
+                return new HttpUnauthorizedResult();
+            }
+
+            ViewBag.Title = T("Budget Copy from {0}", Id).Text;
+            var viewModel = new ADLCreateViewModel()
+            {
+                Action = EnumActions.New,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
+
+            SetQuotations(viewModel);
+            var record = _adlRecords.Get(Id);
+            if (record != null)
+            {
+                ViewBag.Title = T("Budget Copy from {0}.{1}",record.ProjectNo,record.VersionNo).Text;
+            }
+            else
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+
+            viewModel.Head.ProjectNo = string.Empty;
+            viewModel.Head.Name = string.Empty;
+            viewModel.Head.Id = 0;
+            viewModel.Head.Status = EnumStatus.Inwork;
+            viewModel.Head.Phase = EnumPhase.Creating;
+
+            return View("Quotation", viewModel);
+        }
         public ActionResult Quotation(int Id=0)
         {
 
@@ -250,7 +289,6 @@ namespace Faurecia.ADL.Controllers
             SetHeadViewModel(viewModel, record);
             return View("Quotation", viewModel);
         }
-
         public ActionResult IBP(int Id = 0)
         {
            
@@ -339,7 +377,6 @@ namespace Faurecia.ADL.Controllers
             SetHeadViewModel(viewModel, record);
             return View("Quotation", viewModel);
         }
-
         public ActionResult View(int Id = 0)
         {
             if (!_orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetView, T("Not authorized to view on the budget module.")))
