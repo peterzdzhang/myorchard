@@ -1,8 +1,8 @@
 ﻿Name: Faurecia.ADL
 Path: ADL
 AntiForgery: enabled
-Author: The Orchard Team
-Website: http://orchardproject.net
+Author: Peter Zhang(peter.zhang@foxmail.com)
+Website: http://fromchaos.cnblogs.com/
 Version: 1.0
 OrchardVersion: 1.0
 Description: Description for the module
