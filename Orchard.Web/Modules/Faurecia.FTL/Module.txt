@@ -1,7 +1,7 @@
 ﻿Name: Faurecia.FTL
 Path: FTL
 AntiForgery: enabled
-Author:  Peter Zhang(peter.zhang@foxmail.com)
+Author: Peter Zhang(peter.zhang@foxmail.com)
 Website: http://fromchaos.cnblogs.com/
 Version: 1.0
 OrchardVersion: 1.0
