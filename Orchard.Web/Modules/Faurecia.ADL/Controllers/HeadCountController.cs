@@ -302,7 +302,9 @@ namespace Faurecia.ADL.Controllers
                     }
                     else if (id==0 && viewModel.Year!=0)
                     {
-                        int recordCount = _headCountRecords.Table.Where(w => w.Year == viewModel.Year && w.Id != id).Count();
+                        int recordCount = _headCountRecords.Table
+                                                           .Where(w => w.Year == viewModel.Year && w.Id != id && w.IsUsed==true)
+                                                           .Count();
                         if (recordCount > 0)
                         {
                             throw new Exception(T("Year({0})'s record have been existed.", viewModel.Year).Text);

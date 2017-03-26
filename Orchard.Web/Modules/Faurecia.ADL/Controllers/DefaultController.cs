@@ -1967,7 +1967,7 @@ namespace Faurecia.ADL.Controllers
                     currentSeqenceNo = maxSeqenceNo + 1;
                 }
             }
-            string currentProjectNo = string.Format("{0}{1}", name, currentSeqenceNo.ToString("0000"));
+            string currentProjectNo = string.Format("{0}{1}", name, currentSeqenceNo.ToString("00"));
             return currentProjectNo;
         }
         /// <summary>

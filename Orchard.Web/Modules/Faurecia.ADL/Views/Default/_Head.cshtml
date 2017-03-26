@@ -31,7 +31,7 @@
     <div class="row" style="padding:5px;">
         @Html.LabelFor(m => m.Head.Name, T("Name").Text, new { @class = "col-sm-2 col-xs-2 col-lg-2 control-label", @style = "text-align:left"})
         <div class="col-sm-10 col-lg-10">
-            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "", @style = "text-transform:uppercase", @maxlength = 8 })
+            @Html.TextBoxFor(m => m.Head.Name, new { @class = "form-control", placeholder = "", @style = "text-transform:uppercase", @maxlength = 10 })
             @Html.ValidationMessageFor(m => m.Head.Name)
         </div>
     </div>
@@ -171,6 +171,7 @@
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant1)" name="@Html.NameOf(m => m.Head.Variant1)">
                 @Html.SelectOption(Model.Head.Variant1, "1st Row", T("1st row").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "NA", T("NA").ToString())
                 @Html.SelectOption(Model.Head.Variant1, "2W", T("2W").ToString())
                 @Html.SelectOption(Model.Head.Variant1, "Man", T("Man").ToString())
                 @Html.SelectOption(Model.Head.Variant1, "5D", T("5D").ToString())
@@ -180,6 +181,7 @@
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant2)" name="@Html.NameOf(m => m.Head.Variant2)">
                 @Html.SelectOption(Model.Head.Variant2, "2nd Row", T("2nd row").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "NA", T("NA").ToString())
                 @Html.SelectOption(Model.Head.Variant2, "4W", T("4W").ToString())
                 @Html.SelectOption(Model.Head.Variant2, "Pow", T("Pow").ToString())
                 @Html.SelectOption(Model.Head.Variant2, "3D", T("3D").ToString())
@@ -189,6 +191,7 @@
         <div class="col-sm-2 col-xs-2 col-lg-2">
             <select id="@Html.IdFor(m=>m.Head.Variant3)" name="@Html.NameOf(m => m.Head.Variant3)">
                 @Html.SelectOption(Model.Head.Variant3, "3rd Row", T("3rd row").ToString())
+                @Html.SelectOption(Model.Head.Variant1, "NA", T("NA").ToString())
                 @Html.SelectOption(Model.Head.Variant3, "6W & More", T("6W & More").ToString())
             </select>
             @Html.ValidationMessageFor(m => m.Head.Variant3)
