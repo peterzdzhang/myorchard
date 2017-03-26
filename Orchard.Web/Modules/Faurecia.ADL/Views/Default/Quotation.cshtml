@@ -2,6 +2,8 @@
 @{
     Script.Require("jQueryUI");
     Script.Require("Microsoft_jQueryAjax_Validate");
+    //Script.Require("html2canvas");
+    //Script.Require("jspdf");
     Style.Require("jQueryUI");
     Style.Require("FaureciaADLStyle");
     Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
@@ -39,6 +41,8 @@
                         <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
                         <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
                     }
+                    @*<button class="btn btn-warning" type="button" name="button.ExportToExcel" value="@T("ExportToExcel")">@T("Export To Excel")</button>
+                    <button class="btn btn-warning" type="button" name="button.ExportToPDF" value="@T("ExportToPDF")">@T("Export To PDF")</button>*@
                 }
                 &nbsp;
                 </div>
@@ -57,269 +61,271 @@
             </button>
             <p></p>
         </div>
-        <div id="baseInfo" class="collapse in" >
-        <div class="panel-body">
-            @Html.HiddenFor(m=>m.Action)
-            <div id="head">
-                @Html.Partial("_Head", Model)
+        <div id="content">
+            <div id="baseInfo" class="collapse in">
+                <div class="panel-body">
+                    @Html.HiddenFor(m=>m.Action)
+                    <div id="head">
+                        @Html.Partial("_Head", Model)
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
-        <div class="panel-body">
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist" id="detailTab">
-                @for (int i = 0; i < Model.Years.Count; i++)
+            <div class="panel-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" id="detailTab">
+                    @for (int i = 0; i < Model.Years.Count; i++)
                 {
                     int year = Model.Years[i];
                     var tabName = string.Format("YEAR{0}", year);
                     if (i==0)
                     {
-                        <li role="presentation" class="active">
-                            <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
-                            @Html.HiddenFor(m => m.Years[i])
-                        </li>
+                            <li role="presentation" class="active">
+                                <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
+                                @Html.HiddenFor(m => m.Years[i])
+                            </li>
                     }
                     else
                     {
-                        <li role="presentation">
-                            <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
-                            @Html.HiddenFor(m => m.Years[i])
-                        </li>
+                            <li role="presentation">
+                                <a href="#@tabName" role="tab" data-toggle="tab">@year</a>
+                                @Html.HiddenFor(m => m.Years[i])
+                            </li>
                     }
                 }
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                @Html.Partial("_Detail", Model)
-            </div>
-            <div class="row" style="margin-top:10px">
-                @Html.LabelFor(m => m.Head.WBSID, T("WBS ID").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                <div class="col-sm-4 col-lg-4">
-                    @Html.TextBoxFor(m => m.Head.WBSID, new { @class = "form-control", placeholder = "" })
-                    @Html.ValidationMessageFor(m => m.Head.WBSID)
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    @Html.Partial("_Detail", Model)
                 </div>
-                <div class="col-sm-6 col-lg-6">
-                    <table class="table table-bordered table-condensed table-hover" id="totalTable"
-                           style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:0px">
-                        <thead>
-                            <tr class="active">
-                                <th style="width:auto">@T("Actual H")</th>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                <div class="row" style="margin-top:10px">
+                    @Html.LabelFor(m => m.Head.WBSID, T("WBS ID").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                    <div class="col-sm-4 col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.WBSID, new { @class = "form-control", placeholder = "" })
+                        @Html.ValidationMessageFor(m => m.Head.WBSID)
+                    </div>
+                    <div class="col-sm-6 col-lg-6">
+                        <table class="table table-bordered table-condensed table-hover" id="totalTable"
+                               style="width:auto;margin-right:0px;margin-left:Auto;margin-bottom:0px;margin-top:0px">
+                            <thead>
+                                <tr class="active">
+                                    <th style="width:auto">@T("Actual H")</th>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
                                     var titleName = string.Format("Y{0}", year);
-                                    <th style="width:61px" data-year="@year">@titleName</th>
+                                        <th style="width:61px" data-year="@year">@titleName</th>
                                 }
-                                <th style="width:61px">@T("Total")</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="width:auto">@T("Total D&D")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <th style="width:61px">@T("Total")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width:auto">@T("Total D&D")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DD" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total FEA")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total FEA")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.FEA" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total DV")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total DV")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.DV" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total PV")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total PV")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.PV" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="success">
-                                <td style="width:auto">@T("Total D&D (BP)")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="success">
+                                    <td style="width:auto">@T("Total D&D (BP)")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                        <td style="width:61px" data-sum="1" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total other CT")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total other CT")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.otherCT" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr>
-                                <td style="width:auto">@T("Total ME")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:auto">@T("Total ME")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
+                                        <td style="width:61px" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.ME" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="success">
-                                <td style="width:auto">@T("Total CT (BP)")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="success">
+                                    <td style="width:auto">@T("Total CT (BP)")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-sum="1" data-year="@year"></td>
+                                        <td style="width:61px" data-sum="1" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="success">
-                                <td style="width:auto">@T("Total travel")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="success">
+                                    <td style="width:auto">@T("Total travel")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
+                                        <td style="width:61px" data-sum="1" data-total-group="@Faurecia.ADL.Models.ActivityTypeTotalGroup.Travel" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                            <tr class="warning">
-                                <td style="width:auto">@T("Total")</td>
-                                @for (int i = 0; i < Model.Years.Count; i++)
+                                    <td style="width:61px"></td>
+                                </tr>
+                                <tr class="warning">
+                                    <td style="width:auto">@T("Total")</td>
+                                    @for (int i = 0; i < Model.Years.Count; i++)
                                 {
                                     int year = Model.Years[i];
-                                    <td style="width:61px" data-total="1" data-year="@year"></td>
+                                        <td style="width:61px" data-total="1" data-year="@year"></td>
                                 }
-                                <td style="width:61px"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <td style="width:61px"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
 
-            @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation
+                @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation
                 || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
             {
-            <div class="row" style="padding:5px;">
-                @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                <div class="col-sm-10 col-lg-10">
-                    @Html.TextAreaFor(m => m.Head.QuotationComments, new { @class = "form-control", placeholder = "", rows = "10" })
-                    @Html.ValidationMessageFor(m => m.Head.QuotationComments)
-                </div>
-            </div>
+                    <div class="row" style="padding:5px;">
+                        @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-10 col-lg-10">
+                            @Html.TextAreaFor(m => m.Head.QuotationComments, new { @class = "form-control", placeholder = "", rows = "10" })
+                            @Html.ValidationMessageFor(m => m.Head.QuotationComments)
+                        </div>
+                    </div>
             }
-            @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
+                @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
             {
-            <div class="row" style="padding:5px;">
-                @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                <div class="col-sm-10 col-lg-10">
-                    @Html.TextAreaFor(m => m.Head.IBPComments, new { @class = "form-control", placeholder = "", rows = "10" })
-                    @Html.ValidationMessageFor(m => m.Head.IBPComments)
-                </div>
-            </div>
+                    <div class="row" style="padding:5px;">
+                        @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                        <div class="col-sm-10 col-lg-10">
+                            @Html.TextAreaFor(m => m.Head.IBPComments, new { @class = "form-control", placeholder = "", rows = "10" })
+                            @Html.ValidationMessageFor(m => m.Head.IBPComments)
+                        </div>
+                    </div>
             }
-        </div>
-        <div class="panel-footer">
-            <div class="form-horizontal">
-                <div class="form-group">
-                    @if (Model.Action == Faurecia.ADL.ViewModels.EnumActions.View)
+            </div>
+            <div class="panel-footer">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @if (Model.Action == Faurecia.ADL.ViewModels.EnumActions.View)
                     {
-                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @Model.Head.IBP
+                            @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @Model.Head.IBP
+                                </label>
+                            </div>
+                            @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @Model.Head.Quotation
+                                </label>
+                            </div>
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("Creator").Text
                             </label>
-                        </div>
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @Model.Head.Quotation
-                            </label>
-                        </div>
-                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                            @T("Creator").Text
-                        </label>
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @Model.Head.Creator
-                            </label>
-                        </div>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @Model.Head.Creator
+                                </label>
+                            </div>
                     }
                     else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Creating)
                     {
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-3 col-lg-3">
-                            @Html.DropDownListFor(m => m.Head.Quotation, Model.Quotations, new { @class = "form-control", placeholder = "" })
-                            @Html.ValidationMessageFor(m => m.Head.Quotation)
-                        </div>
-                        <div class="col-sm-3 col-lg-3">
-                        </div>
-                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                            @T("Creator").Text
-                        </label>
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @WorkContext.CurrentUser.UserName
+                            @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-3 col-lg-3">
+                                @Html.DropDownListFor(m => m.Head.Quotation, Model.Quotations, new { @class = "form-control", placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.Head.Quotation)
+                            </div>
+                            <div class="col-sm-3 col-lg-3">
+                            </div>
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("Creator").Text
                             </label>
-                        </div>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @WorkContext.CurrentUser.UserName
+                                </label>
+                            </div>
                     }
                     else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.ECR)
                     {
-                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            @Html.DropDownListFor(m => m.Head.IBP, Model.IBPs, new { @class = "form-control", placeholder = "" })
-                            @Html.ValidationMessageFor(m => m.Head.IBP)
-                        </div>
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @WorkContext.CurrentUser.UserName
+                            @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                @Html.DropDownListFor(m => m.Head.IBP, Model.IBPs, new { @class = "form-control", placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.Head.IBP)
+                            </div>
+                            @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @WorkContext.CurrentUser.UserName
+                                </label>
+                            </div>
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("Creator").Text
                             </label>
-                        </div>
-                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                            @T("Creator").Text
-                        </label>
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @Model.Head.Creator
-                            </label>
-                        </div>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @Model.Head.Creator
+                                </label>
+                            </div>
                     }
                     else if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
                     {
-                        @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @WorkContext.CurrentUser.UserName
+                            @Html.LabelFor(m => m.Head.IBP, T("IBP").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @WorkContext.CurrentUser.UserName
+                                </label>
+                            </div>
+                            @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @Model.Head.Quotation
+                                </label>
+                            </div>
+                            <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
+                                @T("Creator").Text
                             </label>
-                        </div>
-                        @Html.LabelFor(m => m.Head.Quotation, T("Quotation").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @Model.Head.Quotation
-                            </label>
-                        </div>
-                        <label class="col-sm-2 col-lg-2 col-xs-2 control-label" style="text-align:left">
-                            @T("Creator").Text
-                        </label>
-                        <div class="col-sm-2 col-lg-2 col-xs-2">
-                            <label class="control-label text-success" style="text-align:left">
-                                @Model.Head.Creator
-                            </label>
-                        </div>
+                            <div class="col-sm-2 col-lg-2 col-xs-2">
+                                <label class="control-label text-success" style="text-align:left">
+                                    @Model.Head.Creator
+                                </label>
+                            </div>
                     }
+                    </div>
                 </div>
             </div>
         </div>
@@ -349,7 +355,6 @@
 @using (Script.Foot())
 {
     <script type="text/javascript">
-
 
         function popoverTitle() {
             var title="";
@@ -585,6 +590,18 @@
 
             //$("body").bind("click",function(){
             //    $("[data-toggle='popover']").popover("hide");
+            //});
+            
+            //$("button[name='button.ExportToPDF']").bind("click", function () {
+            //    var pdf = new jsPDF('p','pt','a4');
+            //    pdf.internal.scaleFactor = 1;
+            //    var options = {
+            //        pagesplit: true
+            //    };
+            //    var content=$("#content");
+            //    pdf.addHTML(content,options,function() {
+            //        pdf.save('web1111.pdf');
+            //    });
             //});
 
             if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.View") {

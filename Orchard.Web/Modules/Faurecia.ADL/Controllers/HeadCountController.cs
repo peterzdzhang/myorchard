@@ -341,5 +341,7 @@ namespace Faurecia.ADL.Controllers
 
             return Json(new { Code = 0, Message = T("Save success.").Text },JsonRequestBehavior.AllowGet);
         }
+
+        
     }
 }

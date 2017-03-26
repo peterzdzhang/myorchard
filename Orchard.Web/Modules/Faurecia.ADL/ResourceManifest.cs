@@ -40,6 +40,15 @@ namespace Faurecia.ADL
                     .SetUrl("echarts.theme.macarons.js")
                     .SetDependencies("echarts");
 
+            manifest.DefineScript("html2canvas")
+                    .SetVersion("0.4.1")
+                    .SetUrl("html2canvas.js")
+                    .SetDependencies("jQuery");
+
+            manifest.DefineScript("jspdf")
+                    .SetVersion("1.0.272")
+                    .SetUrl("jspdf.js")
+                    .SetDependencies("jQuery");
 
             manifest.DefineStyle("FaureciaADLStyle").SetUrl("styles/styles.css");
         }

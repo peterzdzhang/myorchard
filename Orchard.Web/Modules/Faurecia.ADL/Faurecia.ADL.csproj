@@ -157,6 +157,7 @@
     <Content Include="Scripts\echarts.common.min.js" />
     <Content Include="Scripts\echarts.js" />
     <Content Include="Scripts\echarts.theme.macarons.js" />
+    <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-ui-addon-timepicker.js" />
@@ -169,6 +170,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jspdf.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Styles\Styles.css" />
     <Content Include="Styles\Styles.min.css" />
