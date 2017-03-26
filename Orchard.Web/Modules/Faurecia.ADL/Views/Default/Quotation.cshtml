@@ -1127,14 +1127,14 @@
                     if (val.indexOf(".") >= 0 && (event.keyCode==46 || event.keyCode==110)) {
                         event.preventDefault();
                     }
-                    var index=val.indexOf(".");
-                    if(index>0)
-                    {
-                        var len=val.length-index;
-                        if (len>2) {
-                            event.preventDefault();
-                        }
-                    }
+                    //var index=val.indexOf(".");
+                    //if(index>=0)
+                    //{
+                    //    var len=val.length-index;
+                    //    if (len>2) {
+                    //        event.preventDefault();
+                    //    }
+                    //}
                 }).bind("paste", function (event) {
                     var val = undefined;
                     if (window.clipboardData && window.clipboardData.getData) {
@@ -1259,7 +1259,7 @@
                     sum = sum + parseFloat(val);
                 }
             }
-            sum=Math.round(sum*100)/100;
+            sum=Math.round(sum*1000)/1000;
             $(y1).val(sum);
         }
 
@@ -1291,7 +1291,7 @@
             }
             var totalRowCellIndex = (totalRowCellLength - rowCellLength) + cellIndex;
             var totalRowCell = $(totalRow).find("th:eq(" + totalRowCellIndex + ")");
-            sum=Math.round(sum*100)/100;
+            sum=Math.round(sum*1000)/1000;
             $(totalRowCell).text(sum);
 
             sum = 0;
@@ -1309,7 +1309,7 @@
                     sum = sum + parseFloat(val);
                 }
             }
-            sum=Math.round(sum*100)/100;
+            sum=Math.round(sum*1000)/1000;
             $(totalRowSumCell).text(sum);
         }
 
@@ -1359,7 +1359,7 @@
                     val = 0;
                 }
                 grossValue = grossValue + parseFloat(val);
-                grossValue=Math.round(grossValue*100)/100;
+                grossValue=Math.round(grossValue*1000)/1000;
                 $(grossTd).text(grossValue);
             }
         }
@@ -1384,7 +1384,7 @@
             }
             var totalTable = $("#totalTable");
             var td = $(totalTable).find("td[data-year='" + year + "'][data-total-group='" + totalGroup + "']");
-            sum=Math.round(sum*100)/100;
+            sum=Math.round(sum*1000)/1000;
             $(td).text(sum);
             CalcTotalRowSum(td);
             
@@ -1424,7 +1424,7 @@
             });
 
             var totalTd = $(totalTable).find("td[data-year='" + year + "'][data-total='1']");
-            sum=Math.round(sum*100)/100;
+            sum=Math.round(sum*1000)/1000;
             $(totalTd).text(sum);
             CalcTotalRowSum(totalTd);
         }
@@ -1441,7 +1441,7 @@
                 }
                 lastValue = lastValue + parseFloat(cellValue);
             }
-            lastValue=Math.round(lastValue*100)/100;
+            lastValue=Math.round(lastValue*1000)/1000;
             $(lastTd).text(lastValue);
         }
 
