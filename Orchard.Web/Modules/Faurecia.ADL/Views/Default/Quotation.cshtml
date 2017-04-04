@@ -41,9 +41,9 @@
                         <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
                         <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
                     }
-                    @*<button class="btn btn-warning" type="button" name="button.ExportToExcel" value="@T("ExportToExcel")">@T("Export To Excel")</button>
-                    <button class="btn btn-warning" type="button" name="button.ExportToPDF" value="@T("ExportToPDF")">@T("Export To PDF")</button>*@
+                    @*<button class="btn btn-warning" type="button" name="button.ExportToPDF" value="@T("ExportToPDF")">@T("Export To PDF")</button>*@
                 }
+                <button class="btn btn-warning" type="button" name="button.ExportToExcel" value="@T("ExportToExcel")">@T("Export To Excel")</button>
                 &nbsp;
                 </div>
                 <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
@@ -484,7 +484,7 @@
                 alertClass="alert-warning";
             }
             var alert = $("<div class=\"alert "+alertClass+" alert-dismissible\" role=\"alert\" style=\"padding-top:2px;padding-bottom:2px;margin-top:2px;margin-bottom:2px;\"></div>");
-          
+
             var alertContent = $("<span></span>");
             $(alertContent).html(data.Content);
             $(alert).append(alertContent);
@@ -515,7 +515,7 @@
                         $(popoverObject).popover("show");
                         setPopoverUI($(popoverObject));
                     });
-                
+
                     $(alert).append(alertCloseButton);
                 }
             }
@@ -524,7 +524,7 @@
 
         function setPopoverUI(popover) {
 
-           
+
             var timestamp = Math.round(new Date().getTime() / 1000);
             var adlRecordId=@Model.Head.Id;
             var date=$(popover).data("date");
@@ -549,7 +549,7 @@
             }
         }
 
-        function banBackSpace(e) 
+        function banBackSpace(e)
         {  
             var ev = e || window.event;
             var obj = ev.target || ev.srcElement;
@@ -591,7 +591,7 @@
             //$("body").bind("click",function(){
             //    $("[data-toggle='popover']").popover("hide");
             //});
-            
+
             //$("button[name='button.ExportToPDF']").bind("click", function () {
             //    var pdf = new jsPDF('p','pt','a4');
             //    pdf.internal.scaleFactor = 1;
@@ -603,6 +603,14 @@
             //        pdf.save('web1111.pdf');
             //    });
             //});
+
+
+            $("button[name='button.ExportToExcel']").bind("click", function () {
+                var id = "@Model.Head.Id";
+                if (id == "") return;
+                var url="@Url.Action("ExportToExcel", "Default", new { Area= "Faurecia.ADL" })";
+                location.href = url + "/" + id;
+            });
 
             if ("@Model.Action" == "@Faurecia.ADL.ViewModels.EnumActions.View") {
                 $("input").attr("readonly", "readonly");

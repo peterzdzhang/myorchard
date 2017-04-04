@@ -1,6 +1,9 @@
 ﻿using Faurecia.ADL.Models;
 using Faurecia.ADL.ViewModels;
 using Newtonsoft.Json;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using Orchard;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -13,6 +16,7 @@ using Orchard.Themes;
 using Orchard.UI.Navigation;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -2013,6 +2017,389 @@ namespace Faurecia.ADL.Controllers
         {
             var queries = _adlKickOffRecords.Table.Where(w => w.ADLRecord.Id == adlRecordId && w.Name==name && w.Year == year && w.Month == month);
             return Json(queries.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ExportToExcel(int id)
+        {
+            //创建工作薄。
+            IWorkbook wb = new HSSFWorkbook();
+            //设置EXCEL格式
+            ICellStyle style = wb.CreateCellStyle();
+            style.FillForegroundColor = 10;
+            //有边框
+            style.BorderBottom = BorderStyle.THIN;
+            style.BorderLeft = BorderStyle.THIN;
+            style.BorderRight = BorderStyle.THIN;
+            style.BorderTop = BorderStyle.THIN;
+            IFont font = wb.CreateFont();
+            font.Boldweight = 10;
+            style.SetFont(font);
+
+            ISheet ws = wb.CreateSheet();
+            ws.SetColumnWidth(0, 25 * 256);
+            ws.SetColumnWidth(1, 25 * 256);
+            ws.SetColumnWidth(2, 20 * 256);
+            ws.SetColumnWidth(3, 20 * 256);
+            //ws.SetColumnWidth(4, 25 * 256);
+            ws.SetColumnWidth(5, 25 * 256);
+            ws.SetColumnWidth(6, 20 * 256);
+            ws.SetColumnWidth(7, 20 * 256);
+            //TITLE
+            IRow titleRow = ws.CreateRow(0);
+            ICellStyle titleRowCellStyle = wb.CreateCellStyle();
+            IFont titleRowCellFont = wb.CreateFont();
+            titleRowCellFont.FontHeightInPoints = 20;
+            titleRowCellFont.FontName = "Arial";
+            titleRowCellFont.Underline = 1;
+            titleRowCellFont.Boldweight = 700;
+            titleRowCellStyle.SetFont(titleRowCellFont);
+            ICell titleCell= titleRow.CreateCell(0);
+            titleCell.CellStyle = titleRowCellStyle;
+            titleCell.SetCellValue("FAS PROGRAM GROSS COST MONTHLY REPORT");
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 7));
+            //HEAD
+            ICellStyle headRowLabelCellStyle = wb.CreateCellStyle();
+            IFont headRowLabelCellFont = wb.CreateFont();
+            headRowLabelCellFont.FontHeightInPoints = 16;
+            headRowLabelCellFont.FontName = "Arial";
+            headRowLabelCellFont.Underline = 0;
+            headRowLabelCellFont.Boldweight = 700;
+            headRowLabelCellStyle.SetFont(headRowLabelCellFont);
+            headRowLabelCellStyle.FillForegroundColor = IndexedColors.LIGHT_YELLOW.Index;
+            headRowLabelCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            headRowLabelCellStyle.Alignment = HorizontalAlignment.CENTER;
+            headRowLabelCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            headRowLabelCellStyle.BorderBottom = BorderStyle.THIN;
+            headRowLabelCellStyle.BorderLeft = BorderStyle.THIN;
+            headRowLabelCellStyle.BorderRight = BorderStyle.THIN;
+            headRowLabelCellStyle.BorderTop = BorderStyle.THIN;
+            headRowLabelCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headRowLabelCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headRowLabelCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headRowLabelCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle headRowValueCellStyle = wb.CreateCellStyle();
+            IFont headRowValueCellFont = wb.CreateFont();
+            headRowValueCellFont.FontHeightInPoints = 12;
+            headRowValueCellFont.FontName = "Arial";
+            headRowValueCellFont.Underline = 0;
+            headRowValueCellFont.Boldweight = 700;
+            headRowValueCellStyle.SetFont(headRowValueCellFont);
+            headRowValueCellStyle.FillForegroundColor = IndexedColors.BRIGHT_GREEN.Index;
+            headRowValueCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            headRowValueCellStyle.Alignment = HorizontalAlignment.CENTER;
+            headRowValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            headRowValueCellStyle.BorderBottom = BorderStyle.THIN;
+            headRowValueCellStyle.BorderLeft = BorderStyle.THIN;
+            headRowValueCellStyle.BorderRight = BorderStyle.THIN;
+            headRowValueCellStyle.BorderTop = BorderStyle.THIN;
+            headRowValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headRowValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headRowValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headRowValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            int rowNumber = 3;
+            int cellNumber = 0;
+            IRow headRow = ws.CreateRow(rowNumber);
+            ICell cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowLabelCellStyle;
+            cell.SetCellValue("Program Name:");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber+1));
+
+            cellNumber = 2;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowValueCellStyle;
+            cell.SetCellValue("DPCA P87 2nd row");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 4;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowLabelCellStyle;
+            cell.SetCellValue("Awarded Date:");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 6;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowValueCellStyle;
+            cell.SetCellValue("All year");
+            cell = headRow.CreateCell(cellNumber+1);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            rowNumber = 4;
+            cellNumber = 0;
+            headRow = ws.CreateRow(rowNumber);
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowLabelCellStyle;
+            cell.SetCellValue("Program/Acquisition Manager:");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 2;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowValueCellStyle;
+            cell.SetCellValue("Selina CHEN");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 4;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowLabelCellStyle;
+            cell.SetCellValue("SOP Date :");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 6;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowValueCellStyle;
+            cell.SetCellValue("All year");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            rowNumber =5;
+            cellNumber = 0;
+            headRow = ws.CreateRow(rowNumber);
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowLabelCellStyle;
+            cell.SetCellValue("Program Controller:");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 2;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowValueCellStyle;
+            cell.SetCellValue("");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber = 4;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowLabelCellStyle;
+            cell.SetCellValue("Currency:");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+
+            cellNumber =6;
+            cell = headRow.CreateCell(cellNumber);
+            cell.CellStyle = headRowValueCellStyle;
+            cell.SetCellValue("RMB");
+            cell = headRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            //KEY Milestones
+            ICellStyle keyMilestonesLabelCellStyle = wb.CreateCellStyle();
+            IFont keyMilestonesLabelCellFont = wb.CreateFont();
+            keyMilestonesLabelCellFont.FontHeightInPoints = 12;
+            keyMilestonesLabelCellFont.FontName = "Arial";
+            keyMilestonesLabelCellFont.Underline = 0;
+            keyMilestonesLabelCellFont.Boldweight = (short)FontBoldWeight.None;
+            keyMilestonesLabelCellStyle.SetFont(keyMilestonesLabelCellFont);
+            keyMilestonesLabelCellStyle.FillForegroundColor = IndexedColors.LIGHT_GREEN.Index;
+            keyMilestonesLabelCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            keyMilestonesLabelCellStyle.Alignment = HorizontalAlignment.CENTER;
+            keyMilestonesLabelCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            keyMilestonesLabelCellStyle.BorderBottom = BorderStyle.THIN;
+            keyMilestonesLabelCellStyle.BorderLeft = BorderStyle.THIN;
+            keyMilestonesLabelCellStyle.BorderRight = BorderStyle.THIN;
+            keyMilestonesLabelCellStyle.BorderTop = BorderStyle.THIN;
+            keyMilestonesLabelCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            keyMilestonesLabelCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            keyMilestonesLabelCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            keyMilestonesLabelCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle keyMilestonesValueCellStyle = wb.CreateCellStyle();
+            IFont keyMilestonesValueCellFont = wb.CreateFont();
+            keyMilestonesValueCellFont.FontHeightInPoints = 12;
+            keyMilestonesValueCellFont.FontName = "Arial";
+            keyMilestonesValueCellFont.Underline = 0;
+            keyMilestonesValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            keyMilestonesValueCellStyle.SetFont(keyMilestonesValueCellFont);
+            keyMilestonesValueCellStyle.FillForegroundColor = IndexedColors.LIGHT_GREEN.Index;
+            keyMilestonesValueCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            keyMilestonesValueCellStyle.Alignment = HorizontalAlignment.CENTER;
+            keyMilestonesValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            keyMilestonesValueCellStyle.BorderBottom = BorderStyle.THIN;
+            keyMilestonesValueCellStyle.BorderLeft = BorderStyle.THIN;
+            keyMilestonesValueCellStyle.BorderRight = BorderStyle.THIN;
+            keyMilestonesValueCellStyle.BorderTop = BorderStyle.THIN;
+            keyMilestonesValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            keyMilestonesValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            keyMilestonesValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            keyMilestonesValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            rowNumber = 7;
+            cellNumber = 0;
+            IRow keyMilestonesRow = ws.CreateRow(rowNumber);
+            cell = keyMilestonesRow.CreateCell(cellNumber);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+            cell.SetCellValue("KEY Milestones");
+            cell = keyMilestonesRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+            cell = keyMilestonesRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+            cell = keyMilestonesRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+
+            keyMilestonesRow = ws.CreateRow(rowNumber+1);
+            cell = keyMilestonesRow.CreateCell(cellNumber);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+            cell = keyMilestonesRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+            cell = keyMilestonesRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+            cell = keyMilestonesRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = keyMilestonesLabelCellStyle;
+
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber+1, cellNumber, cellNumber + 3));
+
+            //HEAD COUNT
+            ICellStyle headCountCaptionCellStyle = wb.CreateCellStyle();
+            IFont headCountCaptionCellFont = wb.CreateFont();
+            headCountCaptionCellFont.FontHeightInPoints = 12;
+            headCountCaptionCellFont.FontName = "Arial";
+            headCountCaptionCellFont.Underline = 0;
+            headCountCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            headCountCaptionCellStyle.SetFont(headCountCaptionCellFont);
+            headCountCaptionCellStyle.FillForegroundColor = IndexedColors.GREY_40_PERCENT.Index;
+            headCountCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            headCountCaptionCellStyle.Alignment = HorizontalAlignment.CENTER;
+            headCountCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            headCountCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            headCountCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            headCountCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            headCountCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            headCountCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headCountCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headCountCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headCountCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle headCountValueCellStyle = wb.CreateCellStyle();
+            IFont headCountValueCellFont = wb.CreateFont();
+            headCountValueCellFont.FontHeightInPoints = 12;
+            headCountValueCellFont.FontName = "Arial";
+            headCountValueCellFont.Underline = 0;
+            headCountValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            headCountValueCellStyle.SetFont(headCountValueCellFont);
+            headCountValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            headCountValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            headCountValueCellStyle.Alignment = HorizontalAlignment.CENTER;
+            headCountValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            headCountValueCellStyle.BorderBottom = BorderStyle.THIN;
+            headCountValueCellStyle.BorderLeft = BorderStyle.THIN;
+            headCountValueCellStyle.BorderRight = BorderStyle.THIN;
+            headCountValueCellStyle.BorderTop = BorderStyle.THIN;
+            headCountValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headCountValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headCountValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            headCountValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            rowNumber = 11;
+            cellNumber = 0;
+            IRow headCountCaptionRow = ws.CreateRow(rowNumber);
+
+            cell = headCountCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell.SetCellValue("Comment");
+
+            cell = headCountCaptionRow.CreateCell(cellNumber+1);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell.SetCellValue("RMB/Hour");
+
+            cell = headCountCaptionRow.CreateCell(cellNumber +2);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell.SetCellValue("SAP Cost Center");
+
+            cell = headCountCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell.SetCellValue("SAP Activity Type");
+
+            IRow headCountCaptionRow1 = ws.CreateRow(rowNumber + 1);
+            cell = headCountCaptionRow1.CreateCell(cellNumber);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell = headCountCaptionRow1.CreateCell(cellNumber + 1);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell = headCountCaptionRow1.CreateCell(cellNumber + 2);
+            cell.CellStyle = headCountCaptionCellStyle;
+            cell = headCountCaptionRow1.CreateCell(cellNumber + 3);
+            cell.CellStyle = headCountCaptionCellStyle;
+
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber, cellNumber ));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber+1, cellNumber + 1));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 2, cellNumber + 2));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 3, cellNumber + 3));
+
+
+            var startYear = 2015;
+            var endYear = startYear + 5;
+            
+            for(int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+                cell = headCountCaptionRow.CreateCell(startCol);
+                cell.CellStyle = headCountCaptionCellStyle;
+                cell.SetCellValue(string.Format("{0} - HEADCOUNT",year));
+                ws.AddMergedRegion(new CellRangeAddress(rowNumber, rowNumber, startCol, endCol));
+                
+                for(int i = 0; i < 13; i++)
+                {
+                    cell = headCountCaptionRow1.CreateCell(startCol+i);
+                    cell.CellStyle = headCountValueCellStyle;
+                    cell.SetCellValue(GetMonthCaption(i+1));
+                }
+            }
+
+            MemoryStream ms = new MemoryStream();
+            wb.Write(ms);
+            ms.Flush();
+            ms.Position = 0;
+            return File(ms, "application/vnd.ms-excel", "ADL.xls");
+        }
+
+        private string GetMonthCaption(int month)
+        {
+            //Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec Y1
+            switch (month)
+            {
+                case 1:
+                    return "Jan";
+                case 2:
+                    return "Feb";
+                case 3:
+                    return "Mar";
+                case 4:
+                    return "Apr";
+                case 5:
+                    return "May";
+                case 6:
+                    return "Jun";
+                case 7:
+                    return "Jul";
+                case 8:
+                    return "Aug";
+                case 9:
+                    return "Sep";
+                case 10:
+                    return "Oct";
+                case 11:
+                    return "Nov";
+                case 12:
+                    return "Dec";
+            }
+            return "Y1";
         }
 
         public ActionResult GetKickOffsByName(int adlRecordId, string name)
