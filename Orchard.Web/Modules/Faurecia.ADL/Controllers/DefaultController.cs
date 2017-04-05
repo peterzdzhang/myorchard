@@ -2041,9 +2041,9 @@ namespace Faurecia.ADL.Controllers
             ws.SetColumnWidth(2, 20 * 256);
             ws.SetColumnWidth(3, 20 * 256);
             //ws.SetColumnWidth(4, 25 * 256);
-            ws.SetColumnWidth(5, 25 * 256);
-            ws.SetColumnWidth(6, 20 * 256);
-            ws.SetColumnWidth(7, 20 * 256);
+            //ws.SetColumnWidth(5, 15 * 256);
+            //ws.SetColumnWidth(6, 15 * 256);
+            //ws.SetColumnWidth(7, 15 * 256);
             //TITLE
             IRow titleRow = ws.CreateRow(0);
             ICellStyle titleRowCellStyle = wb.CreateCellStyle();
@@ -2056,7 +2056,7 @@ namespace Faurecia.ADL.Controllers
             ICell titleCell= titleRow.CreateCell(0);
             titleCell.CellStyle = titleRowCellStyle;
             titleCell.SetCellValue("FAS PROGRAM GROSS COST MONTHLY REPORT");
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 7));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 9));
             //HEAD
             ICellStyle headRowLabelCellStyle = wb.CreateCellStyle();
             IFont headRowLabelCellFont = wb.CreateFont();
@@ -2122,15 +2122,19 @@ namespace Faurecia.ADL.Controllers
             cell.SetCellValue("Awarded Date:");
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowLabelCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            cell = headRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
 
-            cellNumber = 6;
+            cellNumber = 7;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
             cell.SetCellValue("All year");
             cell = headRow.CreateCell(cellNumber+1);
             cell.CellStyle = headRowValueCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            cell = headRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
 
             rowNumber = 4;
             cellNumber = 0;
@@ -2156,15 +2160,19 @@ namespace Faurecia.ADL.Controllers
             cell.SetCellValue("SOP Date :");
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowLabelCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            cell = headRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
 
-            cellNumber = 6;
+            cellNumber = 7;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
             cell.SetCellValue("All year");
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            cell = headRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
 
             rowNumber =5;
             cellNumber = 0;
@@ -2190,15 +2198,19 @@ namespace Faurecia.ADL.Controllers
             cell.SetCellValue("Currency:");
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowLabelCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            cell = headRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
 
-            cellNumber =6;
+            cellNumber = 7;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
             cell.SetCellValue("RMB");
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
+            cell = headRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = headRowValueCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
             //KEY Milestones
             ICellStyle keyMilestonesLabelCellStyle = wb.CreateCellStyle();
             IFont keyMilestonesLabelCellFont = wb.CreateFont();
@@ -2265,10 +2277,12 @@ namespace Faurecia.ADL.Controllers
 
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber+1, cellNumber, cellNumber + 3));
 
+            
+
             //HEAD COUNT
             ICellStyle headCountCaptionCellStyle = wb.CreateCellStyle();
             IFont headCountCaptionCellFont = wb.CreateFont();
-            headCountCaptionCellFont.FontHeightInPoints = 12;
+            headCountCaptionCellFont.FontHeightInPoints = 11;
             headCountCaptionCellFont.FontName = "Arial";
             headCountCaptionCellFont.Underline = 0;
             headCountCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
@@ -2288,7 +2302,7 @@ namespace Faurecia.ADL.Controllers
 
             ICellStyle headCountValueCellStyle = wb.CreateCellStyle();
             IFont headCountValueCellFont = wb.CreateFont();
-            headCountValueCellFont.FontHeightInPoints = 12;
+            headCountValueCellFont.FontHeightInPoints = 11;
             headCountValueCellFont.FontName = "Arial";
             headCountValueCellFont.Underline = 0;
             headCountValueCellFont.Boldweight = (short)FontBoldWeight.None;
@@ -2314,11 +2328,11 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = headCountCaptionCellStyle;
             cell.SetCellValue("Comment");
 
-            cell = headCountCaptionRow.CreateCell(cellNumber+1);
+            cell = headCountCaptionRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headCountCaptionCellStyle;
             cell.SetCellValue("RMB/Hour");
 
-            cell = headCountCaptionRow.CreateCell(cellNumber +2);
+            cell = headCountCaptionRow.CreateCell(cellNumber + 2);
             cell.CellStyle = headCountCaptionCellStyle;
             cell.SetCellValue("SAP Cost Center");
 
@@ -2336,31 +2350,842 @@ namespace Faurecia.ADL.Controllers
             cell = headCountCaptionRow1.CreateCell(cellNumber + 3);
             cell.CellStyle = headCountCaptionCellStyle;
 
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber, cellNumber ));
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber+1, cellNumber + 1));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber, cellNumber));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 1, cellNumber + 1));
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 2, cellNumber + 2));
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 3, cellNumber + 3));
 
 
             var startYear = 2015;
             var endYear = startYear + 5;
-            
-            for(int year = startYear; year < endYear; year++)
+
+            for (int year = startYear; year < endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
                 cell = headCountCaptionRow.CreateCell(startCol);
                 cell.CellStyle = headCountCaptionCellStyle;
-                cell.SetCellValue(string.Format("{0} - HEADCOUNT",year));
+                cell.SetCellValue(string.Format("{0} - HEADCOUNT", year));
                 ws.AddMergedRegion(new CellRangeAddress(rowNumber, rowNumber, startCol, endCol));
-                
-                for(int i = 0; i < 13; i++)
+
+                for (int i = 0; i < 13; i++)
                 {
-                    cell = headCountCaptionRow1.CreateCell(startCol+i);
+                    cell = headCountCaptionRow1.CreateCell(startCol + i);
                     cell.CellStyle = headCountValueCellStyle;
-                    cell.SetCellValue(GetMonthCaption(i+1));
+                    cell.SetCellValue(GetMonthCaption(i + 1));
                 }
             }
+            //COST
+            ICellStyle costCaptionCellStyle = wb.CreateCellStyle();
+            IFont costCaptionCellFont = wb.CreateFont();
+            costCaptionCellFont.FontHeightInPoints = 11;
+            costCaptionCellFont.FontName = "Arial";
+            costCaptionCellFont.Underline = 0;
+            costCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            costCaptionCellStyle.SetFont(costCaptionCellFont);
+            costCaptionCellStyle.FillForegroundColor = IndexedColors.GREY_40_PERCENT.Index;
+            costCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            costCaptionCellStyle.Alignment = HorizontalAlignment.CENTER;
+            costCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            costCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            costCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            costCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            costCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            costCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            costCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            costCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            costCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle costValueCellStyle = wb.CreateCellStyle();
+            IFont costValueCellFont = wb.CreateFont();
+            costValueCellFont.FontHeightInPoints = 11;
+            costValueCellFont.FontName = "Arial";
+            costValueCellFont.Underline = 0;
+            costValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            costValueCellStyle.SetFont(costValueCellFont);
+            costValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            costValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            costValueCellStyle.Alignment = HorizontalAlignment.CENTER;
+            costValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            costValueCellStyle.BorderBottom = BorderStyle.THIN;
+            costValueCellStyle.BorderLeft = BorderStyle.THIN;
+            costValueCellStyle.BorderRight = BorderStyle.THIN;
+            costValueCellStyle.BorderTop = BorderStyle.THIN;
+            costValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            costValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            costValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            costValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 3;
+            cellNumber = 0;
+            IRow costCaptionRow = ws.CreateRow(rowNumber);
+
+            cell = costCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = costCaptionCellStyle;
+            cell.SetCellValue("Comment");
+
+            cell = costCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = costCaptionCellStyle;
+            cell.SetCellValue("RMB/Hour");
+
+            cell = costCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = costCaptionCellStyle;
+            cell.SetCellValue("SAP Cost Center");
+
+            cell = costCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = costCaptionCellStyle;
+            cell.SetCellValue("SAP Activity Type");
+
+            IRow costCaptionRow1 = ws.CreateRow(rowNumber + 1);
+            cell = costCaptionRow1.CreateCell(cellNumber);
+            cell.CellStyle = costCaptionCellStyle;
+            cell = costCaptionRow1.CreateCell(cellNumber + 1);
+            cell.CellStyle = costCaptionCellStyle;
+            cell = costCaptionRow1.CreateCell(cellNumber + 2);
+            cell.CellStyle = costCaptionCellStyle;
+            cell = costCaptionRow1.CreateCell(cellNumber + 3);
+            cell.CellStyle = costCaptionCellStyle;
+
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber, cellNumber));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 1, cellNumber + 1));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 2, cellNumber + 2));
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 3, cellNumber + 3));
+            
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+                cell = costCaptionRow.CreateCell(startCol);
+                cell.CellStyle = costCaptionCellStyle;
+                cell.SetCellValue(string.Format("{0} - COST", year));
+                ws.AddMergedRegion(new CellRangeAddress(rowNumber, rowNumber, startCol, endCol));
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = costCaptionRow1.CreateCell(startCol + i);
+                    cell.CellStyle = costValueCellStyle;
+                    cell.SetCellValue(GetMonthCaption(i + 1));
+                }
+            }
+
+           
+
+            //Total Travel
+            ICellStyle travelCaptionCellStyle = wb.CreateCellStyle();
+            IFont travelCaptionCellFont = wb.CreateFont();
+            travelCaptionCellFont.FontHeightInPoints = 11;
+            travelCaptionCellFont.FontName = "Arial";
+            travelCaptionCellFont.Underline = 0;
+            travelCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            travelCaptionCellStyle.SetFont(travelCaptionCellFont);
+            travelCaptionCellStyle.FillForegroundColor = IndexedColors.SKY_BLUE.Index;
+            travelCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            travelCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            travelCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            travelCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            travelCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            travelCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            travelCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            travelCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            travelCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            travelCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            travelCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle travelValueCellStyle = wb.CreateCellStyle();
+            IFont travelValueCellFont = wb.CreateFont();
+            travelValueCellFont.FontHeightInPoints = 11;
+            travelValueCellFont.FontName = "Arial";
+            travelValueCellFont.Underline = 0;
+            travelValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            travelValueCellStyle.SetFont(travelValueCellFont);
+            travelValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            travelValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            travelValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            travelValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            travelValueCellStyle.BorderBottom = BorderStyle.THIN;
+            travelValueCellStyle.BorderLeft = BorderStyle.THIN;
+            travelValueCellStyle.BorderRight = BorderStyle.THIN;
+            travelValueCellStyle.BorderTop = BorderStyle.THIN;
+            travelValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            travelValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            travelValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            travelValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 3;
+            cellNumber = 0;
+            IRow travelCaptionRow = ws.CreateRow(rowNumber);
+            cell = travelCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = travelCaptionCellStyle;
+            cell.SetCellValue("Total Travel");
+            cell = travelCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = travelCaptionCellStyle;
+            cell = travelCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = travelCaptionCellStyle;
+            cell = travelCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = travelCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = travelCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = travelCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //DV
+            ICellStyle dvCaptionCellStyle = wb.CreateCellStyle();
+            IFont dvCaptionCellFont = wb.CreateFont();
+            dvCaptionCellFont.FontHeightInPoints = 11;
+            dvCaptionCellFont.FontName = "Arial";
+            dvCaptionCellFont.Underline = 0;
+            dvCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            dvCaptionCellStyle.SetFont(dvCaptionCellFont);
+            dvCaptionCellStyle.FillForegroundColor = IndexedColors.SKY_BLUE.Index;
+            dvCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            dvCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            dvCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            dvCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            dvCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            dvCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            dvCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            dvCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            dvCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            dvCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            dvCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle dvValueCellStyle = wb.CreateCellStyle();
+            IFont dvValueCellFont = wb.CreateFont();
+            dvValueCellFont.FontHeightInPoints = 11;
+            dvValueCellFont.FontName = "Arial";
+            dvValueCellFont.Underline = 0;
+            dvValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            dvValueCellStyle.SetFont(dvValueCellFont);
+            dvValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            dvValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            dvValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            dvValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            dvValueCellStyle.BorderBottom = BorderStyle.THIN;
+            dvValueCellStyle.BorderLeft = BorderStyle.THIN;
+            dvValueCellStyle.BorderRight = BorderStyle.THIN;
+            dvValueCellStyle.BorderTop = BorderStyle.THIN;
+            dvValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            dvValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            dvValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            dvValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 0;
+            IRow dvCaptionRow = ws.CreateRow(rowNumber);
+            cell = dvCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = dvCaptionCellStyle;
+            cell.SetCellValue("DV");
+            cell = dvCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = dvCaptionCellStyle;
+            cell = dvCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = dvCaptionCellStyle;
+            cell = dvCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = dvCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = dvCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = dvCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //PV
+            ICellStyle pvCaptionCellStyle = wb.CreateCellStyle();
+            IFont pvCaptionCellFont = wb.CreateFont();
+            pvCaptionCellFont.FontHeightInPoints = 11;
+            pvCaptionCellFont.FontName = "Arial";
+            pvCaptionCellFont.Underline = 0;
+            pvCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            pvCaptionCellStyle.SetFont(pvCaptionCellFont);
+            pvCaptionCellStyle.FillForegroundColor = IndexedColors.SKY_BLUE.Index;
+            pvCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            pvCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            pvCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            pvCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            pvCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            pvCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            pvCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            pvCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            pvCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            pvCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            pvCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle pvValueCellStyle = wb.CreateCellStyle();
+            IFont pvValueCellFont = wb.CreateFont();
+            pvValueCellFont.FontHeightInPoints = 11;
+            pvValueCellFont.FontName = "Arial";
+            pvValueCellFont.Underline = 0;
+            pvValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            pvValueCellStyle.SetFont(pvValueCellFont);
+            pvValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            pvValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            pvValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            pvValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            pvValueCellStyle.BorderBottom = BorderStyle.THIN;
+            pvValueCellStyle.BorderLeft = BorderStyle.THIN;
+            pvValueCellStyle.BorderRight = BorderStyle.THIN;
+            pvValueCellStyle.BorderTop = BorderStyle.THIN;
+            pvValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            pvValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            pvValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            pvValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 0;
+            IRow pvCaptionRow = ws.CreateRow(rowNumber);
+            cell = pvCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = pvCaptionCellStyle;
+            cell.SetCellValue("PV");
+            cell = pvCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = pvCaptionCellStyle;
+            cell = pvCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = pvCaptionCellStyle;
+            cell = pvCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = pvCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = pvCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = pvCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //External Support							
+            ICellStyle externalCaptionCellStyle = wb.CreateCellStyle();
+            IFont externalCaptionCellFont = wb.CreateFont();
+            externalCaptionCellFont.FontHeightInPoints = 11;
+            externalCaptionCellFont.FontName = "Arial";
+            externalCaptionCellFont.Underline = 0;
+            externalCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            externalCaptionCellStyle.SetFont(externalCaptionCellFont);
+            externalCaptionCellStyle.FillForegroundColor = IndexedColors.SKY_BLUE.Index;
+            externalCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            externalCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            externalCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            externalCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            externalCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            externalCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            externalCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            externalCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            externalCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            externalCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            externalCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle externalValueCellStyle = wb.CreateCellStyle();
+            IFont externalValueCellFont = wb.CreateFont();
+            externalValueCellFont.FontHeightInPoints = 11;
+            externalValueCellFont.FontName = "Arial";
+            externalValueCellFont.Underline = 0;
+            externalValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            externalValueCellStyle.SetFont(externalValueCellFont);
+            externalValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            externalValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            externalValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            externalValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            externalValueCellStyle.BorderBottom = BorderStyle.THIN;
+            externalValueCellStyle.BorderLeft = BorderStyle.THIN;
+            externalValueCellStyle.BorderRight = BorderStyle.THIN;
+            externalValueCellStyle.BorderTop = BorderStyle.THIN;
+            externalValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            externalValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            externalValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            externalValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 0;
+            IRow externalCaptionRow = ws.CreateRow(rowNumber);
+            cell = externalCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = externalCaptionCellStyle;
+            cell.SetCellValue("External Support");
+            cell = externalCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = externalCaptionCellStyle;
+            cell = externalCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = externalCaptionCellStyle;
+            cell = externalCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = externalCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = externalCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = externalCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //FEA					
+            ICellStyle feaCaptionCellStyle = wb.CreateCellStyle();
+            IFont feaCaptionCellFont = wb.CreateFont();
+            feaCaptionCellFont.FontHeightInPoints = 11;
+            feaCaptionCellFont.FontName = "Arial";
+            feaCaptionCellFont.Underline = 0;
+            feaCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            feaCaptionCellStyle.SetFont(externalCaptionCellFont);
+            feaCaptionCellStyle.FillForegroundColor = IndexedColors.SKY_BLUE.Index;
+            feaCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            feaCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            feaCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            feaCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            feaCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            feaCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            feaCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            feaCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            feaCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            feaCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            feaCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle feaValueCellStyle = wb.CreateCellStyle();
+            IFont feaValueCellFont = wb.CreateFont();
+            feaValueCellFont.FontHeightInPoints = 11;
+            feaValueCellFont.FontName = "Arial";
+            feaValueCellFont.Underline = 0;
+            feaValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            feaValueCellStyle.SetFont(feaValueCellFont);
+            feaValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            feaValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            feaValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            feaValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            feaValueCellStyle.BorderBottom = BorderStyle.THIN;
+            feaValueCellStyle.BorderLeft = BorderStyle.THIN;
+            feaValueCellStyle.BorderRight = BorderStyle.THIN;
+            feaValueCellStyle.BorderTop = BorderStyle.THIN;
+            feaValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            feaValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            feaValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            feaValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 0;
+            IRow feaCaptionRow = ws.CreateRow(rowNumber);
+            cell = feaCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = feaCaptionCellStyle;
+            cell.SetCellValue("External Support");
+            cell = feaCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = feaCaptionCellStyle;
+            cell = feaCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = feaCaptionCellStyle;
+            cell = feaCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = feaCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = feaCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = feaCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //Gross Cost (R&D) SH						
+            ICellStyle grossCaptionCellStyle = wb.CreateCellStyle();
+            IFont grossCaptionCellFont = wb.CreateFont();
+            grossCaptionCellFont.FontHeightInPoints = 11;
+            grossCaptionCellFont.FontName = "Arial";
+            grossCaptionCellFont.Underline = 0;
+            grossCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            grossCaptionCellStyle.SetFont(grossCaptionCellFont);
+            grossCaptionCellStyle.FillForegroundColor =IndexedColors.LIGHT_ORANGE.Index;
+            grossCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            grossCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            grossCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            grossCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            grossCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            grossCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            grossCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            grossCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            grossCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            grossCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            grossCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle grossValueCellStyle = wb.CreateCellStyle();
+            IFont grossValueCellFont = wb.CreateFont();
+            grossValueCellFont.FontHeightInPoints = 11;
+            grossValueCellFont.FontName = "Arial";
+            grossValueCellFont.Underline = 0;
+            grossValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            grossValueCellStyle.SetFont(grossValueCellFont);
+            grossValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            grossValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            grossValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            grossValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            grossValueCellStyle.BorderBottom = BorderStyle.THIN;
+            grossValueCellStyle.BorderLeft = BorderStyle.THIN;
+            grossValueCellStyle.BorderRight = BorderStyle.THIN;
+            grossValueCellStyle.BorderTop = BorderStyle.THIN;
+            grossValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            grossValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            grossValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            grossValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 0;
+            IRow grossCaptionRow = ws.CreateRow(rowNumber);
+            cell = grossCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = grossCaptionCellStyle;
+            cell.SetCellValue("Gross Cost (R&D) SH");
+            cell = grossCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = grossCaptionCellStyle;
+            cell = grossCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = grossCaptionCellStyle;
+            cell = grossCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = grossCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = grossCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = grossCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //Capitalized
+            ICellStyle capitalizedCaptionCellStyle = wb.CreateCellStyle();
+            IFont capitalizedCaptionCellFont = wb.CreateFont();
+            capitalizedCaptionCellFont.FontHeightInPoints = 11;
+            capitalizedCaptionCellFont.FontName = "Arial";
+            capitalizedCaptionCellFont.Underline = 0;
+            capitalizedCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            capitalizedCaptionCellStyle.SetFont(capitalizedCaptionCellFont);
+            capitalizedCaptionCellStyle.FillForegroundColor = IndexedColors.ROSE.Index; 
+            capitalizedCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            capitalizedCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            capitalizedCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            capitalizedCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            capitalizedCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            capitalizedCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            capitalizedCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            capitalizedCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            capitalizedCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            capitalizedCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            capitalizedCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle capitalizedValueCellStyle = wb.CreateCellStyle();
+            IFont capitalizedValueCellFont = wb.CreateFont();
+            capitalizedValueCellFont.FontHeightInPoints = 11;
+            capitalizedValueCellFont.FontName = "Arial";
+            capitalizedValueCellFont.Underline = 0;
+            capitalizedValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            capitalizedValueCellStyle.SetFont(capitalizedValueCellFont);
+            capitalizedValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            capitalizedValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            capitalizedValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            capitalizedValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            capitalizedValueCellStyle.BorderBottom = BorderStyle.THIN;
+            capitalizedValueCellStyle.BorderLeft = BorderStyle.THIN;
+            capitalizedValueCellStyle.BorderRight = BorderStyle.THIN;
+            capitalizedValueCellStyle.BorderTop = BorderStyle.THIN;
+            capitalizedValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            capitalizedValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            capitalizedValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            capitalizedValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 0;
+            IRow capitalizedCaptionRow = ws.CreateRow(rowNumber);
+            cell = capitalizedCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = capitalizedCaptionCellStyle;
+            cell.SetCellValue("Capitalized");
+            cell = capitalizedCaptionRow.CreateCell(cellNumber + 1);
+            cell.CellStyle = capitalizedCaptionCellStyle;
+            cell = capitalizedCaptionRow.CreateCell(cellNumber + 2);
+            cell.CellStyle = capitalizedCaptionCellStyle;
+            cell = capitalizedCaptionRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = capitalizedCaptionCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
+
+            for (int year = startYear; year < endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = capitalizedCaptionRow.CreateCell(startCol + i);
+                    cell.CellStyle = capitalizedCaptionCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    cell.SetCellFormula(formual);
+                }
+            }
+            //Total Table
+            ICellStyle totalCaptionCellStyle = wb.CreateCellStyle();
+            IFont totalCaptionCellFont = wb.CreateFont();
+            totalCaptionCellFont.FontHeightInPoints = 11;
+            totalCaptionCellFont.FontName = "Arial";
+            totalCaptionCellFont.Underline = 0;
+            totalCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
+            totalCaptionCellStyle.SetFont(totalCaptionCellFont);
+            totalCaptionCellStyle.FillForegroundColor = IndexedColors.PALE_BLUE.Index;
+            totalCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            totalCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
+            totalCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            totalCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            totalCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            totalCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            totalCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            totalCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            totalCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            totalCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            totalCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+            ICellStyle totalValueCellStyle = wb.CreateCellStyle();
+            IFont totalValueCellFont = wb.CreateFont();
+            totalValueCellFont.FontHeightInPoints = 11;
+            totalValueCellFont.FontName = "Arial";
+            totalValueCellFont.Underline = 0;
+            totalValueCellFont.Boldweight = (short)FontBoldWeight.None;
+            totalValueCellStyle.SetFont(totalValueCellFont);
+            totalValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
+            totalValueCellStyle.FillPattern = FillPatternType.NO_FILL;
+            totalValueCellStyle.Alignment = HorizontalAlignment.LEFT;
+            totalValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            totalValueCellStyle.BorderBottom = BorderStyle.THIN;
+            totalValueCellStyle.BorderLeft = BorderStyle.THIN;
+            totalValueCellStyle.BorderRight = BorderStyle.THIN;
+            totalValueCellStyle.BorderTop = BorderStyle.THIN;
+            totalValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            totalValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            totalValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            totalValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+
+
+            rowNumber = rowNumber + 2;
+            cellNumber = 3;
+            //Actual H	Y2017	Y2018	Y2019	Y2020	Y2021	Total
+            IRow totalCaptionRow = ws.CreateRow(rowNumber);
+            cell = totalCaptionRow.CreateCell(cellNumber);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellValue("Actual H");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber +(year - startYear)+1;
+                cell = totalCaptionRow.CreateCell(col);
+                cell.CellStyle = totalCaptionCellStyle;
+                cell.SetCellValue(string.Format("{0}",year));
+            }
+            var totalCol = cellNumber + (endYear - startYear) + 1;
+            cell = totalCaptionRow.CreateCell(totalCol);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellValue("Total");
+
+            //Total D&D    0   0   0   0   0   0
+            rowNumber = rowNumber + 1;
+            IRow totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellValue("Total D&D");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalValueCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            string totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2),ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total FEA   84  0   0   0   0   84
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellValue("Total FEA");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalValueCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total DV    42  0   0   0   0   42
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellValue("Total DV");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalValueCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber+2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total PV    118 0   0   0   0   118
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellValue("Total PV");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalValueCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total D&D(BP)  244 0   0   0   0   244
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellValue("Total D&D(BP)");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalCaptionCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total other CT  0   0   0   0   0   0
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellValue("Total other CT");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalValueCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total ME    0   0   0   0   0   0
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellValue("Total ME");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalValueCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalValueCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total CT (BP)0   0   0   0   0   0
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellValue("Total CT (BP)");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalCaptionCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total travel    11725.95    0   0   0   0   11725.95
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellValue("Total travel");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalCaptionCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellFormula(totalFormual);
+            //Total   11969.95    0   0   0   0   11969.95
+            rowNumber = rowNumber + 1;
+            totalValueRow = ws.CreateRow(rowNumber);
+            cell = totalValueRow.CreateCell(cellNumber);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellValue("Total");
+            for (int year = startYear; year < endYear; year++)
+            {
+                int col = cellNumber + (year - startYear) + 1;
+                cell = totalValueRow.CreateCell(col);
+                cell.CellStyle = totalCaptionCellStyle;
+                cell.SetCellValue(0);
+            }
+            cell = totalValueRow.CreateCell(totalCol);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            cell.CellStyle = totalCaptionCellStyle;
+            cell.SetCellFormula(totalFormual);
+
 
             MemoryStream ms = new MemoryStream();
             wb.Write(ms);
@@ -2400,6 +3225,42 @@ namespace Faurecia.ADL.Controllers
                     return "Dec";
             }
             return "Y1";
+        }
+
+        /// <summary>
+        /// 将指定的自然数转换为26进制表示。映射关系：[1-26] ->[A-Z]。
+        /// </summary>
+        /// <param name="n">自然数（如果无效，则返回空字符串）。</param>
+        /// <returns>26进制表示。</returns>
+        private string ToNumberSystem26(int n)
+        {
+            string s = string.Empty;
+            while (n > 0)
+            {
+                int m = n % 26;
+                if (m == 0) m = 26;
+                s = (char)(m + 64) + s;
+                n = (n - m) / 26;
+            }
+            return s;
+        }
+
+        /// <summary>
+        /// 将指定的26进制表示转换为自然数。映射关系：[A-Z] ->[1-26]。
+        /// </summary>
+        /// <param name="s">26进制表示（如果无效，则返回0）。</param>
+        /// <returns>自然数。</returns>
+        private int FromNumberSystem26(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return 0;
+            int n = 0;
+            for (int i = s.Length - 1, j = 1; i >= 0; i--, j *= 26)
+            {
+                char c = Char.ToUpper(s[i]);
+                if (c < 'A' || c > 'Z') return 0;
+                n += ((int)c - 64) * j;
+            }
+            return n;
         }
 
         public ActionResult GetKickOffsByName(int adlRecordId, string name)
