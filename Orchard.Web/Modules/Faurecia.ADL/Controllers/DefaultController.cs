@@ -2019,8 +2019,26 @@ namespace Faurecia.ADL.Controllers
             return Json(queries.ToList(), JsonRequestBehavior.AllowGet);
         }
 
+       
         public ActionResult ExportToExcel(int id)
         {
+            var viewModel = new ADLQuotationViewModel()
+            {
+                Action = EnumActions.New,
+                Head = new ADLHeadViewModel(),
+                Detail = new ADLDetailViewModel(),
+                Message = string.Empty
+            };
+            var record = _adlRecords.Get(id);
+            if (record == null)
+            {
+                record = new ADLRecord() { VersionNo = 1, Currency = "RMB" };
+            }
+            SetHeadViewModel(viewModel, record);
+            SetYears(viewModel);
+            SetDetailViewModel(viewModel, record);
+            SetHeadViewModel(viewModel, record);
+
             //创建工作薄。
             IWorkbook wb = new HSSFWorkbook();
             //设置EXCEL格式
@@ -2111,7 +2129,7 @@ namespace Faurecia.ADL.Controllers
             cellNumber = 2;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue("DPCA P87 2nd row");
+            cell.SetCellValue(string.Format("{0}", viewModel.Head.Name));
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
@@ -2129,7 +2147,7 @@ namespace Faurecia.ADL.Controllers
             cellNumber = 7;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue("All year");
+            cell.SetCellValue(string.Format("{0:yyyy-MM-dd}", viewModel.Head.Award));
             cell = headRow.CreateCell(cellNumber+1);
             cell.CellStyle = headRowValueCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
@@ -2149,7 +2167,7 @@ namespace Faurecia.ADL.Controllers
             cellNumber = 2;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue("Selina CHEN");
+            cell.SetCellValue(string.Format("{0}", viewModel.Head.ProgramManager));
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
@@ -2167,7 +2185,7 @@ namespace Faurecia.ADL.Controllers
             cellNumber = 7;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue("All year");
+            cell.SetCellValue(string.Format("{0:yyyy-MM-dd}", viewModel.Head.SOPDate));
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
@@ -2187,7 +2205,7 @@ namespace Faurecia.ADL.Controllers
             cellNumber = 2;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue("");
+            cell.SetCellValue(string.Format("{0}", viewModel.Head.ProgramController));
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 1));
@@ -2205,7 +2223,7 @@ namespace Faurecia.ADL.Controllers
             cellNumber = 7;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue("RMB");
+            cell.SetCellValue(string.Format("{0}", viewModel.Head.Currency));
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
@@ -2356,10 +2374,10 @@ namespace Faurecia.ADL.Controllers
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 3, cellNumber + 3));
 
 
-            var startYear = 2015;
-            var endYear = startYear + 5;
+            var startYear = viewModel.Years.Min();
+            var endYear = viewModel.Years.Max();
 
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
@@ -2375,7 +2393,212 @@ namespace Faurecia.ADL.Controllers
                     cell.SetCellValue(GetMonthCaption(i + 1));
                 }
             }
+            rowNumber = 12;
+            cellNumber = 0;
+            int rowCount = 0;
+            for (int i=0;i<viewModel.Detail.Entries.Count;i++)
+            {
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
+
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
+                {
+                    rowCount = viewModel.Detail.Entries[i].HeadCounts.Count;
+                    for (int j=0;j < rowCount; j++)
+                    {
+                        var hc = viewModel.Detail.Entries[i].HeadCounts[j];
+
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo+j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.ActivityType.Comment);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.ActivityType.RMBHour);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.ActivityType.CostCenter);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.ActivityType.ActivityType);
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Jan??0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo+1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo+1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var hc = viewModel.Detail.Entries[i].HeadCounts[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        cell.SetCellValue(hc.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = headCountValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo+1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo+1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+            }
+            var yearTotalFormualStartRowNo = rowNumber+1;
+            var yearTotalFormualEndRowNo = rowNumber + rowCount;
+            rowNumber = rowNumber + rowCount + 1;
+            IRow hcYearTotalRow = ws.CreateRow(rowNumber);
+            for (int year = startYear; year <= endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = hcYearTotalRow.CreateCell(startCol + i);
+                    cell.CellStyle = headCountValueCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                        , ToNumberSystem26(startCol + i + 1), yearTotalFormualStartRowNo + 1
+                                        , ToNumberSystem26(startCol + i + 1), yearTotalFormualEndRowNo + 1);
+                    cell.SetCellFormula(formual);
+                }
+            }
             //COST
+            
             ICellStyle costCaptionCellStyle = wb.CreateCellStyle();
             IFont costCaptionCellFont = wb.CreateFont();
             costCaptionCellFont.FontHeightInPoints = 11;
@@ -2417,7 +2640,7 @@ namespace Faurecia.ADL.Controllers
             costValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
 
-            rowNumber = rowNumber + 3;
+            rowNumber = rowNumber + 2;
             cellNumber = 0;
             IRow costCaptionRow = ws.CreateRow(rowNumber);
 
@@ -2468,8 +2691,211 @@ namespace Faurecia.ADL.Controllers
                     cell.SetCellValue(GetMonthCaption(i + 1));
                 }
             }
+            rowNumber = rowNumber + 1;
+            cellNumber = 0;
+            rowCount = 0;
+            for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
+            {
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
 
-           
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
+                {
+                    rowCount = viewModel.Detail.Entries[i].Costs.Count;
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var cost = viewModel.Detail.Entries[i].Costs[j];
+
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo + j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.ActivityType.Comment);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.ActivityType.RMBHour);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.ActivityType.CostCenter);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.ActivityType.ActivityType);
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var cost = viewModel.Detail.Entries[i].Costs[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        cell.SetCellValue(cost.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = costValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+            }
+            yearTotalFormualStartRowNo = rowNumber + 1;
+            yearTotalFormualEndRowNo = rowNumber + rowCount;
+            rowNumber = rowNumber + rowCount + 1;
+            int totalCostRowNumber = rowNumber;
+            IRow yearTotalRow = ws.CreateRow(rowNumber);
+            for (int year = startYear; year <= endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                int endCol = startCol + 12;
+                for (int i = 0; i < 13; i++)
+                {
+                    cell = yearTotalRow.CreateCell(startCol + i);
+                    cell.CellStyle = costValueCellStyle;
+                    string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                        , ToNumberSystem26(startCol + i + 1), yearTotalFormualStartRowNo + 1
+                                        , ToNumberSystem26(startCol + i + 1), yearTotalFormualEndRowNo + 1);
+                    cell.SetCellFormula(formual);
+                }
+            }
 
             //Total Travel
             ICellStyle travelCaptionCellStyle = wb.CreateCellStyle();
@@ -2513,7 +2939,8 @@ namespace Faurecia.ADL.Controllers
             travelValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
 
-            rowNumber = rowNumber + 3;
+            rowNumber = rowNumber + 2;
+            int totalTravelsRowNumber = rowNumber;
             cellNumber = 0;
             IRow travelCaptionRow = ws.CreateRow(rowNumber);
             cell = travelCaptionRow.CreateCell(cellNumber);
@@ -2527,6 +2954,9 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = travelCaptionCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
+            rowCount = viewModel.Detail.Entries[0].Travels.Count;
+            yearTotalFormualStartRowNo = rowNumber + 1;
+            yearTotalFormualEndRowNo = rowNumber + rowCount;
             for (int year = startYear; year < endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
@@ -2536,8 +2966,190 @@ namespace Faurecia.ADL.Controllers
                 {
                     cell = travelCaptionRow.CreateCell(startCol + i);
                     cell.CellStyle = travelCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    string formual = string.Format("SUM({0}{1}:{0}{2})"
+                                                    , ToNumberSystem26(startCol + i + 1)
+                                                    , yearTotalFormualStartRowNo + 1
+                                                    , yearTotalFormualEndRowNo + 1);
                     cell.SetCellFormula(formual);
+                }
+            }
+            cellNumber = 0;
+            for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
+            {
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
+
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].Travels[j];
+
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo + j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.ActivityType.RMBHour);
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNo + j, rowNo + j, cellNo-3, cellNo));
+
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].Travels[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = travelValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
                 }
             }
             //DV
@@ -2582,7 +3194,8 @@ namespace Faurecia.ADL.Controllers
             dvValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
 
-            rowNumber = rowNumber + 2;
+            rowNumber = rowNumber + rowCount + 1;
+            int totalDVsRowNumber = rowNumber;
             cellNumber = 0;
             IRow dvCaptionRow = ws.CreateRow(rowNumber);
             cell = dvCaptionRow.CreateCell(cellNumber);
@@ -2596,6 +3209,9 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = dvCaptionCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
+            rowCount = viewModel.Detail.Entries[0].DVs.Count;
+            yearTotalFormualStartRowNo = rowNumber + 1;
+            yearTotalFormualEndRowNo = rowNumber + rowCount;
             for (int year = startYear; year < endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
@@ -2605,8 +3221,191 @@ namespace Faurecia.ADL.Controllers
                 {
                     cell = dvCaptionRow.CreateCell(startCol + i);
                     cell.CellStyle = dvCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    string formual = string.Format("SUM({0}{1}:{0}{2})"
+                                                   , ToNumberSystem26(startCol + i + 1)
+                                                   , yearTotalFormualStartRowNo + 1
+                                                   , yearTotalFormualEndRowNo + 1);
                     cell.SetCellFormula(formual);
+                }
+            }
+            
+            cellNumber = 0;
+            for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
+            {
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
+
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].DVs[j];
+
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo + j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.ActivityType.RMBHour);
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNo + j, rowNo + j, cellNo - 3, cellNo));
+
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].DVs[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = dvValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
                 }
             }
             //PV
@@ -2651,7 +3450,8 @@ namespace Faurecia.ADL.Controllers
             pvValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
 
-            rowNumber = rowNumber + 2;
+            rowNumber = rowNumber + rowCount +1;
+            int totalPVsRowNumber = rowNumber;
             cellNumber = 0;
             IRow pvCaptionRow = ws.CreateRow(rowNumber);
             cell = pvCaptionRow.CreateCell(cellNumber);
@@ -2665,6 +3465,9 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = pvCaptionCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
+            rowCount = viewModel.Detail.Entries[0].PVs.Count;
+            yearTotalFormualStartRowNo = rowNumber + 1;
+            yearTotalFormualEndRowNo = rowNumber + rowCount;
             for (int year = startYear; year < endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
@@ -2674,8 +3477,191 @@ namespace Faurecia.ADL.Controllers
                 {
                     cell = pvCaptionRow.CreateCell(startCol + i);
                     cell.CellStyle = pvCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    string formual = string.Format("SUM({0}{1}:{0}{2})"
+                                                   , ToNumberSystem26(startCol + i + 1)
+                                                   , yearTotalFormualStartRowNo + 1
+                                                   , yearTotalFormualEndRowNo + 1);
                     cell.SetCellFormula(formual);
+                }
+            }
+
+            cellNumber = 0;
+            for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
+            {
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
+
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].PVs[j];
+
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo + j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.ActivityType.RMBHour);
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNo + j, rowNo + j, cellNo - 3, cellNo));
+
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].PVs[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = pvValueCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
                 }
             }
             //External Support							
@@ -2719,101 +3705,186 @@ namespace Faurecia.ADL.Controllers
             externalValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             externalValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
-
-            rowNumber = rowNumber + 2;
+            List<int> lstExternalRowNumber = new List<int>();
+            rowNumber = rowNumber+rowCount;
             cellNumber = 0;
-            IRow externalCaptionRow = ws.CreateRow(rowNumber);
-            cell = externalCaptionRow.CreateCell(cellNumber);
-            cell.CellStyle = externalCaptionCellStyle;
-            cell.SetCellValue("External Support");
-            cell = externalCaptionRow.CreateCell(cellNumber + 1);
-            cell.CellStyle = externalCaptionCellStyle;
-            cell = externalCaptionRow.CreateCell(cellNumber + 2);
-            cell.CellStyle = externalCaptionCellStyle;
-            cell = externalCaptionRow.CreateCell(cellNumber + 3);
-            cell.CellStyle = externalCaptionCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
-
-            for (int year = startYear; year < endYear; year++)
+            rowCount = viewModel.Detail.Entries[0].Externals.Count;
+            for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
             {
-                int startCol = cellNumber + 5 + (year - startYear) * 14;
-                int endCol = startCol + 12;
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
 
-                for (int i = 0; i < 13; i++)
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
                 {
-                    cell = externalCaptionRow.CreateCell(startCol + i);
-                    cell.CellStyle = externalCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
-                    cell.SetCellFormula(formual);
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].Externals[j];
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo + j);
+                        lstExternalRowNumber.Add(rowNo + j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.ActivityType.RMBHour);
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNo + j, rowNo + j, cellNo - 3, cellNo));
+
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
                 }
-            }
-            //FEA					
-            ICellStyle feaCaptionCellStyle = wb.CreateCellStyle();
-            IFont feaCaptionCellFont = wb.CreateFont();
-            feaCaptionCellFont.FontHeightInPoints = 11;
-            feaCaptionCellFont.FontName = "Arial";
-            feaCaptionCellFont.Underline = 0;
-            feaCaptionCellFont.Boldweight = (short)FontBoldWeight.None;
-            feaCaptionCellStyle.SetFont(externalCaptionCellFont);
-            feaCaptionCellStyle.FillForegroundColor = IndexedColors.SKY_BLUE.Index;
-            feaCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
-            feaCaptionCellStyle.Alignment = HorizontalAlignment.LEFT;
-            feaCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
-            feaCaptionCellStyle.BorderBottom = BorderStyle.THIN;
-            feaCaptionCellStyle.BorderLeft = BorderStyle.THIN;
-            feaCaptionCellStyle.BorderRight = BorderStyle.THIN;
-            feaCaptionCellStyle.BorderTop = BorderStyle.THIN;
-            feaCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-            feaCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-            feaCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-            feaCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-
-            ICellStyle feaValueCellStyle = wb.CreateCellStyle();
-            IFont feaValueCellFont = wb.CreateFont();
-            feaValueCellFont.FontHeightInPoints = 11;
-            feaValueCellFont.FontName = "Arial";
-            feaValueCellFont.Underline = 0;
-            feaValueCellFont.Boldweight = (short)FontBoldWeight.None;
-            feaValueCellStyle.SetFont(feaValueCellFont);
-            feaValueCellStyle.FillForegroundColor = IndexedColors.WHITE.Index;
-            feaValueCellStyle.FillPattern = FillPatternType.NO_FILL;
-            feaValueCellStyle.Alignment = HorizontalAlignment.LEFT;
-            feaValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
-            feaValueCellStyle.BorderBottom = BorderStyle.THIN;
-            feaValueCellStyle.BorderLeft = BorderStyle.THIN;
-            feaValueCellStyle.BorderRight = BorderStyle.THIN;
-            feaValueCellStyle.BorderTop = BorderStyle.THIN;
-            feaValueCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-            feaValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-            feaValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-            feaValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-
-
-            rowNumber = rowNumber + 2;
-            cellNumber = 0;
-            IRow feaCaptionRow = ws.CreateRow(rowNumber);
-            cell = feaCaptionRow.CreateCell(cellNumber);
-            cell.CellStyle = feaCaptionCellStyle;
-            cell.SetCellValue("External Support");
-            cell = feaCaptionRow.CreateCell(cellNumber + 1);
-            cell.CellStyle = feaCaptionCellStyle;
-            cell = feaCaptionRow.CreateCell(cellNumber + 2);
-            cell.CellStyle = feaCaptionCellStyle;
-            cell = feaCaptionRow.CreateCell(cellNumber + 3);
-            cell.CellStyle = feaCaptionCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
-
-            for (int year = startYear; year < endYear; year++)
-            {
-                int startCol = cellNumber + 5 + (year - startYear) * 14;
-                int endCol = startCol + 12;
-
-                for (int i = 0; i < 13; i++)
+                else
                 {
-                    cell = feaCaptionRow.CreateCell(startCol + i);
-                    cell.CellStyle = feaCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
-                    cell.SetCellFormula(formual);
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].Externals[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = externalCaptionCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
                 }
             }
             //Gross Cost (R&D) SH						
@@ -2858,7 +3929,7 @@ namespace Faurecia.ADL.Controllers
             grossValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
 
-            rowNumber = rowNumber + 2;
+            rowNumber = rowNumber+ rowCount + 1;
             cellNumber = 0;
             IRow grossCaptionRow = ws.CreateRow(rowNumber);
             cell = grossCaptionRow.CreateCell(cellNumber);
@@ -2872,16 +3943,25 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = grossCaptionCellStyle;
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
 
                 for (int i = 0; i < 13; i++)
                 {
+
                     cell = grossCaptionRow.CreateCell(startCol + i);
                     cell.CellStyle = grossCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
+                    string formual = string.Format("{0}{1}+", ToNumberSystem26(startCol + i + 1), totalCostRowNumber + 1);
+                    formual += string.Format("{0}{1}+", ToNumberSystem26(startCol + i + 1),totalTravelsRowNumber + 1);
+                    formual += string.Format("{0}{1}+", ToNumberSystem26(startCol + i + 1),totalPVsRowNumber + 1);
+                    formual += string.Format("{0}{1}+", ToNumberSystem26(startCol + i + 1),totalDVsRowNumber + 1);
+                    for (int k = 0; k < lstExternalRowNumber.Count; k++)
+                    {
+                        formual += string.Format("{0}{1}+", ToNumberSystem26(startCol + i + 1),lstExternalRowNumber[k] + 1);
+                    }
+                    formual = formual.TrimEnd('+');
                     cell.SetCellFormula(formual);
                 }
             }
@@ -2926,32 +4006,184 @@ namespace Faurecia.ADL.Controllers
             capitalizedValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             capitalizedValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
-
-            rowNumber = rowNumber + 2;
+            rowCount = viewModel.Detail.Entries[0].Capitalizeds.Count;
             cellNumber = 0;
-            IRow capitalizedCaptionRow = ws.CreateRow(rowNumber);
-            cell = capitalizedCaptionRow.CreateCell(cellNumber);
-            cell.CellStyle = capitalizedCaptionCellStyle;
-            cell.SetCellValue("Capitalized");
-            cell = capitalizedCaptionRow.CreateCell(cellNumber + 1);
-            cell.CellStyle = capitalizedCaptionCellStyle;
-            cell = capitalizedCaptionRow.CreateCell(cellNumber + 2);
-            cell.CellStyle = capitalizedCaptionCellStyle;
-            cell = capitalizedCaptionRow.CreateCell(cellNumber + 3);
-            cell.CellStyle = capitalizedCaptionCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
-
-            for (int year = startYear; year < endYear; year++)
+            for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
             {
-                int startCol = cellNumber + 5 + (year - startYear) * 14;
-                int endCol = startCol + 12;
+                int rowNo = rowNumber + 1;
+                int rowCellNo = cellNumber + (i == 0 ? 0 : 5) + i * 14;
 
-                for (int i = 0; i < 13; i++)
+                int yearTotalFormualStartCellNo = 0;
+                int yearTotalFormualEndCellNo = 0;
+                if (i == 0)
                 {
-                    cell = capitalizedCaptionRow.CreateCell(startCol + i);
-                    cell.CellStyle = capitalizedCaptionCellStyle;
-                    string formual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(startCol + i + 1), rowNumber + 1, rowNumber + 3);
-                    cell.SetCellFormula(formual);
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].Capitalizeds[j];
+
+                        int cellNo = rowCellNo;
+                        IRow row = ws.CreateRow(rowNo + j);
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.ActivityType.RMBHour);
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNo + j, rowNo + j, cellNo - 3, cellNo));
+
+
+                        cellNo = cellNo + 2;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        var item = viewModel.Detail.Entries[i].Capitalizeds[j];
+
+                        IRow row = ws.GetRow(rowNo + j);
+                        int cellNo = rowCellNo;
+                        yearTotalFormualStartCellNo = cellNo;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Jan ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Feb ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Mar ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Apr ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.May ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Jun ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Jul ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Aug ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Sep ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Oct ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Nov ?? 0);
+
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        cell.SetCellValue(item.Dev ?? 0);
+                        yearTotalFormualEndCellNo = cellNo;
+                        cellNo = cellNo + 1;
+                        cell = row.CreateCell(cellNo);
+                        cell.CellStyle = capitalizedCaptionCellStyle;
+                        string formual = string.Format("SUM({0}{1}:{2}{3})"
+                                            , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
+                                            , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
+                        cell.SetCellFormula(formual);
+                    }
                 }
             }
             //Total Table
@@ -2994,9 +4226,8 @@ namespace Faurecia.ADL.Controllers
             totalValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             totalValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             totalValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-
-
-            rowNumber = rowNumber + 2;
+            
+            rowNumber = rowNumber + rowCount + 2;
             cellNumber = 3;
             //Actual H	Y2017	Y2018	Y2019	Y2020	Y2021	Total
             IRow totalCaptionRow = ws.CreateRow(rowNumber);
