@@ -80,6 +80,33 @@ namespace Faurecia.ADL
                                             BudgetCompareHeadCount,
                                             BudgetCompareCost
                                         }
+                },
+                new PermissionStereotype {
+                    Name = "Engineer",
+                    Permissions = new[] {
+                                            BudgetHome,
+                                            BudgetCreateNew,
+                                            BudgetCopyTo,
+                                            BudgetDelete,
+                                            BudgetQuotation,
+                                            BudgetIBP,
+                                            BudgetECR,
+                                            BudgetCompare,
+                                            BudgetView,
+
+                                            BudgetCompareHeadCount,
+                                            BudgetCompareCost
+                                        }
+                },
+                new PermissionStereotype {
+                    Name = "Viewer",
+                    Permissions = new[] {
+                                            BudgetHome,
+                                            BudgetCompare,
+                                            BudgetView,
+                                            BudgetCompareHeadCount,
+                                            BudgetCompareCost
+                                        }
                 }
             };
         }

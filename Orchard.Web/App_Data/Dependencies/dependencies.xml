@@ -103,6 +103,11 @@
     <LoaderName>DynamicExtensionLoader</LoaderName>
     <References>
       <Reference>
+        <Name>ICSharpCode.SharpZipLib</Name>
+        <LoaderName>PrecompiledExtensionLoader</LoaderName>
+        <VirtualPath>~/Modules/Lucene/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
+      </Reference>
+      <Reference>
         <Name>NPOI</Name>
         <LoaderName>PrecompiledExtensionLoader</LoaderName>
         <VirtualPath>~/Modules/Faurecia.ADL/bin/NPOI.dll</VirtualPath>

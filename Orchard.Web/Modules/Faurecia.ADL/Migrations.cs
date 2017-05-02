@@ -6,9 +6,17 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using Orchard.Roles.Services;
 
 namespace Faurecia.ADL {
     public class Migrations : DataMigrationImpl {
+
+        private readonly IRoleService _roleService;
+
+        public Migrations(IRoleService roleService)
+        {
+            _roleService = roleService;
+        }
 
         public int Create() {
 
@@ -427,6 +435,35 @@ namespace Faurecia.ADL {
                                                     , tableDbName
                                                     , DateTime.Now));
             return 10;
+        }
+
+        public int UpdateFrom10()
+        {
+            _roleService.CreateRole("Viewer");
+            _roleService.CreateRole("Engineer");
+
+            return 11;
+        }
+        public int UpdateFrom11()
+        {
+            _roleService.CreatePermissionForRole("Viewer", Faurecia.ADL.Permissions.BudgetHome.Name);
+            _roleService.CreatePermissionForRole("Viewer", Faurecia.ADL.Permissions.BudgetCompare.Name);
+            _roleService.CreatePermissionForRole("Viewer", Faurecia.ADL.Permissions.BudgetView.Name);
+            _roleService.CreatePermissionForRole("Viewer", Faurecia.ADL.Permissions.BudgetCompareHeadCount.Name);
+            _roleService.CreatePermissionForRole("Viewer", Faurecia.ADL.Permissions.BudgetCompareCost.Name);
+
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetHome.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetCreateNew.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetCopyTo.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetDelete.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetQuotation.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetIBP.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetECR.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetCompare.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetView.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetCompareHeadCount.Name);
+            _roleService.CreatePermissionForRole("Engineer", Faurecia.ADL.Permissions.BudgetCompareCost.Name);
+            return 12;
         }
     }
 }

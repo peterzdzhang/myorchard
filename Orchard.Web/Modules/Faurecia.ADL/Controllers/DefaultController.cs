@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -2058,7 +2059,7 @@ namespace Faurecia.ADL.Controllers
             ws.SetColumnWidth(1, 25 * 256);
             ws.SetColumnWidth(2, 20 * 256);
             ws.SetColumnWidth(3, 20 * 256);
-            //ws.SetColumnWidth(4, 25 * 256);
+            ws.SetColumnWidth(4, 5 * 256);
             //ws.SetColumnWidth(5, 15 * 256);
             //ws.SetColumnWidth(6, 15 * 256);
             //ws.SetColumnWidth(7, 15 * 256);
@@ -2142,12 +2143,21 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = headRowLabelCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
             cell.CellStyle = headRowLabelCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
+            cell = headRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
-            cellNumber = 7;
+            cellNumber = 8;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue(string.Format("{0:yyyy-MM-dd}", viewModel.Head.Award));
+            if(viewModel.Head.Award==null)
+            {
+                cell.SetCellValue(string.Format("{0:yyyy-MM-dd}", viewModel.Head.Award));
+            }
+            else
+            {
+                cell.SetCellValue("All year");
+            }
             cell = headRow.CreateCell(cellNumber+1);
             cell.CellStyle = headRowValueCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
@@ -2180,12 +2190,21 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = headRowLabelCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
             cell.CellStyle = headRowLabelCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
+            cell = headRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
-            cellNumber = 7;
+            cellNumber = 8;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
-            cell.SetCellValue(string.Format("{0:yyyy-MM-dd}", viewModel.Head.SOPDate));
+            if (viewModel.Head.SOPDate == null)
+            {
+                cell.SetCellValue(string.Format("{0:yyyy-MM-dd}", viewModel.Head.SOPDate));
+            }
+            else
+            {
+                cell.SetCellValue("All year");
+            }
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
@@ -2218,9 +2237,11 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = headRowLabelCellStyle;
             cell = headRow.CreateCell(cellNumber + 2);
             cell.CellStyle = headRowLabelCellStyle;
-            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 2));
+            cell = headRow.CreateCell(cellNumber + 3);
+            cell.CellStyle = headRowLabelCellStyle;
+            ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
-            cellNumber = 7;
+            cellNumber = 8;
             cell = headRow.CreateCell(cellNumber);
             cell.CellStyle = headRowValueCellStyle;
             cell.SetCellValue(string.Format("{0}", viewModel.Head.Currency));
@@ -2252,12 +2273,13 @@ namespace Faurecia.ADL.Controllers
 
             ICellStyle keyMilestonesValueCellStyle = wb.CreateCellStyle();
             IFont keyMilestonesValueCellFont = wb.CreateFont();
-            keyMilestonesValueCellFont.FontHeightInPoints = 12;
+            keyMilestonesValueCellFont.FontHeightInPoints = 10;
             keyMilestonesValueCellFont.FontName = "Arial";
+            keyMilestonesValueCellFont.Color = IndexedColors.WHITE.Index;
             keyMilestonesValueCellFont.Underline = 0;
             keyMilestonesValueCellFont.Boldweight = (short)FontBoldWeight.None;
             keyMilestonesValueCellStyle.SetFont(keyMilestonesValueCellFont);
-            keyMilestonesValueCellStyle.FillForegroundColor = IndexedColors.LIGHT_GREEN.Index;
+            keyMilestonesValueCellStyle.FillForegroundColor = IndexedColors.GREEN.Index;
             keyMilestonesValueCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
             keyMilestonesValueCellStyle.Alignment = HorizontalAlignment.CENTER;
             keyMilestonesValueCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
@@ -2269,7 +2291,7 @@ namespace Faurecia.ADL.Controllers
             keyMilestonesValueCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             keyMilestonesValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             keyMilestonesValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
-
+            keyMilestonesValueCellStyle.WrapText = true;
             rowNumber = 7;
             cellNumber = 0;
             IRow keyMilestonesRow = ws.CreateRow(rowNumber);
@@ -2283,20 +2305,131 @@ namespace Faurecia.ADL.Controllers
             cell = keyMilestonesRow.CreateCell(cellNumber + 3);
             cell.CellStyle = keyMilestonesLabelCellStyle;
 
-            keyMilestonesRow = ws.CreateRow(rowNumber+1);
-            cell = keyMilestonesRow.CreateCell(cellNumber);
+            IRow keyMilestonesRow1 = ws.CreateRow(rowNumber+1);
+            cell = keyMilestonesRow1.CreateCell(cellNumber);
             cell.CellStyle = keyMilestonesLabelCellStyle;
-            cell = keyMilestonesRow.CreateCell(cellNumber + 1);
+            cell = keyMilestonesRow1.CreateCell(cellNumber + 1);
             cell.CellStyle = keyMilestonesLabelCellStyle;
-            cell = keyMilestonesRow.CreateCell(cellNumber + 2);
+            cell = keyMilestonesRow1.CreateCell(cellNumber + 2);
             cell.CellStyle = keyMilestonesLabelCellStyle;
-            cell = keyMilestonesRow.CreateCell(cellNumber + 3);
+            cell = keyMilestonesRow1.CreateCell(cellNumber + 3);
             cell.CellStyle = keyMilestonesLabelCellStyle;
 
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber+1, cellNumber, cellNumber + 3));
 
+            var startYear = viewModel.Years.Min();
+            var endYear = viewModel.Years.Max();
+            Dictionary<string, string> dicKickOff = new Dictionary<string, string>();
             
-
+            for (int year = startYear; year <= endYear; year++)
+            {
+                int startCol = cellNumber + 5 + (year - startYear) * 14;
+                for (int i = 0; i < 13; i++)
+                {
+                    dicKickOff.Clear();
+                    bool isStartDate = (viewModel.Head.StartDate != null 
+                                        && viewModel.Head.StartDate.Value.Year == year 
+                                        && viewModel.Head.StartDate.Value.Month == i+1);
+                    if (isStartDate)
+                    {
+                        dicKickOff.Add("Start", T("Start-{0}", viewModel.Head.StartDate.Value.Day).Text);
+                    }
+                    bool isPTRDate = (viewModel.Head.PTRDate != null 
+                        && viewModel.Head.PTRDate.Value.Year == year 
+                        && viewModel.Head.PTRDate.Value.Month == i+1);
+                    if (isPTRDate)
+                    {
+                        dicKickOff.Add("PTR", T("PTR-{0}", viewModel.Head.PTRDate.Value.Day).Text);
+                    }
+                    bool isMockup = (viewModel.Head.Mockup != null 
+                        && viewModel.Head.Mockup.Value.Year == year
+                        && viewModel.Head.Mockup.Value.Month == i+1);
+                    if (isMockup)
+                    {
+                        dicKickOff.Add("Mockup", T("Mockup-{0}", viewModel.Head.Mockup.Value.Day).Text);
+                    }
+                    bool isOfferDate = (viewModel.Head.OfferDate != null 
+                        && viewModel.Head.OfferDate.Value.Year == year
+                        && viewModel.Head.OfferDate.Value.Month == i+1);
+                    if (isOfferDate)
+                    {
+                        dicKickOff.Add("Offer", T("Offer-{0}", viewModel.Head.OfferDate.Value.Day).Text);
+                    }
+                    bool isAward = (viewModel.Head.Award != null 
+                        && viewModel.Head.Award.Value.Year == year
+                        && viewModel.Head.Award.Value.Month == i + 1);
+                    if (isAward)
+                    {
+                        dicKickOff.Add("Award", T("Award-{0}", viewModel.Head.Award.Value.Day).Text);
+                    }
+                    bool isProgramKickOff = (viewModel.Head.ProgramKickOff != null 
+                        && viewModel.Head.ProgramKickOff.Value.Year == year
+                        && viewModel.Head.ProgramKickOff.Value.Month == i + 1);
+                    if (isProgramKickOff)
+                    {
+                        dicKickOff.Add("Program", T("ProgramKickoff-{0}", viewModel.Head.ProgramKickOff.Value.Day).Text);
+                    }
+                    bool isProtoDate = (viewModel.Head.ProtoDate != null 
+                        && viewModel.Head.ProtoDate.Value.Year == year
+                        && viewModel.Head.ProtoDate.Value.Month == i + 1);
+                    if (isProtoDate)
+                    {
+                        dicKickOff.Add("Proto", T("Proto-{0}", viewModel.Head.ProtoDate.Value.Day).Text);
+                    }
+                    bool isDV = (viewModel.Head.DV != null 
+                        && viewModel.Head.DV.Value.Year == year
+                        && viewModel.Head.DV.Value.Month == i + 1);
+                    if (isDV)
+                    {
+                        dicKickOff.Add("DV", T("DV-{0}", viewModel.Head.DV.Value.Day).Text);
+                    }
+                    bool isToolingKickOff = (viewModel.Head.ToolingKickOff != null 
+                        && viewModel.Head.ToolingKickOff.Value.Year == year
+                        && viewModel.Head.ToolingKickOff.Value.Month == i + 1);
+                    if (isToolingKickOff)
+                    {
+                        dicKickOff.Add("Tooling", T("ToolingKickoff-{0}", viewModel.Head.ToolingKickOff.Value.Day).Text);
+                    }
+                    bool isPV = (viewModel.Head.PV != null 
+                        && viewModel.Head.PV.Value.Year == year
+                        && viewModel.Head.PV.Value.Month == i + 1);
+                    if (isPV)
+                    {
+                        dicKickOff.Add("PV", T("PV-{0}", viewModel.Head.PV.Value.Day).Text);
+                    }
+                    bool isSOPDate = (viewModel.Head.SOPDate != null 
+                        && viewModel.Head.SOPDate.Value.Year == year
+                        && viewModel.Head.SOPDate.Value.Month == i + 1);
+                    if (isSOPDate)
+                    {
+                        dicKickOff.Add("SOP", T("SOP-{0}", viewModel.Head.SOPDate.Value.Day).Text);
+                    }
+                    var kickOffCount = 0;
+                    StringBuilder kickOffContent = new StringBuilder();
+                    foreach(var kickOffKey in dicKickOff.Keys)
+                    {
+                        kickOffCount++;
+                        if (kickOffCount > 3) { break; }
+                        kickOffContent.Append(dicKickOff[kickOffKey]);
+                        kickOffContent.AppendLine();
+                    }
+                    cell = keyMilestonesRow.CreateCell(startCol + i);
+                    ICell cell1 = keyMilestonesRow1.CreateCell(startCol + i);
+                    if (kickOffContent.Length > 0)
+                    {
+                        kickOffContent.Remove(kickOffContent.Length-1, 1);
+                        cell.CellStyle = keyMilestonesValueCellStyle;
+                        cell1.CellStyle = keyMilestonesValueCellStyle;
+                    }
+                    else
+                    {
+                        cell.CellStyle = keyMilestonesLabelCellStyle;
+                        cell1.CellStyle = keyMilestonesLabelCellStyle;
+                    }
+                    cell.SetCellValue(kickOffContent.ToString());
+                    ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, startCol + i, startCol + i));
+                }
+            }
             //HEAD COUNT
             ICellStyle headCountCaptionCellStyle = wb.CreateCellStyle();
             IFont headCountCaptionCellFont = wb.CreateFont();
@@ -2374,8 +2507,6 @@ namespace Faurecia.ADL.Controllers
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 3, cellNumber + 3));
 
 
-            var startYear = viewModel.Years.Min();
-            var endYear = viewModel.Years.Max();
 
             for (int year = startYear; year <= endYear; year++)
             {
@@ -2580,8 +2711,8 @@ namespace Faurecia.ADL.Controllers
                 }
             }
             var yearTotalFormualStartRowNo = rowNumber+1;
-            var yearTotalFormualEndRowNo = rowNumber + rowCount;
-            rowNumber = rowNumber + rowCount + 1;
+            var yearTotalFormualEndRowNo = yearTotalFormualStartRowNo + rowCount;
+            rowNumber = yearTotalFormualEndRowNo + 1;
             IRow hcYearTotalRow = ws.CreateRow(rowNumber);
             for (int year = startYear; year <= endYear; year++)
             {
@@ -2598,7 +2729,9 @@ namespace Faurecia.ADL.Controllers
                 }
             }
             //COST
-            
+            Dictionary<int, string> dicYearTotalDDFormula = new Dictionary<int, string>();
+            Dictionary<int, string> dicYearTotalOtherCTFormula = new Dictionary<int, string>();
+            Dictionary<int, string> dicYearTotalMEFormula = new Dictionary<int, string>();
             ICellStyle costCaptionCellStyle = wb.CreateCellStyle();
             IFont costCaptionCellFont = wb.CreateFont();
             costCaptionCellFont.FontHeightInPoints = 11;
@@ -2675,7 +2808,7 @@ namespace Faurecia.ADL.Controllers
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 2, cellNumber + 2));
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber + 1, cellNumber + 3, cellNumber + 3));
             
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
@@ -2797,6 +2930,51 @@ namespace Faurecia.ADL.Controllers
                                             , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
                                             , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
                         cell.SetCellFormula(formual);
+                        if(cost.ActivityType.TotalGroup==ActivityTypeTotalGroup.DD)
+                        {
+                            var yearTotalDDFormula = string.Empty;
+                            if (dicYearTotalDDFormula.ContainsKey(cost.Year))
+                            {
+                                yearTotalDDFormula = dicYearTotalDDFormula[cost.Year];
+                                yearTotalDDFormula = yearTotalDDFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalDDFormula[cost.Year] = yearTotalDDFormula;
+                            }
+                            else
+                            {
+                                yearTotalDDFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalDDFormula.Add(cost.Year, yearTotalDDFormula);
+                            }
+                        }
+                        else if (cost.ActivityType.TotalGroup == ActivityTypeTotalGroup.ME)
+                        {
+                            var yearTotalMEFormula = string.Empty;
+                            if (dicYearTotalMEFormula.ContainsKey(cost.Year))
+                            {
+                                yearTotalMEFormula = dicYearTotalMEFormula[cost.Year];
+                                yearTotalMEFormula = yearTotalMEFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalMEFormula[cost.Year] = yearTotalMEFormula;
+                            }
+                            else
+                            {
+                                yearTotalMEFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalMEFormula.Add(cost.Year, yearTotalMEFormula);
+                            }
+                        }
+                        else if (cost.ActivityType.TotalGroup == ActivityTypeTotalGroup.otherCT)
+                        {
+                            var yearTotalOtherCTFormula = string.Empty;
+                            if (dicYearTotalOtherCTFormula.ContainsKey(cost.Year))
+                            {
+                                yearTotalOtherCTFormula = dicYearTotalOtherCTFormula[cost.Year];
+                                yearTotalOtherCTFormula = yearTotalOtherCTFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalOtherCTFormula[cost.Year] = yearTotalOtherCTFormula;
+                            }
+                            else
+                            {
+                                yearTotalOtherCTFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalOtherCTFormula.Add(cost.Year, yearTotalOtherCTFormula);
+                            }
+                        }
                     }
                 }
                 else
@@ -2874,12 +3052,58 @@ namespace Faurecia.ADL.Controllers
                                             , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
                                             , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
                         cell.SetCellFormula(formual);
+
+                        if (cost.ActivityType.TotalGroup == ActivityTypeTotalGroup.DD)
+                        {
+                            var yearTotalDDFormula = string.Empty;
+                            if (dicYearTotalDDFormula.ContainsKey(cost.Year))
+                            {
+                                yearTotalDDFormula = dicYearTotalDDFormula[cost.Year];
+                                yearTotalDDFormula = yearTotalDDFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalDDFormula[cost.Year] = yearTotalDDFormula;
+                            }
+                            else
+                            {
+                                yearTotalDDFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalDDFormula.Add(cost.Year, yearTotalDDFormula);
+                            }
+                        }
+                        else if (cost.ActivityType.TotalGroup == ActivityTypeTotalGroup.ME)
+                        {
+                            var yearTotalMEFormula = string.Empty;
+                            if (dicYearTotalMEFormula.ContainsKey(cost.Year))
+                            {
+                                yearTotalMEFormula = dicYearTotalMEFormula[cost.Year];
+                                yearTotalMEFormula = yearTotalMEFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalMEFormula[cost.Year] = yearTotalMEFormula;
+                            }
+                            else
+                            {
+                                yearTotalMEFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalMEFormula.Add(cost.Year, yearTotalMEFormula);
+                            }
+                        }
+                        else if (cost.ActivityType.TotalGroup == ActivityTypeTotalGroup.otherCT)
+                        {
+                            var yearTotalOtherCTFormula = string.Empty;
+                            if (dicYearTotalOtherCTFormula.ContainsKey(cost.Year))
+                            {
+                                yearTotalOtherCTFormula = dicYearTotalOtherCTFormula[cost.Year];
+                                yearTotalOtherCTFormula = yearTotalOtherCTFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalOtherCTFormula[cost.Year] = yearTotalOtherCTFormula;
+                            }
+                            else
+                            {
+                                yearTotalOtherCTFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalOtherCTFormula.Add(cost.Year, yearTotalOtherCTFormula);
+                            }
+                        }
                     }
                 }
             }
             yearTotalFormualStartRowNo = rowNumber + 1;
-            yearTotalFormualEndRowNo = rowNumber + rowCount;
-            rowNumber = rowNumber + rowCount + 1;
+            yearTotalFormualEndRowNo = yearTotalFormualStartRowNo + rowCount;
+            rowNumber = yearTotalFormualEndRowNo + 1;
             int totalCostRowNumber = rowNumber;
             IRow yearTotalRow = ws.CreateRow(rowNumber);
             for (int year = startYear; year <= endYear; year++)
@@ -2896,7 +3120,6 @@ namespace Faurecia.ADL.Controllers
                     cell.SetCellFormula(formual);
                 }
             }
-
             //Total Travel
             ICellStyle travelCaptionCellStyle = wb.CreateCellStyle();
             IFont travelCaptionCellFont = wb.CreateFont();
@@ -2942,6 +3165,7 @@ namespace Faurecia.ADL.Controllers
             rowNumber = rowNumber + 2;
             int totalTravelsRowNumber = rowNumber;
             cellNumber = 0;
+            Dictionary<int, string> dicYearTotalTravelFormula = new Dictionary<int, string>();
             IRow travelCaptionRow = ws.CreateRow(rowNumber);
             cell = travelCaptionRow.CreateCell(cellNumber);
             cell.CellStyle = travelCaptionCellStyle;
@@ -2957,7 +3181,7 @@ namespace Faurecia.ADL.Controllers
             rowCount = viewModel.Detail.Entries[0].Travels.Count;
             yearTotalFormualStartRowNo = rowNumber + 1;
             yearTotalFormualEndRowNo = rowNumber + rowCount;
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
@@ -2972,6 +3196,8 @@ namespace Faurecia.ADL.Controllers
                                                     , yearTotalFormualEndRowNo + 1);
                     cell.SetCellFormula(formual);
                 }
+                var yearTotalTravelFormula = string.Format("{0}{1}", ToNumberSystem26(endCol + 1), rowNumber + 1);
+                dicYearTotalTravelFormula.Add(year, yearTotalTravelFormula);
             }
             cellNumber = 0;
             for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
@@ -3195,6 +3421,7 @@ namespace Faurecia.ADL.Controllers
 
 
             rowNumber = rowNumber + rowCount + 1;
+            Dictionary<int, string> dicYearTotalDVFormula = new Dictionary<int, string>();
             int totalDVsRowNumber = rowNumber;
             cellNumber = 0;
             IRow dvCaptionRow = ws.CreateRow(rowNumber);
@@ -3212,7 +3439,7 @@ namespace Faurecia.ADL.Controllers
             rowCount = viewModel.Detail.Entries[0].DVs.Count;
             yearTotalFormualStartRowNo = rowNumber + 1;
             yearTotalFormualEndRowNo = rowNumber + rowCount;
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
@@ -3227,8 +3454,9 @@ namespace Faurecia.ADL.Controllers
                                                    , yearTotalFormualEndRowNo + 1);
                     cell.SetCellFormula(formual);
                 }
+                var yearTotalDVFormula = string.Format("{0}{1}", ToNumberSystem26(endCol + 1), rowNumber + 1);
+                dicYearTotalDVFormula.Add(year, yearTotalDVFormula);
             }
-            
             cellNumber = 0;
             for (int i = 0; i < viewModel.Detail.Entries.Count; i++)
             {
@@ -3466,9 +3694,11 @@ namespace Faurecia.ADL.Controllers
             ws.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(rowNumber, rowNumber, cellNumber, cellNumber + 3));
 
             rowCount = viewModel.Detail.Entries[0].PVs.Count;
+
+            Dictionary<int, string> dicYearTotalPVFormula = new Dictionary<int, string>();
             yearTotalFormualStartRowNo = rowNumber + 1;
             yearTotalFormualEndRowNo = rowNumber + rowCount;
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
                 int startCol = cellNumber + 5 + (year - startYear) * 14;
                 int endCol = startCol + 12;
@@ -3483,6 +3713,8 @@ namespace Faurecia.ADL.Controllers
                                                    , yearTotalFormualEndRowNo + 1);
                     cell.SetCellFormula(formual);
                 }
+                var yearTotalPVFormula = string.Format("{0}{1}", ToNumberSystem26(endCol + 1), rowNumber + 1);
+                dicYearTotalPVFormula.Add(year, yearTotalPVFormula);
             }
 
             cellNumber = 0;
@@ -3705,6 +3937,9 @@ namespace Faurecia.ADL.Controllers
             externalValueCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
             externalValueCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
+
+            Dictionary<int, string> dicYearTotalFEAFormula = new Dictionary<int, string>();
+
             List<int> lstExternalRowNumber = new List<int>();
             rowNumber = rowNumber+rowCount;
             cellNumber = 0;
@@ -3807,6 +4042,22 @@ namespace Faurecia.ADL.Controllers
                                             , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
                                             , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
                         cell.SetCellFormula(formual);
+
+                        if (item.ActivityType.TotalGroup == ActivityTypeTotalGroup.FEA)
+                        {
+                            var yearTotalFEAFormula = string.Empty;
+                            if (dicYearTotalFEAFormula.ContainsKey(item.Year))
+                            {
+                                yearTotalFEAFormula = dicYearTotalFEAFormula[item.Year];
+                                yearTotalFEAFormula = yearTotalFEAFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalFEAFormula[item.Year] = yearTotalFEAFormula;
+                            }
+                            else
+                            {
+                                yearTotalFEAFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalFEAFormula.Add(item.Year, yearTotalFEAFormula);
+                            }
+                        }
                     }
                 }
                 else
@@ -3884,6 +4135,21 @@ namespace Faurecia.ADL.Controllers
                                             , ToNumberSystem26(yearTotalFormualStartCellNo + 1), rowNo + j + 1
                                             , ToNumberSystem26(yearTotalFormualEndCellNo + 1), rowNo + j + 1);
                         cell.SetCellFormula(formual);
+                        if (item.ActivityType.TotalGroup == ActivityTypeTotalGroup.FEA)
+                        {
+                            var yearTotalFEAFormula = string.Empty;
+                            if (dicYearTotalFEAFormula.ContainsKey(item.Year))
+                            {
+                                yearTotalFEAFormula = dicYearTotalFEAFormula[item.Year];
+                                yearTotalFEAFormula = yearTotalFEAFormula + string.Format("+{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalFEAFormula[item.Year] = yearTotalFEAFormula;
+                            }
+                            else
+                            {
+                                yearTotalFEAFormula = string.Format("{0}{1}", ToNumberSystem26(cellNo + 1), rowNo + j + 1);
+                                dicYearTotalFEAFormula.Add(item.Year, yearTotalFEAFormula);
+                            }
+                        }
                     }
                 }
             }
@@ -4234,33 +4500,43 @@ namespace Faurecia.ADL.Controllers
             cell = totalCaptionRow.CreateCell(cellNumber);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellValue("Actual H");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber +(year - startYear)+1;
+                int col = cellNumber +(year - startYear)+2;
                 cell = totalCaptionRow.CreateCell(col);
                 cell.CellStyle = totalCaptionCellStyle;
                 cell.SetCellValue(string.Format("{0}",year));
             }
-            var totalCol = cellNumber + (endYear - startYear) + 1;
+            var totalCol = cellNumber + (endYear - startYear) + 3;
             cell = totalCaptionRow.CreateCell(totalCol);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellValue("Total");
 
             //Total D&D    0   0   0   0   0   0
+            
             rowNumber = rowNumber + 1;
+            int yearTotalDDBPStartRow = rowNumber;
             IRow totalValueRow = ws.CreateRow(rowNumber);
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellValue("Total D&D");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalValueCellStyle;
-                cell.SetCellValue(0);
+                if (dicYearTotalDDFormula.ContainsKey(year))
+                {
+                    var formula = dicYearTotalDDFormula[year];
+                    cell.SetCellFormula(formula);
+                }
+                else
+                {
+                    cell.SetCellValue(0);
+                }
             }
             cell = totalValueRow.CreateCell(totalCol);
-            string totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2),ToNumberSystem26(totalCol), rowNumber+1);
+            string totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3),ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total FEA   84  0   0   0   0   84
@@ -4269,15 +4545,17 @@ namespace Faurecia.ADL.Controllers
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellValue("Total FEA");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalValueCellStyle;
-                cell.SetCellValue(0);
+                
+                var formula = dicYearTotalFEAFormula[year];
+                cell.SetCellFormula(formula);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total DV    42  0   0   0   0   42
@@ -4286,15 +4564,16 @@ namespace Faurecia.ADL.Controllers
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellValue("Total DV");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalValueCellStyle;
-                cell.SetCellValue(0);
+                var formula = dicYearTotalDVFormula[year];
+                cell.SetCellFormula(formula);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber+2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber+3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total PV    118 0   0   0   0   118
@@ -4303,49 +4582,61 @@ namespace Faurecia.ADL.Controllers
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellValue("Total PV");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalValueCellStyle;
-                cell.SetCellValue(0);
+                var formula = dicYearTotalPVFormula[year];
+                cell.SetCellFormula(formula);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total D&D(BP)  244 0   0   0   0   244
             rowNumber = rowNumber + 1;
+            int yearTotalDDBPEndRow = rowNumber;
             totalValueRow = ws.CreateRow(rowNumber);
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellValue("Total D&D(BP)");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalCaptionCellStyle;
-                cell.SetCellValue(0);
+                totalFormual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(col+1), yearTotalDDBPStartRow+1, yearTotalDDBPEndRow);
+                cell.SetCellFormula(totalFormual);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total other CT  0   0   0   0   0   0
             rowNumber = rowNumber + 1;
+            int yearTotalCTBPStartRow = rowNumber;
             totalValueRow = ws.CreateRow(rowNumber);
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellValue("Total other CT");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalValueCellStyle;
-                cell.SetCellValue(0);
+                if (dicYearTotalOtherCTFormula.ContainsKey(year))
+                {
+                    var formula = dicYearTotalOtherCTFormula[year];
+                    cell.SetCellFormula(formula);
+                }
+                else
+                {
+                    cell.SetCellValue(0);
+                }
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total ME    0   0   0   0   0   0
@@ -4354,49 +4645,61 @@ namespace Faurecia.ADL.Controllers
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellValue("Total ME");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalValueCellStyle;
-                cell.SetCellValue(0);
+                if (dicYearTotalMEFormula.ContainsKey(year))
+                {
+                    var formula = dicYearTotalMEFormula[year];
+                    cell.SetCellFormula(formula);
+                }
+                else
+                {
+                    cell.SetCellValue(0);
+                }
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalValueCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total CT (BP)0   0   0   0   0   0
             rowNumber = rowNumber + 1;
+            int yearTotalCTBPEndRow = rowNumber;
             totalValueRow = ws.CreateRow(rowNumber);
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellValue("Total CT (BP)");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalCaptionCellStyle;
-                cell.SetCellValue(0);
+                totalFormual = string.Format("SUM({0}{1}:{0}{2})", ToNumberSystem26(col + 1), yearTotalCTBPStartRow + 1, yearTotalCTBPEndRow);
+                cell.SetCellFormula(totalFormual);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total travel    11725.95    0   0   0   0   11725.95
             rowNumber = rowNumber + 1;
+            int yearTotalTravelEndRow = rowNumber;
             totalValueRow = ws.CreateRow(rowNumber);
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellValue("Total travel");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalCaptionCellStyle;
-                cell.SetCellValue(0);
+                var yearTotalTravelFormula = dicYearTotalTravelFormula[year];
+                cell.SetCellFormula(yearTotalTravelFormula);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellFormula(totalFormual);
             //Total   11969.95    0   0   0   0   11969.95
@@ -4405,15 +4708,20 @@ namespace Faurecia.ADL.Controllers
             cell = totalValueRow.CreateCell(cellNumber);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellValue("Total");
-            for (int year = startYear; year < endYear; year++)
+            for (int year = startYear; year <= endYear; year++)
             {
-                int col = cellNumber + (year - startYear) + 1;
+                int col = cellNumber + (year - startYear) + 2;
                 cell = totalValueRow.CreateCell(col);
                 cell.CellStyle = totalCaptionCellStyle;
-                cell.SetCellValue(0);
+                totalFormual = string.Format("{0}{1}+{0}{2}+{0}{3}"
+                    , ToNumberSystem26(col + 1)
+                    , yearTotalDDBPEndRow+1
+                    , yearTotalCTBPEndRow+1
+                    , yearTotalTravelEndRow+1);
+                cell.SetCellFormula(totalFormual);
             }
             cell = totalValueRow.CreateCell(totalCol);
-            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 2), ToNumberSystem26(totalCol), rowNumber+1);
+            totalFormual = string.Format("SUM({0}{2}:{1}{2})", ToNumberSystem26(cellNumber + 3), ToNumberSystem26(totalCol), rowNumber+1);
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellFormula(totalFormual);
 
