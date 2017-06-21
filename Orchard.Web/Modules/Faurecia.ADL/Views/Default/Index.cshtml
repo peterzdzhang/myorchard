@@ -26,8 +26,14 @@
                 <div class="col-lg-6 col-sm-8">
                     <button class="btn btn-info" type="submit" name="submit.Query" value="Query">@T("Filter")</button>
                     <button class="btn btn-success" type="button" name="button.Diff" value="Diff">@T("Compare")</button>
+                    @if (Model.IsDisplayCompareHeadCount)
+                    {
                     <button class="btn btn-success" type="button" name="button.CompareHeadCount" value="CompareHeadCount">@T("Compare HeadCount")</button>
+                    }
+                    @if (Model.IsDisplayCompareCost)
+                    {
                     <button class="btn btn-success" type="button" name="button.CompareCost" value="CompareCost">@T("Compare Cost")</button>
+                    }
                     <button class="btn btn-danger" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">

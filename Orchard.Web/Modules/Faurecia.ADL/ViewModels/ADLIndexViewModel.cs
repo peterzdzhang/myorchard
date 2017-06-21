@@ -16,6 +16,9 @@ namespace Faurecia.ADL.ViewModels
         }
         public IList<ADLIndexEntry> ADLs { get; set; }
 
+        public bool IsDisplayCompareHeadCount { get; set; }
+
+        public bool IsDisplayCompareCost { get; set; }
         public ADLIndexOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }

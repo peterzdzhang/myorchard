@@ -159,10 +159,13 @@ namespace Faurecia.ADL.Controllers
             routeData.Values.Add("Page", pager.Page);
             pagerShape.RouteData(routeData);
 
+           
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_IndexQueryResult", model);
             }
+            model.IsDisplayCompareCost = _orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetCompareCost);
+            model.IsDisplayCompareHeadCount = _orchardService.Authorizer.Authorize(Faurecia.ADL.Permissions.BudgetCompareHeadCount);
             return View(model);
         }
         // GET: Create
@@ -2040,6 +2043,10 @@ namespace Faurecia.ADL.Controllers
             SetDetailViewModel(viewModel, record);
             SetHeadViewModel(viewModel, record);
 
+            //获取所有版本记录。
+            var lstRecords = _adlRecords.Table.Where(w => w.ProjectNo == record.ProjectNo).OrderBy(o=>o.VersionNo);
+
+
             //创建工作薄。
             IWorkbook wb = new HSSFWorkbook();
             //设置EXCEL格式
@@ -2053,8 +2060,112 @@ namespace Faurecia.ADL.Controllers
             IFont font = wb.CreateFont();
             font.Boldweight = 10;
             style.SetFont(font);
+            ISheet wsVersionHistory = wb.CreateSheet("Version History");
+            wsVersionHistory.SetColumnWidth(0, 15 * 256);
+            wsVersionHistory.SetColumnWidth(1, 15 * 256);
+            wsVersionHistory.SetColumnWidth(2, 20 * 256);
+            wsVersionHistory.SetColumnWidth(3, 120 * 256);
+            ICellStyle versionHistoryCaptionCellStyle = wb.CreateCellStyle();
+            IFont versionHistoryCaptionCellFont = wb.CreateFont();
+            versionHistoryCaptionCellFont.FontHeightInPoints = 11;
+            versionHistoryCaptionCellFont.FontName = "Arial";
+            versionHistoryCaptionCellFont.Underline = 0;
+            versionHistoryCaptionCellFont.Boldweight = (short)FontBoldWeight.BOLD;
+            versionHistoryCaptionCellStyle.SetFont(versionHistoryCaptionCellFont);
+            versionHistoryCaptionCellStyle.FillForegroundColor = IndexedColors.GREY_40_PERCENT.Index;
+            versionHistoryCaptionCellStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            versionHistoryCaptionCellStyle.Alignment = HorizontalAlignment.CENTER;
+            versionHistoryCaptionCellStyle.VerticalAlignment = VerticalAlignment.CENTER;
+            versionHistoryCaptionCellStyle.BorderBottom = BorderStyle.THIN;
+            versionHistoryCaptionCellStyle.BorderLeft = BorderStyle.THIN;
+            versionHistoryCaptionCellStyle.BorderRight = BorderStyle.THIN;
+            versionHistoryCaptionCellStyle.BorderTop = BorderStyle.THIN;
+            versionHistoryCaptionCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            versionHistoryCaptionCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            versionHistoryCaptionCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            versionHistoryCaptionCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
 
-            ISheet ws = wb.CreateSheet();
+            ICellStyle versionHistoryRowCellStyle = wb.CreateCellStyle();
+            IFont versionHistoryRowCellFont = wb.CreateFont();
+            versionHistoryRowCellFont.FontHeightInPoints = 11;
+            versionHistoryRowCellFont.FontName = "Arial";
+            versionHistoryRowCellFont.Underline = 0;
+            versionHistoryRowCellFont.Boldweight = (short)FontBoldWeight.None;
+            versionHistoryRowCellStyle.SetFont(versionHistoryRowCellFont);
+            versionHistoryRowCellStyle.FillPattern = FillPatternType.NO_FILL;
+            versionHistoryRowCellStyle.WrapText = true;
+            versionHistoryRowCellStyle.Alignment = HorizontalAlignment.LEFT;
+            versionHistoryRowCellStyle.VerticalAlignment = VerticalAlignment.TOP;
+            versionHistoryRowCellStyle.BorderBottom = BorderStyle.THIN;
+            versionHistoryRowCellStyle.BorderLeft = BorderStyle.THIN;
+            versionHistoryRowCellStyle.BorderRight = BorderStyle.THIN;
+            versionHistoryRowCellStyle.BorderTop = BorderStyle.THIN;
+            versionHistoryRowCellStyle.LeftBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            versionHistoryRowCellStyle.RightBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            versionHistoryRowCellStyle.TopBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            versionHistoryRowCellStyle.BottomBorderColor = IndexedColors.GREY_50_PERCENT.Index;
+            //版本历史记录
+            IRow versionRowHead = wsVersionHistory.CreateRow(0);
+            ICell versionCellHeadVersionNo = versionRowHead.CreateCell(0);
+            versionCellHeadVersionNo.CellStyle = versionHistoryCaptionCellStyle;
+            versionCellHeadVersionNo.SetCellValue("Version");
+
+            ICell versionCellHeadDate = versionRowHead.CreateCell(1);
+            versionCellHeadDate.CellStyle = versionHistoryCaptionCellStyle;
+            versionCellHeadDate.SetCellValue("Date");
+
+            ICell versionCellHeadOwner = versionRowHead.CreateCell(2);
+            versionCellHeadOwner.CellStyle = versionHistoryCaptionCellStyle;
+            versionCellHeadOwner.SetCellValue("Owner");
+
+            ICell versionCellHeadComment = versionRowHead.CreateCell(3);
+            versionCellHeadComment.CellStyle = versionHistoryCaptionCellStyle;
+            versionCellHeadComment.SetCellValue("Comments");
+
+            int versionRowCount = 1;
+            foreach(var versionRecord in lstRecords)
+            {
+                IRow versionRow = wsVersionHistory.CreateRow(versionRowCount);
+                ICell versionCellVersionNo = versionRow.CreateCell(0);
+                versionCellVersionNo.CellStyle = versionHistoryRowCellStyle;
+                versionCellVersionNo.SetCellValue(string.Format("V{0}",versionRecord.VersionNo));
+
+                ICell versionCellDate = versionRow.CreateCell(1);
+                versionCellDate.CellStyle = versionHistoryRowCellStyle;
+                versionCellDate.SetCellValue(string.Format("{0:yyyy-MM-dd}", versionRecord.CreateTime));
+
+                ICell versionCellOwner = versionRow.CreateCell(2);
+                versionCellOwner.CellStyle = versionHistoryRowCellStyle;
+                versionCellOwner.SetCellValue(string.Format("{0}", versionRecord.Creator));
+
+                ICell versionCellComment = versionRow.CreateCell(3);
+                versionCellComment.CellStyle = versionHistoryRowCellStyle;
+                StringBuilder sbComments = new StringBuilder();
+                if (!string.IsNullOrEmpty(versionRecord.MileStoneComments))
+                {
+                    sbComments.Append(versionRecord.MileStoneComments);
+                    sbComments.AppendLine();
+                }
+                if (!string.IsNullOrEmpty(versionRecord.VehicelComments))
+                {
+                    sbComments.Append(versionRecord.VehicelComments);
+                    sbComments.AppendLine();
+                }
+                if (!string.IsNullOrEmpty(versionRecord.QuotationComments))
+                {
+                    sbComments.Append(versionRecord.QuotationComments);
+                    sbComments.AppendLine();
+                }
+                if (!string.IsNullOrEmpty(versionRecord.IBPComments))
+                {
+                    sbComments.Append(versionRecord.IBPComments);
+                }
+                versionCellComment.SetCellValue(sbComments.ToString());
+
+                versionRowCount++;
+            }
+            //导出的项目内容。
+            ISheet ws = wb.CreateSheet("CONTENT");
             ws.SetColumnWidth(0, 25 * 256);
             ws.SetColumnWidth(1, 25 * 256);
             ws.SetColumnWidth(2, 20 * 256);
@@ -2156,7 +2267,7 @@ namespace Faurecia.ADL.Controllers
             }
             else
             {
-                cell.SetCellValue("All year");
+                cell.SetCellValue("");
             }
             cell = headRow.CreateCell(cellNumber+1);
             cell.CellStyle = headRowValueCellStyle;
@@ -2203,7 +2314,7 @@ namespace Faurecia.ADL.Controllers
             }
             else
             {
-                cell.SetCellValue("All year");
+                cell.SetCellValue("");
             }
             cell = headRow.CreateCell(cellNumber + 1);
             cell.CellStyle = headRowValueCellStyle;
@@ -4725,12 +4836,12 @@ namespace Faurecia.ADL.Controllers
             cell.CellStyle = totalCaptionCellStyle;
             cell.SetCellFormula(totalFormual);
 
-
+            string fileName = string.Format("{0}{1}{2} D&D cost.xls", record.Customer.ToUpper(), record.ProjectNo, record.VersionNo);
             MemoryStream ms = new MemoryStream();
             wb.Write(ms);
             ms.Flush();
             ms.Position = 0;
-            return File(ms, "application/vnd.ms-excel", "ADL.xls");
+            return File(ms, "application/vnd.ms-excel", fileName);
         }
 
         private string GetMonthCaption(int month)
