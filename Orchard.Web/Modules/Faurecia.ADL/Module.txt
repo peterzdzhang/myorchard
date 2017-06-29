@@ -1,6 +1,6 @@
 ﻿Name: Faurecia.ADL
 Path: ADL
-AntiForgery: enabled
+AntiForgery: disabled
 Author: Peter Zhang(peter.zhang@foxmail.com)
 Website: http://fromchaos.cnblogs.com/
 Version: 1.0

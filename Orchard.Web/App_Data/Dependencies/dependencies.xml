@@ -99,8 +99,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>Faurecia.ADL</ModuleName>
-    <VirtualPath>~/Modules/Faurecia.ADL/Faurecia.ADL.csproj</VirtualPath>
-    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Modules/Faurecia.ADL/bin/Faurecia.ADL.dll</VirtualPath>
+    <LoaderName>PrecompiledExtensionLoader</LoaderName>
     <References>
       <Reference>
         <Name>ICSharpCode.SharpZipLib</Name>

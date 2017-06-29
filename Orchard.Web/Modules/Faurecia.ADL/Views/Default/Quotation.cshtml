@@ -27,19 +27,19 @@
                     {
                         if (Model.Head.Status == Faurecia.ADL.Models.EnumStatus.Frozen)
                         {
-                            <button class="btn btn-info" type="submit" name="submit.ECR" value="@T("ECR")">@T("ECR")</button>
+                            <button class="btn btn-info cancel" type="submit" name="submit.ECR" value="@T("ECR")">@T("ECR")</button>
                         }
                         else
                         {
-                            <button class="btn btn-info" type="submit" name="submit.Reject" value="@T("Reject")">@T("Reject")</button>
-                            <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                            <button class="btn btn-info cancel" type="submit" name="submit.Reject" value="@T("Reject")">@T("Reject")</button>
+                            <button class="btn btn-primary cancel" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
                         }
                     }
                     else
                     {
-                        <button class="btn btn-info" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-                        <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
-                        <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                        <button class="btn btn-info cancel" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                        <button class="btn btn-info cancel" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
+                        <button class="btn btn-primary cancel" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
                     }
                     @*<button class="btn btn-warning" type="button" name="button.ExportToPDF" value="@T("ExportToPDF")">@T("Export To PDF")</button>*@
                 }
@@ -766,7 +766,7 @@
                     var firstRow = $(xtable).find("tr:first");
                     var cells = firstRow.find("td,th");
                     for (var c = 4; c < cells.length-1; c++) {
-                        var totalRow = $(xtable).find("tfoot>tr:last");
+                        var totalRow = $(xtable).find("tr:last");
                         CalcTotal(totalRow, firstRow, cells[c]);
                     }
                 });
@@ -911,6 +911,13 @@
 
             var lastRow = $(table).find("tr:last");
             var lastRowCells = $(lastRow).find("td");
+
+            if (tableName == "Cost" && lastRowCells.length==0)
+            {
+                lastRow = $(lastRow).prev();
+                lastRowCells = $(lastRow).find("td");
+            }
+
             if (lastRowCells.length == 0) {
                 lastRow = $(table).find("thead tr:last");
                 lastRowCells = $(lastRow).find("th");
@@ -932,12 +939,12 @@
             }
 
             if (tableName == "HourRatio") {
-                readonly = "readonly='readonly'";
+                //readonly = "readonly='readonly'";
             }
 
             if (tableName != "Cost")
             {
-                style = style + "  maxlength='5'";
+                style = style + "  maxlength='15'";
             }
             for (var i = startIndex; i < endIndex; i++) {
                 if (i == 0) {
@@ -1131,11 +1138,13 @@
                 row.find("input[type='text']").each(function (x, xitem) {
                     $(xitem).attr("readonly", "readonly");
                 });
+                var lastestRow = $(table).find("tr:last");
+                $(lastestRow).before(row);
             }
             else {
                 BindCostEvent(row);
+                $(table).append(row);
             }
-            $(table).append(row);
             CalcY1(row);
         }
 
@@ -1261,7 +1270,7 @@
             if (tagName == "TBODY") {
                 costTable = costTable.parent();
             }
-            var totalRow = costTable.find("tfoot>tr:last");
+            var totalRow = costTable.find("tr:last");
             var cell = $(costInput).parent();
             CalcTotal(totalRow, row, cell);
 
@@ -1532,7 +1541,7 @@
                     var firstRow = $(table).find("tr:first");
                     var cells = firstRow.find("td,th");
                     for (var c = 4; c < cells.length-1; c++) {
-                        var totalRow = table.find("tfoot>tr:last");
+                        var totalRow = table.find("tr:last");
                         CalcTotal(totalRow, firstRow, cells[c]);
                     }
                     CalcYearTotal(tabpanel, table, totalGroup);
