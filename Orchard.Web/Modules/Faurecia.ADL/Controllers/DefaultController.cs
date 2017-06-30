@@ -882,6 +882,7 @@ namespace Faurecia.ADL.Controllers
                             + (record.Aug ?? 0)
                             + (record.Dev ?? 0)
                             + (record.Feb ?? 0);
+                return entry;
             }
 
             var queries = _hourRatioRecords.Table.Where(w => w.Year == year && w.ActivityTypeRecord.Id == activityType.Id && w.ActivityTypeRecord.IsUsed == true);
@@ -970,6 +971,39 @@ namespace Faurecia.ADL.Controllers
             {
                 Year=year
             };
+            ADLWorkingHourRecord whrecord = _adlWorkingHourRecords.Table
+                                                               .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
+            if (whrecord != null)
+            {
+                entry.Id = whrecord.Id;
+                entry.Jan = whrecord.Jan;
+                entry.Jul = whrecord.Jul;
+                entry.Jun = whrecord.Jun;
+                entry.Mar = whrecord.Mar;
+                entry.May = whrecord.May;
+                entry.Nov = whrecord.Nov;
+                entry.Oct = whrecord.Oct;
+                entry.Sep = whrecord.Sep;
+                entry.Apr = whrecord.Apr;
+                entry.Aug = whrecord.Aug;
+                entry.Dev = whrecord.Dev;
+                entry.Feb = whrecord.Feb;
+                entry.Year = whrecord.Year;
+                entry.Y1 = (whrecord.Jan ?? 0)
+                            + (whrecord.Jul ?? 0)
+                            + (whrecord.Jun ?? 0)
+                            + (whrecord.Mar ?? 0)
+                            + (whrecord.May ?? 0)
+                            + (whrecord.Nov ?? 0)
+                            + (whrecord.Oct ?? 0)
+                            + (whrecord.Sep ?? 0)
+                            + (whrecord.Apr ?? 0)
+                            + (whrecord.Aug ?? 0)
+                            + (whrecord.Dev ?? 0)
+                            + (whrecord.Feb ?? 0);
+                return entry;
+            }
+
             WorkingHourRecord record = _workingHourRecords.Table.SingleOrDefault(w => w.Year == year && w.IsUsed == true);
             if (record != null && adl.Status == EnumStatus.Inwork) //处于工作中的就更新工作时间。
             {
@@ -999,40 +1033,7 @@ namespace Faurecia.ADL.Controllers
                         + (record.Dev ?? 0)
                         + (record.Feb ?? 0);
             }
-            else
-            {
-                ADLWorkingHourRecord whrecord = _adlWorkingHourRecords.Table
-                                                                .FirstOrDefault(w => w.ADLRecord.Id == adl.Id && w.Year == year);
-                if (whrecord != null)
-                {
-                    entry.Id = whrecord.Id;
-                    entry.Jan = whrecord.Jan;
-                    entry.Jul = whrecord.Jul;
-                    entry.Jun = whrecord.Jun;
-                    entry.Mar = whrecord.Mar;
-                    entry.May = whrecord.May;
-                    entry.Nov = whrecord.Nov;
-                    entry.Oct = whrecord.Oct;
-                    entry.Sep = whrecord.Sep;
-                    entry.Apr = whrecord.Apr;
-                    entry.Aug = whrecord.Aug;
-                    entry.Dev = whrecord.Dev;
-                    entry.Feb = whrecord.Feb;
-                    entry.Year = whrecord.Year;
-                    entry.Y1 = (whrecord.Jan ?? 0)
-                                + (whrecord.Jul ?? 0)
-                                + (whrecord.Jun ?? 0)
-                                + (whrecord.Mar ?? 0)
-                                + (whrecord.May ?? 0)
-                                + (whrecord.Nov ?? 0)
-                                + (whrecord.Oct ?? 0)
-                                + (whrecord.Sep ?? 0)
-                                + (whrecord.Apr ?? 0)
-                                + (whrecord.Aug ?? 0)
-                                + (whrecord.Dev ?? 0)
-                                + (whrecord.Feb ?? 0);
-                }
-            }
+           
             return entry;
         }
         [HttpPost, ActionName("Save")]
@@ -1702,7 +1703,8 @@ namespace Faurecia.ADL.Controllers
             ADLWorkingHourRecord record =null;
             if (!isCreateNew)
             {
-                record= _adlWorkingHourRecords.Table.Where(w => w.Year == entry.Year && w.ADLRecord.Id == adl.Id).FirstOrDefault();
+                record= _adlWorkingHourRecords.Table.Where(w => w.Year == entry.Year 
+                                                           && w.ADLRecord.Id == adl.Id).FirstOrDefault();
                 //record = _adlWorkingHourRecords.Get(entry.Id);
             }
 
