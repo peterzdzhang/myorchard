@@ -50,6 +50,16 @@ namespace Faurecia.ADL
                     .SetUrl("jspdf.js")
                     .SetDependencies("jQuery");
 
+            manifest.DefineScript("jqfloat")
+                    .SetVersion("1.1")
+                    .SetUrl("jqfloat.js")
+                    .SetDependencies("jQuery");
+
+
+            manifest.DefineScript("jfloatdiv")
+                    .SetUrl("jfloatdiv.js")
+                    .SetDependencies("jQuery");
+
             manifest.DefineStyle("FaureciaADLStyle").SetUrl("styles/styles.css");
         }
     }

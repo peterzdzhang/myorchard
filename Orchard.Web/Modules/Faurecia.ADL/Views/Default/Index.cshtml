@@ -3,6 +3,7 @@
 @{
     Script.Require("jQueryUI");
     Script.Require("Microsoft_jQueryAjax_Validate");
+    Script.Require("jfloatdiv");
     Style.Require("jQueryUI");
     Style.Require("FaureciaADLStyle");
     Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
@@ -17,7 +18,7 @@
     @Html.TitleForPage(T("Budget Home").ToString())
 </h1>
 @using (Ajax.BeginForm("Index", "Default", new AjaxOptions { HttpMethod = "Post"
-                                , UpdateTargetId="indexQueryResults"  }))
+                                , UpdateTargetId="indexQueryResults", OnComplete="onComplete" }))
 {
     @Html.AntiForgeryToken()
     <div class="panel panel-default">
@@ -25,15 +26,6 @@
             <div class="row">
                 <div class="col-lg-6 col-sm-8">
                     <button class="btn btn-info" type="submit" name="submit.Query" value="Query">@T("Filter")</button>
-                    <button class="btn btn-success" type="button" name="button.Diff" value="Diff">@T("Compare")</button>
-                    @if (Model.IsDisplayCompareHeadCount)
-                    {
-                    <button class="btn btn-success" type="button" name="button.CompareHeadCount" value="CompareHeadCount">@T("Compare HeadCount")</button>
-                    }
-                    @if (Model.IsDisplayCompareCost)
-                    {
-                    <button class="btn btn-success" type="button" name="button.CompareCost" value="CompareCost">@T("Compare Cost")</button>
-                    }
                     <button class="btn btn-danger" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
@@ -68,6 +60,41 @@
         </div>
     </div>
 }
+<div id="compareItems" class="panel panel-info" style="margin-bottom:80px;">
+    <div class="panel-heading">
+        <button type="button" class="btn btn-sm btn-warning" id="btnCompareCollapse">
+            <span class="glyphicon glyphicon-resize-small" aria-hidden="true" id="spanCompareCollapse"/>
+        </button>
+    </div>
+    <div  id="compareItemsContent"  class="form-horizontal collapse">
+        <div class="panel-body" style="overflow:auto;font-size:12px;max-height:300px">
+            <table class="table table-bordered" id="tableCompareItems">
+                <thead>
+                    <tr class="active">
+                        <td width="20px"></td>
+                        <td>Project No</td>
+                        <td>Version No</td>
+                    </tr>
+                </thead>
+                <tbody style="height:auto">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-success" type="button" name="button.Diff" value="Diff">@T("Compare")</button>
+            @if (Model.IsDisplayCompareHeadCount)
+            {
+                <button class="btn btn-success" type="button" name="button.CompareHeadCount" value="CompareHeadCount">@T("Compare HeadCount")</button>
+            }
+            @if (Model.IsDisplayCompareCost)
+            {
+                <button class="btn btn-success" type="button" name="button.CompareCost" value="CompareCost">@T("Compare Cost")</button>
+            }
+        </div>
+    </div>
+    
+</div>
 @using (Script.Foot())
 {
     <script type="text/javascript">
@@ -92,9 +119,8 @@
 
             $("button[name='button.Diff']").bind("click", function () {
 
-                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                var checkboxs = $("#tableCompareItems").find("input[type='hidden']");
                 if ($(checkboxs).length < 1) { return;}
-                if ($(checkboxs).length > 3) { return; }
 
                 var ids = "";
                 $(checkboxs).each(function(i,item){
@@ -109,9 +135,9 @@
 
             $("button[name='button.CompareHeadCount']").bind("click", function () {
 
-                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                var checkboxs = $("#tableCompareItems").find("input[type='hidden']");
                 if ($(checkboxs).length < 1) { return;}
-
+                
                 var ids = "";
                 $(checkboxs).each(function(i,item){
                     if (ids != "") ids = ids + ",";
@@ -126,7 +152,7 @@
 
             $("button[name='button.CompareCost']").bind("click", function () {
 
-                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                var checkboxs =  $("#tableCompareItems").find("input[type='hidden']");
                 if ($(checkboxs).length < 1) { return;}
 
                 var ids = "";
@@ -183,6 +209,85 @@
                 var url="@Url.Action("CopyTo", "Default", new { Area= "Faurecia.ADL" })";
                 location.href = url + "/" + id + "?returnurl=" + returnurl;
             });
+
+            $('#compareItemsContent').collapse({
+                toggle: false
+            });
+
+            $('#compareItemsContent').on('hidden.bs.collapse', function () {
+                $("#spanCompareCollapse").removeClass("glyphicon-resize-small");
+                $("#spanCompareCollapse").addClass("glyphicon-resize-full");
+            });
+
+            $('#compareItemsContent').on('shown.bs.collapse', function () {
+                $("#spanCompareCollapse").removeClass("glyphicon-resize-full");
+                $("#spanCompareCollapse").addClass("glyphicon-resize-small");
+            });
+
+            $("#btnCompareCollapse").click(function () {
+                $('#compareItemsContent').collapse("toggle");
+            });
+
+            registerToCompareItems();
+            showCompareItems();
         })
+
+        function onComplete() {
+            registerToCompareItems();
+        }
+
+        function registerToCompareItems()
+        {
+            var checkboxs = $("input[type='checkbox'][name$='.IsChecked']");
+            checkboxs.on("click", addToCompareItems);
+        }
+        function showCompareItems() {
+            $("#compareItems").floatdiv("rightbottom");
+        }
+
+        function addToCompareItems() {
+            var checked = $(this).prop("checked");
+            var val=$(this).val();
+            if (checked) {
+
+                var trSource = $(this).parent().parent();
+                var projectNo = trSource.find("td:eq(1)").text();
+                var versionNo = trSource.find("td:eq(2)").text();
+                var tbody = $("#tableCompareItems");
+                var vals = tbody.find("input[type='hidden'][value='" + val + "']");
+                if (vals.length > 0) return;
+
+                var tr = $("<tr style='heigth:20px'></tr>");
+                
+                var td1 = $("<td></td>");
+
+                var hidden = $("<input type='hidden' value='" + val + "' name='hiddenCompareItem_"+val+"'/>");
+                td1.append(hidden);
+
+                var deleteButton = $("<input class='btn btn-danger' style='margin:2px 2px;padding:1px 6px' type='button' value='-'/>");
+                deleteButton.click(function () {
+                    var trDeleted = $(this).parent().parent();
+                    trDeleted.remove();
+                });
+                td1.append(deleteButton);
+                tr.append(td1);
+
+                var td2 = $("<td></td>");
+                var projectNoLabel = $("<p></p>");
+                projectNoLabel.html(projectNo);
+                td2.append(projectNoLabel);
+                tr.append(td2);
+
+                var td3 = $("<td></td>");
+                td3.html(versionNo);
+                tr.append(td3);
+
+
+                tbody.append(tr);
+                if ($("#compareItemsContent").hasClass("in")==false) {
+                    $("#btnCompareCollapse").click();
+                }
+            }
+        }
     </script>
 }

@@ -161,6 +161,8 @@
     <Content Include="Scripts\echarts.js" />
     <Content Include="Scripts\echarts.theme.macarons.js" />
     <Content Include="Scripts\html2canvas.js" />
+    <Content Include="Scripts\jfloatdiv.js" />
+    <Content Include="Scripts\jqfloat.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-ui-addon-timepicker.js" />
