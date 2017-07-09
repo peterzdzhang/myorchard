@@ -1488,7 +1488,7 @@
             //Delete Head Record Row
             $("table[id^='detailHeadCount_']").each(function(){
                 var headCountTable = $(this);
-                var entryIndex=$(headCountTable).data("entryIndex");
+                var entryIndex=$(headCountTable).data("entryindex");
                 var tabpanel=$(headCountTable).parent().parent();
                 var activityTypeIds = $(headCountTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
                 replaceInputName(tabpanel,entryIndex, activityTypeIds, "HeadCounts");
@@ -1496,7 +1496,7 @@
             //Delete Hour Ratio Record Row
             $("table[id^='detailHourRatio_']").each(function(){
                 var hourRatioTable = $(this);
-                var entryIndex=$(hourRatioTable).data("entryIndex");
+                var entryIndex=$(hourRatioTable).data("entryindex");
                 var tabpanel=$(hourRatioTable).parent().parent();
                 activityTypeIds = $(hourRatioTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
                 replaceInputName(tabpanel,entryIndex, activityTypeIds, "HourRatios");
@@ -1504,10 +1504,10 @@
             //Delete Cost Record Row
             $("table[id^='detailCost_']").each(function(){
                 var costTable = $(this);
-                var entryIndex=$(costTable).data("entryIndex");
+                var entryIndex=$(costTable).data("entryindex");
                 var tabpanel=$(costTable).parent().parent().parent();
                 activityTypeIds = $(costTable).find("input[name$='.ActivityType.Id'][value='" + result.ActivityTypeId + "']");
-                replaceInputName(tabpanel,result, activityTypeIds, "Costs");
+                replaceInputName(tabpanel,entryIndex, activityTypeIds, "Costs");
             });
         }
 

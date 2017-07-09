@@ -56,7 +56,7 @@
             </div>
         </div>
         <div class="panel-body" id="indexQueryResults" style="padding-bottom:40px">
-            @Html.Partial("_IndexQueryResult", Model)
+            
         </div>
     </div>
 }
@@ -230,6 +230,7 @@
 
             registerToCompareItems();
             showCompareItems();
+            $("button[name='submit.Query']").click();
         })
 
         function onComplete() {
