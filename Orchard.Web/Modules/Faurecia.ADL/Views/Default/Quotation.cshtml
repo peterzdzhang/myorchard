@@ -158,10 +158,10 @@
                                 <tr class="success">
                                     <td style="width:auto">@T("Total D&D (BP)")</td>
                                     @for (int i = 0; i < Model.Years.Count; i++)
-                                {
-                                    int year = Model.Years[i];
+                                    {
+                                        int year = Model.Years[i];
                                         <td style="width:61px" data-sum="1" data-year="@year"></td>
-                                }
+                                    }
                                     <td style="width:61px"></td>
                                 </tr>
                                 <tr>
@@ -1444,6 +1444,7 @@
                             cellValue = 0;
                         }
                         totalSum = totalSum + parseFloat(cellValue);
+                        totalSum=Math.round(totalSum*1000)/1000;
                     }
                     $(xitem).text(totalSum);
                     CalcTotalRowSum(xitem);
