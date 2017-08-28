@@ -1,0 +1,127 @@
+﻿@model DefaultIndexViewModel
+@using Faurecia.FTL.ViewModels;
+@{
+    Script.Require("jQueryUI");
+    Script.Require("Microsoft_jQueryAjax_Validate");
+    Style.Require("jQueryUI");
+    Style.Require("FaureciaFTLStyle");
+    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+}
+<style type="text/css"> 
+    .table-head{padding-right:17px;}
+    .table-body{width:100%; height:500px;overflow-y:scroll;}
+    .table-head table,.table-body table{width:100%;}
+    .table-body table tr:nth-child(2n+1){background-color:#f2f2f2;}
+</style>
+<h1 style="margin:5px 10px 10px 10px">
+    @Html.TitleForPage(T("Fulfillment Tracking List Home").ToString())
+</h1>
+@using (Ajax.BeginForm("Index", "Default", new AjaxOptions{ HttpMethod = "Post"
+                                                            , UpdateTargetId="indexQueryResults"
+                                                            , OnComplete="onComplete" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-lg-6 col-sm-8">
+                    <button class="btn btn-info" type="submit" name="submit.Query" value="Query">@T("Filter")</button>
+                    <button class="btn btn-danger" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
+                </div>
+                <div class="col-lg-6 col-sm-4 text-right">
+                    <button class="btn btn-warning" type="button" name="button.CopyTo" value="CopyTo">@T("Copy To")</button>
+                    @Html.ActionLink(T("Create New").Text, "Create","Default", new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+        <div class="panel-body" style="margin-bottom:0px">
+            <div class="form-inline">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Project, T("Project No").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    @Html.TextBoxFor(m => m.Options.Project, new { autofocus = "autofocus", @class = "form-control", placeholder = "Project No" })
+                    @Html.ValidationMessageFor(m => m.Options.Project)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Options.Customer, T("Customer").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    @Html.TextBoxFor(m => m.Options.Customer, new { @class = "form-control", @maxlength = 25, placeholder = "Customer Name" })
+                    @Html.ValidationMessageFor(m => m.Options.Customer)
+                </div>
+            </div>
+        </div>
+        <div class="panel-body" id="indexQueryResults" style="padding-bottom:40px">
+        </div>
+    </div>
+}
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        $(function () {
+            $(window).bind("onkeydown", function () {
+                return (event.keyCode != 8)
+            });
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                autoSize:true,
+                dateFormat: "yy/mm/dd"
+            });
+            $("input[type='checkbox'][name$='.IsChecked']").bind("change", function () {
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                var isChecked = $(this).prop("checked");
+                if (isChecked && $(checkboxs).length > 20) {
+                    $(this).prop("checked", !isChecked);
+                    event.preventDefault();
+                }
+            });
+
+            $("button[name='button.Delete']").bind("click", function () {
+
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+
+                var ids = "";
+                $(checkboxs).each(function(i,item){
+                    if (ids != "") ids = ids + ",";
+                    ids = ids + $(item).val();
+                });
+                if (ids == "") return;
+                var returnurl = "@HttpContext.Current.Request.RawUrl";
+                var url="@Url.Action("Delete", "Default", new { Area= "Faurecia.FTL" })";
+                url = url + "?ids=" + ids;
+                $.get(url, null, function (data) {
+                    if (data.Code > 0)
+                    {
+                        alert(data.Message);
+                    }
+                    else {
+                        $("button[name='submit.Query']").click();
+                    }
+                });
+            });
+
+            $("button[name='button.CopyTo']").bind("click", function () {
+
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+                if ($(checkboxs).length > 1) {
+                    alert("@T("Can only choice one item.").Text");
+                    return;
+                }
+                var id = "";
+                $(checkboxs).each(function(i,item){
+                    if (id != "") id = id + ",";
+                    id = id + $(item).val();
+                });
+                if (id == "") return;
+                var returnurl = "@HttpContext.Current.Request.RawUrl";
+                var url="@Url.Action("CopyTo", "Default", new { Area= "Faurecia.FTL" })";
+                location.href = url + "/" + id + "?returnurl=" + returnurl;
+            });
+            $("button[name='submit.Query']").click();
+        })
+
+        function onComplete() {
+        }
+        
+    </script>
+}

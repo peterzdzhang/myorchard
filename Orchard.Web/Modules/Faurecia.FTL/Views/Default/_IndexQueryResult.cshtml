@@ -1,0 +1,111 @@
+﻿@model DefaultIndexViewModel
+@using Faurecia.FTL.ViewModels;
+@{
+    var index = 0;
+    var pageSizes = new List<int?>() { 10, 20, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if (!pageSizes.Contains(defaultPageSize))
+    {
+        pageSizes.Add(defaultPageSize);
+    }
+}
+
+<div style="width: 100%;">
+    <div class="table-head">
+        <table class="table table-bordered" style="margin-bottom:0px">
+            <colgroup>
+                <col style="width: 50px;" />
+                <col style="width: 90px;" />
+                <col style="width: 100px;" />
+                <col style="width: 80px;" />
+                <col style="width: 80px;" />
+                <col style="width: 80px;" />
+                <col style="width: 90px;" />
+                <col style="width: 80px;" />
+                <col />
+            </colgroup>
+            <thead>
+                <tr class="active">
+                    <th nowrap>@T("No")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("Project No")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("Version")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("OEM(Customer)")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("Phase")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("Product")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("Owner")</th>
+                    <th style="word-wrap:break-word;word-break:break-all;">@T("Date")</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="table-body">
+        <table class="table table-bordered">
+            <colgroup>
+                <col style="width: 50px;" />
+                <col style="width: 90px;" />
+                <col style="width: 100px;" />
+                <col style="width: 80px;" />
+                <col style="width: 80px;" />
+                <col style="width: 80px;" />
+                <col style="width: 90px;" />
+                <col style="width: 80px;" />
+                <col />
+            </colgroup>
+            <tbody>
+            @if (Model.Projects.Count == 0)
+            {
+                <tr>
+                    <td colspan="11" class="warning text-center">
+                        @T("No Data Found.")
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var entry in Model.Projects)
+                {
+                    <tr>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            <input type="hidden" value="@Model.Projects[index].Id" name="@Html.NameOf(m => m.Projects[index].Id)" />
+                            <input type="checkbox" value="@Model.Projects[index].Id"
+                                    name="@Html.NameOf(m => m.Projects[index].IsChecked)"/>
+                            @(index + 1)
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                        @{
+                            string url = Url.Action("Index", "Create", new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id });
+                            @Html.ActionLink(entry.ProjectRecord.Project, "Create", "Default"
+                                                , new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl , Id = entry.Id }
+                                                , new { })
+                        }
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            @entry.ProjectRecord.Version
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            @entry.ProjectRecord.Customer
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            @entry.ProjectRecord.Phase
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            @entry.ProjectRecord.Product
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            @entry.ProjectRecord.Owner
+                        </td>
+                        <td style="word-wrap:break-word;word-break:break-all;">
+                            @string.Format("{0:yyyy/MM/dd}", entry.ProjectRecord.CreateTime)
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div style="margin:-30px 0">
+    @Display(Model.Pager)
+</div>

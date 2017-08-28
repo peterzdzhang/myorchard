@@ -28,7 +28,7 @@ namespace PJS.Bootstrap {
                     .Max();
 
                 var itemCount = maxPosition + 1;
-
+                
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     builder.Add(T(_orchardServices.WorkContext.CurrentUser.UserName), itemCount.ToString(), item => item.Url("#").AddClass("menuUserName"));
                     builder.Add(T("Change Password"), itemCount.ToString() + ".1", item => item.Action("ChangePassword", "Account", new { area = "Orchard.Users" }));
