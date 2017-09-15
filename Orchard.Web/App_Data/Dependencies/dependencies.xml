@@ -147,8 +147,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>Faurecia.FTL</ModuleName>
-    <VirtualPath>~/Modules/Faurecia.FTL/bin/Faurecia.FTL.dll</VirtualPath>
-    <LoaderName>PrecompiledExtensionLoader</LoaderName>
+    <VirtualPath>~/Modules/Faurecia.FTL/Faurecia.FTL.csproj</VirtualPath>
+    <LoaderName>DynamicExtensionLoader</LoaderName>
     <References>
       <Reference>
         <Name>Faurecia.ADL</Name>
@@ -232,8 +232,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>Maps</ModuleName>
-    <VirtualPath>~/Modules/Maps/Maps.csproj</VirtualPath>
-    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Modules/Maps/bin/Maps.dll</VirtualPath>
+    <LoaderName>PrecompiledExtensionLoader</LoaderName>
     <References />
   </Dependency>
   <Dependency>

@@ -1,5 +1,5 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.FTL.Models.ProjectRevisionContentRecord, Faurecia.FTL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_FTL_ProjectRevisionContentRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.FTL.Models.ProjectRevisionContentRecord, App_Web_lh5lcw20, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_FTL_ProjectRevisionContentRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />
@@ -80,7 +80,7 @@
     <property name="Editor" type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Editor" />
     </property>
-    <many-to-one class="Faurecia.FTL.Models.ProjectRevisionRecord, Faurecia.FTL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ProjectRevisionRecord">
+    <many-to-one class="Faurecia.FTL.Models.ProjectRevisionRecord, App_Web_lh5lcw20, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" name="ProjectRevisionRecord">
       <column name="ProjectRevisionRecord_id" />
     </many-to-one>
   </class>

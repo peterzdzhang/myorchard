@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
                     <button class="btn btn-warning" type="button" name="button.CopyTo" value="CopyTo">@T("Copy To")</button>
-                    @Html.ActionLink(T("Create New").Text, "Create","Default", new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink(T("Create New").Text, "Index", "Create", new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
                 </div>
             </div>
         </div>

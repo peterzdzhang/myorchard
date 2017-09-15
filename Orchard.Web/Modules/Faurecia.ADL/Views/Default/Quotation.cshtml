@@ -73,7 +73,7 @@
             <div class="panel-body">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist" id="detailTab">
-                    @for (int i = 0; i < Model.Years.Count; i++)
+                @for (int i = 0; i < Model.Years.Count; i++)
                 {
                     int year = Model.Years[i];
                     var tabName = string.Format("YEAR{0}", year);
@@ -216,7 +216,7 @@
 
                 @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.Quotation
                 || Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
-            {
+                {
                     <div class="row" style="padding:5px;">
                         @Html.LabelFor(m => m.Head.QuotationComments, T("Quotation Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                         <div class="col-sm-10 col-lg-10">
@@ -224,9 +224,9 @@
                             @Html.ValidationMessageFor(m => m.Head.QuotationComments)
                         </div>
                     </div>
-            }
+                }
                 @if (Model.Head.Phase == Faurecia.ADL.Models.EnumPhase.IBP)
-            {
+                {
                     <div class="row" style="padding:5px;">
                         @Html.LabelFor(m => m.Head.IBPComments, T("IBP Comments").Text, new { @class = "col-sm-2 col-lg-2 col-xs-2 control-label", @style = "text-align:left" })
                         <div class="col-sm-10 col-lg-10">
@@ -234,7 +234,7 @@
                             @Html.ValidationMessageFor(m => m.Head.IBPComments)
                         </div>
                     </div>
-            }
+                 }
             </div>
             <div class="panel-footer">
                 <div class="form-horizontal">

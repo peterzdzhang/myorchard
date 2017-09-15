@@ -21,7 +21,7 @@
     Style.Include("site.css");
     Script.Include("~/Core/Shapes/Scripts/html5.js").UseCondition("lt IE 9").AtHead();
     Script.Require("Bootstrap");
-
+    Style.Require("Bootstrap");
     if (settings.UseHoverMenus) {
         Script.Require("HoverDropdown");
     }

@@ -60,7 +60,7 @@ namespace Faurecia.FTL
                     .SetUrl("jfloatdiv.js")
                     .SetDependencies("jQuery");
 
-            manifest.DefineStyle("FaureciaFTLStyle").SetUrl("styles/styles.css");
+            manifest.DefineStyle("FaureciaFTLStyle").SetUrl("styles.css");
         }
     }
 }

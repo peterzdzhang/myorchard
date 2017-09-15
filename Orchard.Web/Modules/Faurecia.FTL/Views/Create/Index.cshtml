@@ -1,0 +1,399 @@
+﻿@model CreateIndexViewModel
+@using Faurecia.FTL.ViewModels;
+@{
+    Script.Require("jQueryUI");
+    Script.Require("Microsoft_jQueryAjax_Validate");
+    Style.Require("jQueryUI_Orchard");
+    Style.Require("FaureciaFTLStyle");
+    Script.Require("jqgrid");
+    Style.Require("jqgrid");
+    Script.Require("jqgrid_en");
+
+    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+}
+@using (Script.Head())
+{
+    <link href="/Themes/PJS.Bootstrap/styles/jqgrid/ui.jqgrid-bootstrap-ui.css" rel="stylesheet" type="text/css">
+    <link href="/Themes/PJS.Bootstrap/styles/jqgrid/ui.jqgrid-bootstrap.css" rel="stylesheet" type="text/css">
+}
+<h1 style="margin:5px 10px 10px 10px">
+    @(ViewBag.Title??T("Fulfillment Tracking List"))
+</h1>
+
+@using (Ajax.BeginForm("Save", "Default", new AjaxOptions { HttpMethod = "Post"
+                                , OnBegin="beginSave"
+                                , OnComplete="completeSave" }))
+{
+    @Html.AntiForgeryToken()
+    string returnUrl = Request["ReturnUrl"];
+    <div class="panel panel-default" style="min-width:1138px;">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6 col-xs-6">
+                    <button class="btn btn-info cancel" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                    <button class="btn btn-info cancel" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
+                    <button class="btn btn-primary cancel" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                    <button class="btn btn-warning" type="button" name="button.ExportToExcel" value="@T("ExportToExcel")">@T("Export To Excel")</button>
+                </div>
+                <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
+                    @if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        @Html.Link(T("Back").Text, returnUrl, new { @class = "btn btn-default" });
+                    }
+                    <button type="button" 
+                            class="btn btn-sm btn-warning" 
+                            data-toggle="collapse" 
+                            data-target="#baseInfo">
+                        <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="alert fade in hide" resource="alert" id="statusMessage">
+            <button type="button" class="close" onclick="hideStatusMessage()">
+                <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+            </button>
+            <p></p>
+        </div>
+
+        <div id="content">
+            <div class="form-horizontal panel-body collapse in" id="baseInfo">
+                <div class="form-group">
+                    <div class="col-lg-2">
+                        @Html.LabelFor(m => m.Head.Market, T("Market").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.Market, new { autofocus = "autofocus", @class = "form-control", @maxlength = "50" })
+                    </div>
+                    <div class="col-lg-2">
+                        @Html.LabelFor(m => m.Head.Seat, T("Seat").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.Seat, new { @class = "form-control", @maxlength = "50" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-2">
+                        @Html.LabelFor(m => m.Head.Customer, T("Customer").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.Customer, new { @class = "form-control", @maxlength = "50" })
+                    </div>
+                    <div class="col-lg-2">
+                        @Html.LabelFor(m => m.Head.Model, T("Model").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.Model, new { @class = "form-control", @maxlength = "50" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-2">
+                        @Html.LabelFor(m => m.Head.Project, T("Program").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.Project, new { @class = "form-control", @maxlength = "50" })
+                    </div>
+                    <div class="col-lg-2">
+                        @Html.LabelFor(m => m.Head.Product, T("MP Design Level").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.Head.Product, new { @class = "form-control", @maxlength = "50" })
+                    </div>
+                </div>
+                <div class="form-group"  style="margin-bottom:0px">
+                    <div class="col-lg-12">
+                        @Html.LabelFor(m => m.Head.Mechanism, T("Mechanism").ToString(), new { @class = "control-label", @style = "text-align:left" })
+                        <p><sub>@T("(only for Mechanism quote)")</sub></p>
+                    </div>
+                    <div class="col-lg-12">
+                        @Html.TextAreaFor(m => m.Head.Mechanism, new { @class = "form-control", @maxlength = "500" })
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" id="detailTab">
+                    <li role="presentation" class="active">
+                        <a href="#tabHead" aria-controls="tabHead" role="tab" data-toggle="tab">
+                            @T("Revision")
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#tabContent" aria-controls="tabContent" role="tab" data-toggle="tab">
+                            @T("Content")
+                        </a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="tabHead">
+                        <div id="revisionGrid" style="margin-right:10px;margin-top:10px">
+                            <table id="jqRevisionGrid"></table>
+                            <div id="jqRevisionGridPager"></div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tabContent">
+                        <div id="contentGrid" style="margin-right:10px;margin-top:10px">
+                            <table id="jqContentGrid"></table>
+                            <div id="jqContentGridPager"></div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+     </div>
+}
+@using (Script.Foot())
+{
+    <script>
+		$.jgrid.defaults.width = 780;
+		$.jgrid.defaults.responsive = true;
+		$.jgrid.defaults.styleUI = 'Bootstrap';
+    </script>
+    <script type="text/javascript">
+
+        function beginSave(obj, req) {
+            hideStatusMessage();
+        }
+
+        function completeSave(req) {
+            showErrorInfo(result);
+        }
+
+        //隐藏状态消息
+        function hideStatusMessage() {
+            $("#statusMessage").addClass("hide");
+        }
+        function showErrorInfo(result) {
+            $("#statusMessage").find("p").html("");
+            var message = result.Message;
+            $("#statusMessage").find("p").html(message);
+            $("#statusMessage").removeClass("hide");
+            if (result.Code > 0) {
+                $("#statusMessage").removeClass("alert-success");
+                $("#statusMessage").addClass("alert-danger");
+            }
+            else {
+                $("#statusMessage").removeClass("alert-danger");
+                $("#statusMessage").addClass("alert-success");
+            }
+        }
+
+        $(function () {
+            initRevisionGrid();
+        });
+
+        function initRevisionGrid() {
+            var width = $("#revisionGrid").width();
+            $("#jqRevisionGrid").jqGrid({
+                datatype: "local",
+                data: [
+                    { id: "1", ProgramPhase: "GR1", MiniorRevision: "test" },
+                    { id: "2", ProgramPhase: "GR1", MiniorRevision: "test"},
+                    { id: "3", ProgramPhase: "GR1", MiniorRevision: "test"},
+                    { id: "4", ProgramPhase: "GR1", MiniorRevision: "test"}
+                ],
+                colModel: [
+                    {
+                        label: "Program Phase",
+                        name: 'ProgramPhase',
+                        width: 85,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Minior revision",
+                        name: 'MiniorRevision',
+                        width: 90,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Status",
+                        name: 'Status',
+                        width: 90,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Customer Specification name",
+                        name: 'CustomerSpecificationName',
+                        width: 100,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Customer Release date",
+                        name: 'CustomerReleaseDate',
+                        width: 100,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Review date (FSA)",
+                        name: 'ReviewDate',
+                        width: 80,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Reviewed by (FSA)",
+                        name: 'ReviewedBy',
+                        width: 100,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Comments",
+                        name: 'Comments',
+                        width: 100,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Owner",
+                        name: 'Owner',
+                        width: 80,
+                        colmenu: true,
+                        coloptions: { columns: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    }
+                ],
+                loadonce: true,
+                viewrecords: true,
+                width: width,
+                height: 200,
+                rowNum: 15,
+                rownumbers: true, // show row numbers
+                rownumWidth: 25, // the width of the row numbers columns
+                colMenu: true,
+                shrinkToFit: true,
+                pager: "#jqRevisionGridPager"
+            });
+            
+            $('#jqRevisionGrid').jqGrid('navGrid', "#jqRevisionGridPager", {
+                search: false, // show search button on the toolbar
+                add: false,
+                edit: false,
+                del: false,
+                refresh: true
+            });
+        }
+
+
+        function initContentGrid() {
+            var width = $("#contentGrid").width();
+            $("#jqContentGrid").jqGrid({
+                datatype: "json",
+                data: [],
+                colModel: [
+                    {
+                        label: "Program Phase",
+                        name: 'ProgramPhase',
+                        width: 75,
+                        coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
+                        searchoptions: {
+                            searchOperMenu: false,
+                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        }
+                    },
+                    {
+                        label: "Minior revision",
+                        name: 'MiniorRevision',
+                        width: 90
+                    },
+                    {
+                        label: "Status",
+                        name: 'Status',
+                        width: 90
+                    },
+                    {
+                        label: "Customer Specification name",
+                        name: 'CustomerSpecificationName',
+                        width: 100
+                    },
+                    {
+                        label: "Customer Release date",
+                        name: 'CustomerReleaseDate',
+                        width: 100
+                    },
+                    {
+                        label: "Review date (FSA)",
+                        name: 'ReviewDate',
+                        width: 80
+                    },
+                    {
+                        label: "Reviewed by (FSA)",
+                        name: 'ReviewedBy',
+                        width: 100
+                    },
+                    {
+                        label: "Comments",
+                        name: 'Comments',
+                        width: 100
+                    },
+                    {
+                        label: "Owner",
+                        name: 'Owner',
+                        width: 80
+                    }
+                ],
+                loadonce: true,
+                viewrecords: true,
+                width: width,
+                height: 200,
+                rowNum: 10,
+                rownumbers: true, // show row numbers
+                rownumWidth: 25, // the width of the row numbers columns
+                colMenu: true,
+                shrinkToFit: true,
+                pager: "#jqContentGridPager"
+            });
+
+        }
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //e.target // newly activated tab
+            //e.relatedTarget // previous active tab
+            if (e.target.hash == "#tabContent") {
+                initContentGrid();
+            }
+        })
+    </script>
+}
