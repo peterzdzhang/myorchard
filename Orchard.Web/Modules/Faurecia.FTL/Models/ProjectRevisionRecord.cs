@@ -8,8 +8,8 @@ namespace Faurecia.FTL.Models
     public class ProjectRevisionRecord
     {
         public virtual int Id { get; set; }
-
-        public virtual string ProgramPhase { get; set; }
+        
+        public virtual ProjectPhase ProgramPhase { get; set; }
         public virtual string MiniorRevision { get; set; }
         public virtual string Status { get; set; }
         public virtual string CustomerSpecificationName { get; set; }

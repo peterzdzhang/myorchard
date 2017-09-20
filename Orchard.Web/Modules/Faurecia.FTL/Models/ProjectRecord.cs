@@ -5,12 +5,20 @@ using System.Web;
 
 namespace Faurecia.FTL.Models
 {
+    public enum ProjectPhase
+    {
+        GR1,
+        GR2,
+        GR3,
+        GR4
+    }
+
     public class ProjectRecord
     {
         public virtual int Id { get; set; }
         public virtual string Project { get; set; }
-        public virtual string Version { get; set; }
-        public virtual string Phase { get; set; }
+        public virtual int Version { get; set; }
+        public virtual ProjectPhase Phase { get; set; }
         public virtual string Market { get; set; }
         public virtual string Customer { get; set; }
         public virtual string Mechanism { get; set; }

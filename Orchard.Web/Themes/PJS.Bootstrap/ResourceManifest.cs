@@ -19,7 +19,7 @@ namespace PJS.Bootstrap {
             //jQuery Grid
             manifest.DefineScript("jqgrid").SetUrl("jquery.jqGrid.min.js", "jquery.jqGrid.js").SetDependencies("jQuery");
             manifest.DefineScript("jqgrid_en").SetUrl("i18n/grid.locale-en.js").SetDependencies("jqGrid");
-            manifest.DefineStyle("jqgrid").SetUrl("ui.jqgrid.css");
+            manifest.DefineStyle("jqgrid").SetUrl("jqgrid/ui.jqgrid.css");
             manifest.DefineStyle("jqgrid_bootstrap").SetUrl("jqgrid/ui.jqgrid-bootstrap.css").SetDependencies("Bootstrap", "jqgrid");
             manifest.DefineStyle("jqgrid_bootstrap_ui").SetUrl("jqgrid/ui.jqgrid-bootstrap-ui.css").SetDependencies("Bootstrap", "jqgrid");
             manifest.DefineStyle("multiselect").SetUrl("jqgrid/ui.multiselect.css");

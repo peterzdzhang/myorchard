@@ -11,9 +11,12 @@ namespace Faurecia.FTL.ViewModels
     {
         public CreateIndexViewModel()
         {
-
         }
         public FTLHeadViewModel Head { get; set; }
+        
+        public int Code { get; set; }
+
+        public string Message { get; set; }
     }
     
     public class FTLHeadViewModel
@@ -25,9 +28,9 @@ namespace Faurecia.FTL.ViewModels
         [StringLength(50)]
         public string Project { get; set; }
         [Required]
-        public string Version { get; set; }
+        public int Version { get; set; }
         [Required]
-        public string Phase { get; set; }
+        public ProjectPhase Phase { get; set; }
         [StringLength(50)]
         public string Market { get; set; }
         [StringLength(50)]

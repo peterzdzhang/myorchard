@@ -15,17 +15,33 @@
 {
     <link href="/Themes/PJS.Bootstrap/styles/jqgrid/ui.jqgrid-bootstrap-ui.css" rel="stylesheet" type="text/css">
     <link href="/Themes/PJS.Bootstrap/styles/jqgrid/ui.jqgrid-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/Themes/PJS.Bootstrap/styles/jqgrid/ui.multiselect.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        /* set the size of the datepicker search control for Order Date*/
+        #ui-datepicker-div {
+            font-size: 11px;
+        }
+
+        /* set the size of the autocomplete search control*/
+        .ui-menu-item {
+        }
+
+        .ui-autocomplete {
+            font-size: 11px;
+        }
+    </style>
 }
 <h1 style="margin:5px 10px 10px 10px">
     @(ViewBag.Title??T("Fulfillment Tracking List"))
 </h1>
 
-@using (Ajax.BeginForm("Save", "Default", new AjaxOptions { HttpMethod = "Post"
+@using (Ajax.BeginForm("Save", "Create", new AjaxOptions { HttpMethod = "Post"
                                 , OnBegin="beginSave"
                                 , OnComplete="completeSave" }))
 {
     @Html.AntiForgeryToken()
     string returnUrl = Request["ReturnUrl"];
+    @Html.HiddenFor(m=>m.Head.Id)
     <div class="panel panel-default" style="min-width:1138px;">
         <div class="panel-heading">
             <div class="row">
@@ -157,8 +173,9 @@
             hideStatusMessage();
         }
 
-        function completeSave(req) {
+        function completeSave(result) {
             showErrorInfo(result);
+            fetchGridData();
         }
 
         //隐藏状态消息
@@ -180,30 +197,64 @@
             }
         }
 
+        function fetchGridData()
+        {
+            $("#jqRevisionGrid")[0].grid.beginReq();
+            var gridArrayData = [];
+            var id = $("#@Html.IdFor(m=>m.Head.Id)").val();
+            var url="@Url.Action("GetProjectRevisions", "Create", new { Area= "Faurecia.FTL" })";
+            $.ajax({
+                url: url,
+                data: {projectId:id},
+                success: function (result) {
+                    var items = JSON.parse(result);
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        gridArrayData.push(item);
+                    }
+                    // set the new data
+                    $("#jqRevisionGrid").jqGrid('setGridParam', { data: gridArrayData });
+                    // hide the show message
+                    $("#jqRevisionGrid")[0].grid.endReq();
+                    // refresh the grid
+                    $("#jqRevisionGrid").trigger('reloadGrid');
+                }
+            });
+        }
+
+
+
         $(function () {
+
+            $("button[name='button.ExportToExcel']").bind("click", function () {
+                var id = "@Html.IdFor(m=>m.Head.Id)";
+                if (id == "") return;
+                var url="@Url.Action("ExportToExcel", "Create", new { Area= "Faurecia.FTL" })";
+                location.href = url + "/" + id;
+            });
+
             initRevisionGrid();
+
         });
 
         function initRevisionGrid() {
             var width = $("#revisionGrid").width();
             $("#jqRevisionGrid").jqGrid({
                 datatype: "local",
-                data: [
-                    { id: "1", ProgramPhase: "GR1", MiniorRevision: "test" },
-                    { id: "2", ProgramPhase: "GR1", MiniorRevision: "test"},
-                    { id: "3", ProgramPhase: "GR1", MiniorRevision: "test"},
-                    { id: "4", ProgramPhase: "GR1", MiniorRevision: "test"}
-                ],
+                data: [],
                 colModel: [
                     {
                         label: "Program Phase",
                         name: 'ProgramPhase',
                         width: 85,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -211,10 +262,13 @@
                         name: 'MiniorRevision',
                         width: 90,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -222,10 +276,13 @@
                         name: 'Status',
                         width: 90,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -233,10 +290,13 @@
                         name: 'CustomerSpecificationName',
                         width: 100,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -244,10 +304,13 @@
                         name: 'CustomerReleaseDate',
                         width: 100,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -255,10 +318,13 @@
                         name: 'ReviewDate',
                         width: 80,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -266,10 +332,13 @@
                         name: 'ReviewedBy',
                         width: 100,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -277,10 +346,13 @@
                         name: 'Comments',
                         width: 100,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
@@ -288,10 +360,13 @@
                         name: 'Owner',
                         width: 80,
                         colmenu: true,
-                        coloptions: { columns: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: false,
+                            seraching: false,
+                            grouping: false,
+                            freeze: true
                         }
                     }
                 ],
@@ -306,7 +381,7 @@
                 shrinkToFit: true,
                 pager: "#jqRevisionGridPager"
             });
-            
+
             $('#jqRevisionGrid').jqGrid('navGrid', "#jqRevisionGridPager", {
                 search: false, // show search button on the toolbar
                 add: false,
@@ -316,51 +391,98 @@
             });
         }
 
-
+        var initialized=false;
         function initContentGrid() {
+            if (initialized) {
+                return;
+            }
+            initialized = true;
             var width = $("#contentGrid").width();
             $("#jqContentGrid").jqGrid({
                 datatype: "json",
                 data: [],
                 colModel: [
                     {
-                        label: "Program Phase",
-                        name: 'ProgramPhase',
+                        label: "Catalogue",
+                        name: 'Catalogue',
                         width: 75,
-                        coloptions: { sorting: true, columns: true, filtering: true, seraching: true, grouping: false, freeze: true },
-                        searchoptions: {
-                            searchOperMenu: false,
-                            sopt: ['eq', 'gt', 'lt', 'ge', 'le']
+                        coloptions: {
+                            sorting: true,
+                            columns: true,
+                            filtering: true,
+                            seraching: true,
+                            grouping: false,
+                            freeze: true
                         }
                     },
                     {
-                        label: "Minior revision",
-                        name: 'MiniorRevision',
+                        label: "Life phase",
+                        name: 'LifePhase',
                         width: 90
                     },
                     {
-                        label: "Status",
-                        name: 'Status',
+                        label: "Function",
+                        name: 'Function',
                         width: 90
                     },
                     {
-                        label: "Customer Specification name",
-                        name: 'CustomerSpecificationName',
+                        label: " Customer specification reference",
+                        name: 'CustomerSpecificationReference',
                         width: 100
                     },
                     {
-                        label: "Customer Release date",
-                        name: 'CustomerReleaseDate',
+                        label: "Chapter",
+                        name: 'Chapter',
                         width: 100
                     },
                     {
-                        label: "Review date (FSA)",
-                        name: 'ReviewDate',
+                        label: "Page",
+                        name: 'Page',
                         width: 80
                     },
                     {
-                        label: "Reviewed by (FSA)",
-                        name: 'ReviewedBy',
+                        label: "Specification subject",
+                        name: 'SpecificationSubjectEnglish',
+                        width: 100
+                    },
+                    {
+                        label: "Reference files",
+                        name: 'ReferenceFiles',
+                        width: 100
+                    },
+                    {
+                        label: "Criteria",
+                        name: 'Criteria',
+                        width: 80
+                    },
+                    {
+                        label: "Satisfaction level",
+                        name: 'SatisfactionLevel',
+                        width: 100
+                    },
+                    {
+                        label: "Test conditions and parameters",
+                        name: 'TestConditions',
+                        width: 100
+                    },
+                    {
+                        label: "Concerned product",
+                        name: 'ConcernedProduct',
+                        width: 100
+                    },
+                    {
+                        label: "Commitment level",
+                        name: 'CommitmentLevel',
+                        width: 100
+                    },
+                    {
+                        label: "Test conditions and parameters",
+                        name: 'TestConditions1',
+                        width: 100
+                    },
+                    {
+                        label: "Risk",
+                        name: 'Risk',
                         width: 100
                     },
                     {
@@ -369,9 +491,24 @@
                         width: 100
                     },
                     {
-                        label: "Owner",
-                        name: 'Owner',
-                        width: 80
+                        label: "Leader",
+                        name: 'Leader',
+                        width: 100
+                    },
+                    {
+                        label: "Due date",
+                        name: 'DueDate',
+                        width: 100
+                    },
+                    {
+                        label: "Related evidence for Faurecia commitment",
+                        name: 'RelatedEvidence',
+                        width: 100
+                    },
+                    {
+                        label: "Competitor performance",
+                        name: 'CompetitorPerformance',
+                        width: 100
                     }
                 ],
                 loadonce: true,
@@ -386,6 +523,17 @@
                 pager: "#jqContentGridPager"
             });
 
+            $('#jqContentGrid').setGroupHeaders(
+               {
+                   useColSpanStyle: true,
+                   groupHeaders: [
+                       { "numberOfColumns": 2, "titleText": "Sorting criterias", "startColumnName": "LifePhase" },
+                       { "numberOfColumns": 8, "titleText": "Customer requirements", "startColumnName": "CustomerSpecificationReference" },
+                       { "numberOfColumns": 4, "titleText": "Faurecia's commitment", "startColumnName": "ConcernedProduct" },
+                       { "numberOfColumns": 3, "titleText": "Action plan", "startColumnName": "Comments" },
+                       { "numberOfColumns": 2, "titleText": "", "startColumnName": "RelatedEvidence" }
+                   ]
+               });
         }
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
