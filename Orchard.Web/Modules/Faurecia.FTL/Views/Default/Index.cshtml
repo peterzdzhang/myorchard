@@ -9,7 +9,7 @@
 }
 <style type="text/css"> 
     .table-head{padding-right:17px;}
-    .table-body{width:100%; height:500px;overflow-y:scroll;}
+    .table-body{width:100%; max-height:500px;overflow-y:scroll;}
     .table-head table,.table-body table{width:100%;}
     .table-body table tr:nth-child(2n+1){background-color:#f2f2f2;}
 </style>
@@ -26,10 +26,10 @@
             <div class="row">
                 <div class="col-lg-6 col-sm-8">
                     <button class="btn btn-info" type="submit" name="submit.Query" value="Query">@T("Filter")</button>
-                    <button class="btn btn-danger" type="button" name="button.Delete" value="Delete">@T("Delete")</button>
+                    <button class="btn btn-danger" type="button" name="button.ConfirmDelete" value="ConfirmDelete">@T("Delete")</button>
                 </div>
                 <div class="col-lg-6 col-sm-4 text-right">
-                    <button class="btn btn-warning" type="button" name="button.CopyTo" value="CopyTo">@T("Copy To")</button>
+                    <button class="btn btn-warning" type="button" name="button.ConfirmCopyTo" value="ConfirmCopyTo">@T("Copy To")</button>
                     @Html.ActionLink(T("Create New").Text, "Index", "Create", new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl }, new { @class = "btn btn-primary" })
                 </div>
             </div>
@@ -52,6 +52,50 @@
         </div>
     </div>
 }
+
+<!-- 删除模态框（Modal） -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="deleteConfirmModalLabel">@T("Delete selected items？")</h4>
+            </div>
+            <div class="modal-body">
+                <span class="glyphicon glyphicon-alert alert-warning"></span>
+                The selected items will be deleted and cannot restore,Are you confirm delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    @T("Close")
+                </button>
+                <button type="button" class="btn btn-primary" name="button.Delete" value="Delete" >@("Ok")</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 复制模态框（Modal） -->
+<div class="modal fade" id="copyToModal" tabindex="-1" role="dialog" aria-labelledby="copyToModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="copyToModalLabel">@T("Copy to selected item")</h4>
+            </div>
+            <div class="modal-body">
+                <span class="glyphicon glyphicon-info-sign alert-info"></span>
+                Copy selected item to new item. are you confirm?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    @T("Close")
+                </button>
+                <button type="button" class="btn btn-primary" name="button.CopyTo" value="CopyTo">@("Ok")</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 @using (Script.Foot())
 {
     <script type="text/javascript">
@@ -74,11 +118,15 @@
                 }
             });
 
+            $("button[name='button.ConfirmDelete']").bind("click", function () {
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+                if ($(checkboxs).length < 1) { return;}
+                $("#deleteConfirmModal").modal("show");
+            });
+
             $("button[name='button.Delete']").bind("click", function () {
 
                 var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
-                if ($(checkboxs).length < 1) { return;}
-
                 var ids = "";
                 $(checkboxs).each(function(i,item){
                     if (ids != "") ids = ids + ",";
@@ -95,18 +143,22 @@
                     }
                     else {
                         $("button[name='submit.Query']").click();
+                        $("#deleteConfirmModal").modal("hide");
                     }
                 });
             });
 
-            $("button[name='button.CopyTo']").bind("click", function () {
-
-                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
+            $("button[name='button.ConfirmCopyTo']").bind("click", function () {
+                 var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
                 if ($(checkboxs).length < 1) { return;}
                 if ($(checkboxs).length > 1) {
-                    alert("@T("Can only choice one item.").Text");
+                    alert("@T("Can only select one item.").Text");
                     return;
                 }
+                $("#copyToModal").modal("show");
+            });
+            $("button[name='button.CopyTo']").bind("click", function () {
+                var checkboxs = $("input[type='checkbox'][name$='.IsChecked']:checked");
                 var id = "";
                 $(checkboxs).each(function(i,item){
                     if (id != "") id = id + ",";
@@ -114,7 +166,7 @@
                 });
                 if (id == "") return;
                 var returnurl = "@HttpContext.Current.Request.RawUrl";
-                var url="@Url.Action("CopyTo", "Default", new { Area= "Faurecia.FTL" })";
+                var url="@Url.Action("Copy", "Create", new { Area= "Faurecia.FTL" })";
                 location.href = url + "/" + id + "?returnurl=" + returnurl;
             });
             $("button[name='submit.Query']").click();
@@ -122,6 +174,6 @@
 
         function onComplete() {
         }
-        
+
     </script>
 }

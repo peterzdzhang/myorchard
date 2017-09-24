@@ -8,7 +8,6 @@
     Script.Require("jqgrid");
     Style.Require("jqgrid");
     Script.Require("jqgrid_en");
-
     Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
 }
 @using (Script.Head())
@@ -37,18 +36,19 @@
 
 @using (Ajax.BeginForm("Save", "Create", new AjaxOptions { HttpMethod = "Post"
                                 , OnBegin="beginSave"
-                                , OnComplete="completeSave" }))
+                                , OnSuccess="completeSave" }))
 {
     @Html.AntiForgeryToken()
     string returnUrl = Request["ReturnUrl"];
-    @Html.HiddenFor(m=>m.Head.Id)
+    @Html.HiddenFor(m => m.Head.Id)
+    @Html.HiddenFor(m=>m.ActionName)
     <div class="panel panel-default" style="min-width:1138px;">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-lg-6 col-sm-6 col-xs-6">
-                    <button class="btn btn-info cancel" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-                    <button class="btn btn-info cancel" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
-                    <button class="btn btn-primary cancel" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
+                    <button class="btn btn-info" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+                    <button class="btn btn-info" type="submit" name="submit.Confirm" value="@T("Confirm")">@T("Confirm")</button>
+                    <button class="btn btn-primary" type="submit" name="submit.Submit" value="@T("Submit")">@T("Submit")</button>
                     <button class="btn btn-warning" type="button" name="button.ExportToExcel" value="@T("ExportToExcel")">@T("Export To Excel")</button>
                 </div>
                 <div class="col-lg-6 col-sm-6 col-xs-6 text-right">
@@ -80,6 +80,7 @@
                     </div>
                     <div class="col-lg-4">
                         @Html.TextBoxFor(m => m.Head.Market, new { autofocus = "autofocus", @class = "form-control", @maxlength = "50" })
+                        
                     </div>
                     <div class="col-lg-2">
                         @Html.LabelFor(m => m.Head.Seat, T("Seat").ToString(), new { @class = "control-label", @style = "text-align:left" })
@@ -108,6 +109,7 @@
                     </div>
                     <div class="col-lg-4">
                         @Html.TextBoxFor(m => m.Head.Project, new { @class = "form-control", @maxlength = "50" })
+                        @Html.ValidationMessageFor(m=>m.Head.Project)
                     </div>
                     <div class="col-lg-2">
                         @Html.LabelFor(m => m.Head.Product, T("MP Design Level").ToString(), new { @class = "control-label", @style = "text-align:left" })
@@ -175,7 +177,6 @@
 
         function completeSave(result) {
             showErrorInfo(result);
-            fetchGridData();
         }
 
         //隐藏状态消息
@@ -183,17 +184,20 @@
             $("#statusMessage").addClass("hide");
         }
         function showErrorInfo(result) {
+            var obj = JSON.parse(result);
             $("#statusMessage").find("p").html("");
-            var message = result.Message;
+            var message = obj.Message;
             $("#statusMessage").find("p").html(message);
             $("#statusMessage").removeClass("hide");
-            if (result.Code > 0) {
+            if (obj.Code > 0) {
                 $("#statusMessage").removeClass("alert-success");
                 $("#statusMessage").addClass("alert-danger");
             }
             else {
                 $("#statusMessage").removeClass("alert-danger");
                 $("#statusMessage").addClass("alert-success");
+                $("#@Html.IdFor(m=>m.Head.Id)").val(obj.Head.Id);
+                fetchGridData();
             }
         }
 
@@ -234,19 +238,28 @@
             });
 
             initRevisionGrid();
+            fetchGridData();
 
+            if("@Model.ActionName"=="@Actions.Copy"){
+                $("#@Html.IdFor(m=>m.Head.Id)").val(0);
+            }
         });
 
         function initRevisionGrid() {
+
+            var url="@Url.Action("SaveRevisionData", "Create", new { Area= "Faurecia.FTL" })";
             var width = $("#revisionGrid").width();
             $("#jqRevisionGrid").jqGrid({
                 datatype: "local",
+                editurl:"clientArray",
                 data: [],
                 colModel: [
                     {
+                        align:"center",
                         label: "Program Phase",
                         name: 'ProgramPhase',
-                        width: 85,
+                        width: 150,
+                        fixed:true,
                         colmenu: true,
                         coloptions: {
                             sorting: true,
@@ -258,9 +271,11 @@
                         }
                     },
                     {
+                        align:"center",
                         label: "Minior revision",
                         name: 'MiniorRevision',
-                        width: 90,
+                        width: 150,
+                        fixed:true,
                         colmenu: true,
                         coloptions: {
                             sorting: true,
@@ -272,9 +287,11 @@
                         }
                     },
                     {
+                        align:"center",
                         label: "Status",
                         name: 'Status',
-                        width: 90,
+                        width: 100,
+                        fixed:true,
                         colmenu: true,
                         coloptions: {
                             sorting: true,
@@ -286,10 +303,14 @@
                         }
                     },
                     {
+                        align:"center",
                         label: "Customer Specification name",
                         name: 'CustomerSpecificationName',
-                        width: 100,
+                        width: 200,
                         colmenu: true,
+                        editable: true,
+                        edittype:"file",
+                        fixed:true,
                         coloptions: {
                             sorting: true,
                             columns: true,
@@ -302,8 +323,25 @@
                     {
                         label: "Customer Release date",
                         name: 'CustomerReleaseDate',
-                        width: 100,
+                        width: 180,
                         colmenu: true,
+                        editable: true,
+                        fixed:true,
+                        edittype:"text",
+                        editoptions: {
+                            // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                            // use it to place a third party control to customize the toolbar
+                            dataInit: function (element) {
+                                $(element).datepicker({
+                                    id: 'customerReleaseDate_datePicker',
+                                    dateFormat: 'yy.mm.dd',
+                                    changeMonth: true,
+                                    changeYear: true,
+                                    autoSize: true,
+                                    showOn: 'focus'
+                                });
+                            }
+                        },
                         coloptions: {
                             sorting: true,
                             columns: true,
@@ -316,8 +354,25 @@
                     {
                         label: "Review date (FSA)",
                         name: 'ReviewDate',
-                        width: 80,
+                        width: 130,
+                        fixed:true,
                         colmenu: true,
+                        editable: true,
+                        edittype:"text",
+                        editoptions: {
+                            // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                            // use it to place a third party control to customize the toolbar
+                            dataInit: function (element) {
+                                $(element).datepicker({
+                                    id: 'customerReleaseDate_datePicker',
+                                    dateFormat: 'yy.mm.dd',
+                                    changeMonth: true,
+                                    changeYear: true,
+                                    autoSize: true,
+                                    showOn: 'focus'
+                                });
+                            }
+                        },
                         coloptions: {
                             sorting: true,
                             columns: true,
@@ -330,8 +385,11 @@
                     {
                         label: "Reviewed by (FSA)",
                         name: 'ReviewedBy',
-                        width: 100,
+                        fixed:true,
+                        edittype:"text",
+                        width: 130,
                         colmenu: true,
+                        editable: true,
                         coloptions: {
                             sorting: true,
                             columns: true,
@@ -344,8 +402,11 @@
                     {
                         label: "Comments",
                         name: 'Comments',
-                        width: 100,
+                        fixed:true,
+                        width:200,
                         colmenu: true,
+                        editable: true,
+                        edittype:"textarea",
                         coloptions: {
                             sorting: true,
                             columns: true,
@@ -358,7 +419,8 @@
                     {
                         label: "Owner",
                         name: 'Owner',
-                        width: 80,
+                        fixed:true,
+                        width: 130,
                         colmenu: true,
                         coloptions: {
                             sorting: true,
@@ -382,13 +444,36 @@
                 pager: "#jqRevisionGridPager"
             });
 
-            $('#jqRevisionGrid').jqGrid('navGrid', "#jqRevisionGridPager", {
-                search: false, // show search button on the toolbar
-                add: false,
-                edit: false,
-                del: false,
-                refresh: true
-            });
+            $('#jqRevisionGrid').navGrid('#jqRevisionGridPager',
+                // the buttons to appear on the toolbar of the grid
+                { edit: true, add: false, del: false, search: false, refresh: false, view: false, position: "left", cloneToTop: false },
+                // options for the Edit Dialog
+                {
+                    editCaption: "The Edit Dialog",
+                    recreateForm: true,
+                    closeAfterEdit: true,
+					viewPagerButtons: false,
+                    afterShowForm: function(){
+
+                    },
+                    errorTextFormat: function (data) {
+                        return 'Error: ' + data.responseText
+                    }
+                },
+                // options for the Add Dialog
+                {
+                    closeAfterAdd: true,
+                    recreateForm: true,
+                    errorTextFormat: function (data) {
+                        return 'Error: ' + data.responseText
+                    }
+                },
+                // options for the Delete Dailog
+                {
+                    errorTextFormat: function (data) {
+                        return 'Error: ' + data.responseText
+                    }
+                });
         }
 
         var initialized=false;

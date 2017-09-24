@@ -17,7 +17,7 @@ namespace Faurecia.FTL.Models
     {
         public virtual int Id { get; set; }
         public virtual string Project { get; set; }
-        public virtual int Version { get; set; }
+        public virtual string Version { get; set; }
         public virtual ProjectPhase Phase { get; set; }
         public virtual string Market { get; set; }
         public virtual string Customer { get; set; }

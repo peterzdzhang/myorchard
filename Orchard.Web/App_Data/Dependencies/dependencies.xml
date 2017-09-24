@@ -105,7 +105,7 @@
       <Reference>
         <Name>ICSharpCode.SharpZipLib</Name>
         <LoaderName>PrecompiledExtensionLoader</LoaderName>
-        <VirtualPath>~/Modules/Faurecia.FTL/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
+        <VirtualPath>~/Modules/Faurecia.ADL/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
       </Reference>
       <Reference>
         <Name>NPOI</Name>
@@ -166,14 +166,9 @@
     <LoaderName>DynamicExtensionLoader</LoaderName>
     <References>
       <Reference>
-        <Name>Faurecia.ADL</Name>
-        <LoaderName>DynamicExtensionLoader</LoaderName>
-        <VirtualPath>~/Modules/Faurecia.ADL/Faurecia.ADL.csproj</VirtualPath>
-      </Reference>
-      <Reference>
         <Name>ICSharpCode.SharpZipLib</Name>
         <LoaderName>PrecompiledExtensionLoader</LoaderName>
-        <VirtualPath>~/Modules/Faurecia.FTL/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
+        <VirtualPath>~/Modules/Faurecia.ADL/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
       </Reference>
       <Reference>
         <Name>NPOI</Name>
@@ -236,7 +231,7 @@
       <Reference>
         <Name>ICSharpCode.SharpZipLib</Name>
         <LoaderName>PrecompiledExtensionLoader</LoaderName>
-        <VirtualPath>~/Modules/Faurecia.FTL/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
+        <VirtualPath>~/Modules/Faurecia.ADL/bin/ICSharpCode.SharpZipLib.dll</VirtualPath>
       </Reference>
       <Reference>
         <Name>Lucene.Net</Name>
@@ -637,6 +632,16 @@
         <Name>System.Spatial</Name>
         <LoaderName>PrecompiledExtensionLoader</LoaderName>
         <VirtualPath>~/Modules/Orchard.Azure/bin/System.Spatial.dll</VirtualPath>
+      </Reference>
+      <Reference>
+        <Name>WindowsAzureEventSource</Name>
+        <LoaderName>PrecompiledExtensionLoader</LoaderName>
+        <VirtualPath>~/Modules/Orchard.Azure/bin/WindowsAzureEventSource.dll</VirtualPath>
+      </Reference>
+      <Reference>
+        <Name>WindowsAzureTelemetryEvents</Name>
+        <LoaderName>PrecompiledExtensionLoader</LoaderName>
+        <VirtualPath>~/Modules/Orchard.Azure/bin/WindowsAzureTelemetryEvents.dll</VirtualPath>
       </Reference>
     </References>
   </Dependency>
@@ -1971,8 +1976,8 @@
   </Dependency>
   <Dependency>
     <ModuleName>PJS.Bootstrap</ModuleName>
-    <VirtualPath>~/Themes/PJS.Bootstrap/PJS.Bootstrap.csproj</VirtualPath>
-    <LoaderName>DynamicExtensionLoader</LoaderName>
+    <VirtualPath>~/Themes/PJS.Bootstrap/bin/PJS.Bootstrap.dll</VirtualPath>
+    <LoaderName>PrecompiledExtensionLoader</LoaderName>
     <References>
       <Reference>
         <Name>JetBrains.Annotations</Name>

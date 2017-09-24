@@ -55,16 +55,89 @@ namespace Faurecia.FTL.Controllers
             T = NullLocalizer.Instance;
             New = shapeFactory;
         }
-        // GET: Create
-        public ActionResult Index()
+        // GET: Copy
+        public ActionResult Copy(int id = 0)
         {
-            return View(new CreateIndexViewModel()
+            if (id == 0)
             {
-              Head=new FTLHeadViewModel()
-              {
-                   Id=0
-              }
-            });
+                return View("Index", new CreateIndexViewModel()
+                {
+                    Head = new FTLHeadViewModel()
+                    {
+                        Id = 0
+                    },
+                    ActionName = Actions.Normal
+                });
+            }
+            else
+            {
+                ProjectRecord record = _projectRecords.Get(id);
+                var viewModel = new CreateIndexViewModel()
+                {
+                    Head = new FTLHeadViewModel()
+                    {
+                        CreateTime = record.CreateTime,
+                        Creator = record.Creator,
+                        Customer = record.Customer,
+                        Editor = record.Editor,
+                        EditTime = record.EditTime,
+                        Id = record.Id,
+                        Market = record.Market,
+                        Mechanism = record.Mechanism,
+                        Model = record.Model,
+                        Owner = record.Owner,
+                        Phase = record.Phase,
+                        Product = record.Product,
+                        Project = record.Project,
+                        Seat = record.Seat,
+                        Version = record.Version
+                    },
+                    ActionName = Actions.Copy
+                };
+                return View("Index",viewModel);
+            }
+        }
+        // GET: Create
+        public ActionResult Index(int id=0)
+        {
+            if (id == 0)
+            {
+                return View(new CreateIndexViewModel()
+                {
+                    Head = new FTLHeadViewModel()
+                    {
+                        Id = 0
+                    },
+                    ActionName = Actions.Normal
+                });
+            }
+            else
+            {
+                ProjectRecord record = _projectRecords.Get(id);
+                var viewModel = new CreateIndexViewModel()
+                {
+                    Head = new FTLHeadViewModel()
+                    {
+                        CreateTime = record.CreateTime,
+                        Creator = record.Creator,
+                        Customer = record.Customer,
+                        Editor = record.Editor,
+                        EditTime = record.EditTime,
+                        Id = record.Id,
+                        Market = record.Market,
+                        Mechanism = record.Mechanism,
+                        Model = record.Model,
+                        Owner = record.Owner,
+                        Phase = record.Phase,
+                        Product = record.Product,
+                        Project = record.Project,
+                        Seat = record.Seat,
+                        Version = record.Version
+                    },
+                    ActionName = Actions.Normal
+                };
+                return View(viewModel);
+            }
         }
 
         [HttpPost, ActionName("Save")]
@@ -88,7 +161,7 @@ namespace Faurecia.FTL.Controllers
             return Save(Submit);
         }
 
-        private ActionResult Save(Action<CreateIndexViewModel> action)
+        private ActionResult Save(Func<CreateIndexViewModel, CreateIndexViewModel> action)
         {
             var viewModel = new CreateIndexViewModel();
             TryUpdateModel(viewModel);
@@ -98,15 +171,14 @@ namespace Faurecia.FTL.Controllers
                 {
                     if (viewModel.Head.Id == 0)
                     {
-                        Create(viewModel);
+                        viewModel=Create(viewModel);
                     }
                     else
                     {
                         //更新项目记录
-                        action(viewModel);
+                        viewModel=action(viewModel);
                     }
                     viewModel.Code = 0;
-                    viewModel.Message = string.Empty;
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +201,7 @@ namespace Faurecia.FTL.Controllers
             return Json(JsonConvert.SerializeObject(viewModel));
         }
 
-        private void Create(CreateIndexViewModel viewModel)
+        private CreateIndexViewModel Create(CreateIndexViewModel viewModel)
         {
             //新增一条项目记录
             ProjectRecord record = new ProjectRecord()
@@ -145,11 +217,164 @@ namespace Faurecia.FTL.Controllers
                 Product = viewModel.Head.Product,
                 Project = viewModel.Head.Project,
                 Mechanism = viewModel.Head.Mechanism,
-                Owner = string.Empty,
+                Owner = _orchardService.WorkContext.CurrentUser.UserName,
                 Phase = ProjectPhase.GR1,
-                Version = 1
+                Version = "1.0"
             };
             _projectRecords.Create(record);
+            _projectRecords.Flush();
+            //新增一条版本记录
+            ProjectRevisionRecord revisionRecord = new ProjectRevisionRecord()
+            {
+                CreateTime = DateTime.Now,
+                Creator = record.Creator,
+                Editor = record.Editor,
+                EditTime = DateTime.Now,
+                MiniorRevision = record.Version.ToString(),
+                Owner = _orchardService.WorkContext.CurrentUser.UserName,
+                ProgramPhase = record.Phase,
+                ReviewDate = string.Empty,
+                ReviewedBy = string.Empty,
+                CustomerReleaseDate = string.Empty,
+                CustomerSpecificationName = string.Empty,
+                Comments = string.Empty,
+                Status = ProjectRevisionRecord.StatusInwork,
+                ProjectRecord = record
+            };
+            _projectRevisionRecords.Create(revisionRecord);
+            _projectRevisionRecords.Flush();
+            viewModel.Head.Id = record.Id;
+            viewModel.Message = T("Create project [{0}] successfully.", record.Project).Text;
+            return viewModel;
+        }
+
+        private CreateIndexViewModel Update(CreateIndexViewModel viewModel)
+        {
+            //更新项目记录
+            ProjectRecord record = _projectRecords.Get(viewModel.Head.Id);
+            record.Editor = _orchardService.WorkContext.CurrentUser.UserName;
+            record.EditTime = DateTime.Now;
+            record.Market = viewModel.Head.Market;
+            record.Seat = viewModel.Head.Seat;
+            record.Customer = viewModel.Head.Customer;
+            record.Model = viewModel.Head.Model;
+            record.Product = viewModel.Head.Product;
+            record.Project = viewModel.Head.Project;
+            record.Mechanism = viewModel.Head.Mechanism;
+            _projectRecords.Update(record);
+            _projectRecords.Flush();
+            viewModel.Head.Id = record.Id;
+            viewModel.Message = T("Update project [{0}] successfully.", record.Project).Text;
+            return viewModel;
+        }
+
+        private CreateIndexViewModel Confirm(CreateIndexViewModel viewModel)
+        {
+            //更新项目记录
+            ProjectRecord record = _projectRecords.Get(viewModel.Head.Id);
+            record.Editor = _orchardService.WorkContext.CurrentUser.UserName;
+            record.EditTime = DateTime.Now;
+            record.Market = viewModel.Head.Market;
+            record.Seat = viewModel.Head.Seat;
+            record.Customer = viewModel.Head.Customer;
+            record.Model = viewModel.Head.Model;
+            record.Product = viewModel.Head.Product;
+            record.Project = viewModel.Head.Project;
+            record.Mechanism = viewModel.Head.Mechanism;
+            record.Version = IncreaseSubVersion(record.Version);
+            _projectRecords.Update(record);
+            _projectRecords.Flush();
+            //更新所有版本记录为Released
+            var lnq = from item in _projectRevisionRecords.Table
+                      where item.Status == ProjectRevisionRecord.StatusInwork && item.ProjectRecord.Id == viewModel.Head.Id
+                      select item;
+            foreach(var item in lnq)
+            {
+                item.Status = ProjectRevisionRecord.StatusReleased;
+                item.Editor = record.Editor;
+                item.EditTime = DateTime.Now;
+                _projectRevisionRecords.Update(item);
+            }
+            //新增一条版本记录
+            ProjectRevisionRecord revisionRecord = new ProjectRevisionRecord()
+            {
+                CreateTime = DateTime.Now,
+                Creator = record.Creator,
+                Editor = record.Editor,
+                EditTime = DateTime.Now,
+                MiniorRevision = record.Version.ToString(),
+                Owner = record.Owner,
+                ProgramPhase = record.Phase,
+                ReviewDate = string.Empty,
+                ReviewedBy = string.Empty,
+                CustomerReleaseDate = string.Empty,
+                CustomerSpecificationName = string.Empty,
+                Comments = string.Empty,
+                Status = ProjectRevisionRecord.StatusInwork,
+                ProjectRecord=record
+            };
+            _projectRevisionRecords.Create(revisionRecord);
+            _projectRevisionRecords.Flush();
+
+            viewModel.Head.Id = record.Id;
+            viewModel.Message = T("Confirm project [{0}] successfully.", record.Project).Text;
+            return viewModel;
+        }
+
+        private string IncreaseSubVersion(string version="")
+        {
+            string[] versions = version.Split('.');
+            int mainVersion = 1;
+            int subVersion = 0;
+            if (versions.Length > 0)
+            {
+                if (!int.TryParse(versions[0], out mainVersion))
+                {
+                    mainVersion = 1;
+                }
+            }
+            if (versions.Length > 1)
+            {
+                if (!int.TryParse(versions[1], out subVersion))
+                {
+                    subVersion = 0;
+                }
+                subVersion = subVersion + 1;
+            }
+            return string.Format("{0}.{1}", mainVersion, subVersion);
+        }
+
+        private string IncreaseMainVersion(string version = "")
+        {
+            string[] versions = version.Split('.');
+            int mainVersion = 1;
+            int subVersion = 0;
+            if (versions.Length > 0)
+            {
+                if (!int.TryParse(versions[0], out mainVersion))
+                {
+                    mainVersion = 1;
+                }
+                mainVersion = mainVersion + 1;
+            }
+            return string.Format("{0}.{1}", mainVersion, subVersion);
+        }
+
+        private CreateIndexViewModel Submit(CreateIndexViewModel viewModel)
+        {
+            //更新项目记录
+            ProjectRecord record = _projectRecords.Get(viewModel.Head.Id);
+            record.Editor = _orchardService.WorkContext.CurrentUser.UserName;
+            record.EditTime = DateTime.Now;
+            record.Market = viewModel.Head.Market;
+            record.Seat = viewModel.Head.Seat;
+            record.Customer = viewModel.Head.Customer;
+            record.Model = viewModel.Head.Model;
+            record.Product = viewModel.Head.Product;
+            record.Project = viewModel.Head.Project;
+            record.Mechanism = viewModel.Head.Mechanism;
+            record.Version = IncreaseMainVersion(record.Version); ;
+            _projectRecords.Update(record);
             //新增一条版本记录
             ProjectRevisionRecord revisionRecord = new ProjectRevisionRecord()
             {
@@ -169,115 +394,19 @@ namespace Faurecia.FTL.Controllers
                 ProjectRecord = record
             };
             _projectRevisionRecords.Create(revisionRecord);
-        }
 
-        private void Update(CreateIndexViewModel viewModel)
-        {
-            //更新项目记录
-            ProjectRecord record = _projectRecords.Get(viewModel.Head.Id);
-            record.Editor = _orchardService.WorkContext.CurrentUser.UserName;
-            record.EditTime = DateTime.Now;
-            record.Market = viewModel.Head.Market;
-            record.Seat = viewModel.Head.Seat;
-            record.Customer = viewModel.Head.Customer;
-            record.Model = viewModel.Head.Model;
-            record.Product = viewModel.Head.Product;
-            record.Project = viewModel.Head.Project;
-            record.Mechanism = viewModel.Head.Mechanism;
-            _projectRecords.Update(record);
-        }
-
-        private void Confirm(CreateIndexViewModel viewModel)
-        {
-            //更新项目记录
-            ProjectRecord record = _projectRecords.Get(viewModel.Head.Id);
-            record.Editor = _orchardService.WorkContext.CurrentUser.UserName;
-            record.EditTime = DateTime.Now;
-            record.Market = viewModel.Head.Market;
-            record.Seat = viewModel.Head.Seat;
-            record.Customer = viewModel.Head.Customer;
-            record.Model = viewModel.Head.Model;
-            record.Product = viewModel.Head.Product;
-            record.Project = viewModel.Head.Project;
-            record.Mechanism = viewModel.Head.Mechanism;
-            record.Version = record.Version+1;
-            _projectRecords.Update(record);
-            //新增一条版本记录
-            ProjectRevisionRecord revisionRecord = new ProjectRevisionRecord()
-            {
-                Comments = string.Empty,
-                CreateTime = DateTime.Now,
-                Creator = record.Creator,
-                CustomerReleaseDate = string.Empty,
-                CustomerSpecificationName = string.Empty,
-                Editor = record.Editor,
-                EditTime = DateTime.Now,
-                MiniorRevision = record.Version.ToString(),
-                Owner = string.Empty,
-                ProgramPhase = record.Phase,
-                ReviewDate = string.Empty,
-                ReviewedBy = string.Empty,
-                Status = string.Empty,
-                ProjectRecord = record
-            };
-            _projectRevisionRecords.Create(revisionRecord);
-        }
-
-        private void Submit(CreateIndexViewModel viewModel)
-        {
-            //更新项目记录
-            ProjectRecord record = _projectRecords.Get(viewModel.Head.Id);
-            record.Editor = _orchardService.WorkContext.CurrentUser.UserName;
-            record.EditTime = DateTime.Now;
-            record.Market = viewModel.Head.Market;
-            record.Seat = viewModel.Head.Seat;
-            record.Customer = viewModel.Head.Customer;
-            record.Model = viewModel.Head.Model;
-            record.Product = viewModel.Head.Product;
-            record.Project = viewModel.Head.Project;
-            record.Mechanism = viewModel.Head.Mechanism;
-            record.Version = record.Version + 1;
-            _projectRecords.Update(record);
-            //新增一条版本记录
-            ProjectRevisionRecord revisionRecord = new ProjectRevisionRecord()
-            {
-                Comments = string.Empty,
-                CreateTime = DateTime.Now,
-                Creator = record.Creator,
-                CustomerReleaseDate = string.Empty,
-                CustomerSpecificationName = string.Empty,
-                Editor = record.Editor,
-                EditTime = DateTime.Now,
-                MiniorRevision = record.Version.ToString(),
-                Owner = string.Empty,
-                ProgramPhase = record.Phase,
-                ReviewDate = string.Empty,
-                ReviewedBy = string.Empty,
-                Status = string.Empty,
-                ProjectRecord = record
-            };
-            _projectRevisionRecords.Create(revisionRecord);
+            viewModel.Head.Id = record.Id;
+            viewModel.Message = T("Submit project [{0}] successfully.", record.Project).Text;
+            return viewModel;
         }
 
 
         public ActionResult GetProjectRevisions(int projectId)
         {
-            IList<ProjectRevisionRecord> lst = new List<ProjectRevisionRecord>();
-            lst.Add(new ProjectRevisionRecord()
-            {
-                Id=0,
-                MiniorRevision="1",
-                Status=string.Empty,
-                ReviewDate="2017-08-14",
-                ReviewedBy="test",
-                CustomerReleaseDate="",
-                CustomerSpecificationName="test",
-                ProgramPhase=ProjectPhase.GR1,
-                Owner="test",
-                Comments="test",
-            });
-
-            var lnq = from item in lst
+            var lnq = from item in _projectRevisionRecords.Table
+                      where item.ProjectRecord.Id == projectId
+                      select item;
+            var lst = from item in lnq
                       select new
                       {
                           MiniorRevision = item.MiniorRevision,
@@ -290,9 +419,14 @@ namespace Faurecia.FTL.Controllers
                           Owner = item.Owner,
                           Comments = item.Comments
                       };
-            return Json(JsonConvert.SerializeObject(lnq),JsonRequestBehavior.AllowGet);
+            return Json(JsonConvert.SerializeObject(lst),JsonRequestBehavior.AllowGet);
         }
-
+        
+        
+        public ActionResult SaveRevisionData()
+        {
+            return Json(new { Code = 0, Message = "" });
+        }
 
         public ActionResult ExportToExcel(int id)
         {

@@ -74,7 +74,7 @@
                         <td style="word-wrap:break-word;word-break:break-all;">
                         @{
                             string url = Url.Action("Index", "Create", new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl, Id = entry.Id });
-                            @Html.ActionLink(entry.ProjectRecord.Project, "Create", "Default"
+                            @Html.ActionLink(entry.ProjectRecord.Project, "Index", "Create"
                                                 , new { Area = "Faurecia.FTL", returnurl = HttpContext.Current.Request.RawUrl , Id = entry.Id }
                                                 , new { })
                         }

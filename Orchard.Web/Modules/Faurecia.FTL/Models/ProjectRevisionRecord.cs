@@ -7,8 +7,10 @@ namespace Faurecia.FTL.Models
 {
     public class ProjectRevisionRecord
     {
+        public const string StatusInwork = "Inwork";
+        public const string StatusReleased = "Released";
+
         public virtual int Id { get; set; }
-        
         public virtual ProjectPhase ProgramPhase { get; set; }
         public virtual string MiniorRevision { get; set; }
         public virtual string Status { get; set; }
@@ -24,4 +26,6 @@ namespace Faurecia.FTL.Models
         public virtual string Editor { get; set; }
         public virtual ProjectRecord ProjectRecord { get; set; }
     }
+
+   
 }

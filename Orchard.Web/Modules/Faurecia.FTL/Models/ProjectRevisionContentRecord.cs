@@ -11,7 +11,7 @@ namespace Faurecia.FTL.Models
 
         public virtual string Catalogue { get; set; }
         public virtual string LifePhase { get; set; }
-        public virtual string Function { get; set; }
+        public virtual string ProjectFunction { get; set; }
         public virtual string CustomerSpecificationReference { get; set; }
         public virtual string Chapter { get; set; }
         public virtual string Page { get; set; }

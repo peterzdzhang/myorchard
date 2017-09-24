@@ -31,18 +31,30 @@ namespace Faurecia.FTL.Controllers
         private readonly IOrchardServices _orchardService;
         private readonly ISiteService _siteService;
         private readonly IRepository<ProjectRecord> _projectRecords;
+        private readonly IRepository<ProjectRevisionRecord> _projectRevisionRecords;
+        private readonly IRepository<ProjectRevisionAttachmentRecord> _projectRevisionAttachmentRecords;
+        private readonly IRepository<ProjectRevisionContentRecord> _projectContentRecords;
+        private readonly IRepository<ProjectRevisionContentAttachmentRecord> _projectRevisionContentAttachmentRecords;
 
         public DefaultController(IOrchardServices orchardService,
             ISiteService siteService,
             IShapeFactory shapeFactory,
-            IRepository<ProjectRecord> projectRecords)
+            IRepository<ProjectRecord> projectRecords,
+            IRepository<ProjectRevisionRecord> projectRevisionRecords,
+            IRepository<ProjectRevisionAttachmentRecord> projectRevisionAttachmentRecords,
+            IRepository<ProjectRevisionContentRecord> projectContentRecords,
+            IRepository<ProjectRevisionContentAttachmentRecord> projectRevisionContentAttachmentRecords)
         {
             _siteService = siteService;
             _orchardService = orchardService;
-            _projectRecords = projectRecords;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             New = shapeFactory;
+            _projectRecords = projectRecords;
+            _projectRevisionRecords = projectRevisionRecords;
+            _projectRevisionAttachmentRecords = projectRevisionAttachmentRecords;
+            _projectContentRecords = projectContentRecords;
+            _projectRevisionContentAttachmentRecords = projectRevisionContentAttachmentRecords;
         }
 
         dynamic New { get; set; }
@@ -122,6 +134,56 @@ namespace Faurecia.FTL.Controllers
                 return PartialView("_IndexQueryResult", model);
             }
             return View(model);
+        }
+
+        //删除
+        public ActionResult Delete()
+        {
+            string ids = Request["ids"];
+            if (!string.IsNullOrEmpty(ids))
+            {
+                try
+                {
+                    foreach (string id in ids.Split(','))
+                    {
+                        int nId = 0;
+                        if (int.TryParse(id, out nId))
+                        {
+                            foreach (var item in _projectRevisionRecords.Table.Where(w => w.ProjectRecord.Id == nId))
+                            {
+                                foreach (var attachment in _projectRevisionAttachmentRecords.Table.Where(w => w.ProjectRevisionRecord.Id == item.Id))
+                                {
+                                    if(System.IO.File.Exists(attachment.Path))
+                                    {
+                                        System.IO.File.Delete(attachment.Path);
+                                    }
+                                    _projectRevisionAttachmentRecords.Delete(attachment);
+                                }
+                                foreach (var contentItem in _projectContentRecords.Table.Where(w => w.ProjectRevisionRecord.Id == item.Id))
+                                {
+                                    foreach (var attachment in _projectRevisionContentAttachmentRecords.Table.Where(w => w.ProjectRevisionContentRecord.Id == contentItem.Id))
+                                    {
+                                        if (System.IO.File.Exists(attachment.Path))
+                                        {
+                                            System.IO.File.Delete(attachment.Path);
+                                        }
+                                        _projectRevisionContentAttachmentRecords.Delete(attachment);
+                                    }
+                                    _projectContentRecords.Delete(contentItem);
+                                }
+
+                                _projectRevisionRecords.Delete(item);
+                            }
+                            _projectRecords.Delete(new ProjectRecord() { Id = nId });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { Code = 1, Message = T("Delete Failed: ") + ex.Message }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { Code = 0, Message = T("Delete Success.") }, JsonRequestBehavior.AllowGet);
         }
     }
 }
