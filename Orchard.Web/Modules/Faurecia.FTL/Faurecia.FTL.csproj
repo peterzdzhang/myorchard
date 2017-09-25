@@ -129,7 +129,6 @@
     <Compile Include="Models\ProjectRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="ViewModels\AjaxPager.cs" />
     <Compile Include="ViewModels\CreateIndexViewModel.cs" />

@@ -373,8 +373,23 @@ namespace Faurecia.FTL.Controllers
             record.Product = viewModel.Head.Product;
             record.Project = viewModel.Head.Project;
             record.Mechanism = viewModel.Head.Mechanism;
-            record.Version = IncreaseMainVersion(record.Version); ;
+            record.Version = IncreaseMainVersion(record.Version);
+            if(record.Phase<ProjectPhase.GR4)
+            {
+                record.Phase = (ProjectPhase)(record.Phase + 1);
+            }
             _projectRecords.Update(record);
+            //更新所有版本记录为Released
+            var lnq = from item in _projectRevisionRecords.Table
+                      where item.Status == ProjectRevisionRecord.StatusInwork && item.ProjectRecord.Id == viewModel.Head.Id
+                      select item;
+            foreach (var item in lnq)
+            {
+                item.Status = ProjectRevisionRecord.StatusReleased;
+                item.Editor = record.Editor;
+                item.EditTime = DateTime.Now;
+                _projectRevisionRecords.Update(item);
+            }
             //新增一条版本记录
             ProjectRevisionRecord revisionRecord = new ProjectRevisionRecord()
             {
@@ -390,7 +405,7 @@ namespace Faurecia.FTL.Controllers
                 ProgramPhase = record.Phase,
                 ReviewDate = string.Empty,
                 ReviewedBy = string.Empty,
-                Status = string.Empty,
+                Status = ProjectRevisionRecord.StatusInwork,
                 ProjectRecord = record
             };
             _projectRevisionRecords.Create(revisionRecord);

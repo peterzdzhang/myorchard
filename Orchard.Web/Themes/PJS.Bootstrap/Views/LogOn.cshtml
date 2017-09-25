@@ -4,6 +4,7 @@
     var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
     var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
     var settings = WorkContext.CurrentSite.As<BootstrapThemeSettingsPart>();
+    var message = Html.ValidationSummary().ToHtmlString();
 }
 
 <div class="navbar-wrapper">
@@ -19,14 +20,14 @@
 </div>
 
 <div id="layout-main-container">
-    @if (Model.Title == "Access Denied")
+    @*@if (Model.Title == "Access Denied")
     {
         <div class="alert alert-dismissable alert-danger">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
             <i class="fa fa-times-circle"></i>&nbsp;&nbsp;@T("You do not have permission to complete your request.")
         </div>
-    }
-    @if (Html.ValidationSummary() != null)
+    }*@
+    @if (!string.IsNullOrEmpty(message) && !message.Contains("display:none"))
     {
         <div class="alert alert-dismissable alert-danger">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
