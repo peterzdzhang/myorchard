@@ -135,6 +135,7 @@
     <Compile Include="ViewModels\DefaultIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AlterTable20170925.sql" />
     <Content Include="Assets.json" />
     <Content Include="Assets\Styles.less" />
     <Content Include="Content\bootstrap.css" />

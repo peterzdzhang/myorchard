@@ -1,5 +1,5 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false">
-  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.HeadCountRecord, App_Web_i5bvxr3l, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_HeadCountRecord">
+  <class xmlns="urn:nhibernate-mapping-2.2" name="Faurecia.ADL.Models.HeadCountRecord, Faurecia.ADL, Version=1.10.1.0, Culture=neutral, PublicKeyToken=null" table="Faurecia_ADL_HeadCountRecord">
     <cache usage="read-write" />
     <id name="Id" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <column name="Id" />
